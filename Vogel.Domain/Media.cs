@@ -5,10 +5,10 @@ namespace Vogel.Domain
     public class Media : Entity
     {
         public string File { get; set; }
-        public string Extension { get; set; }
-        public string MediaType { get; set; }
+        public MediaType MediaType { get; set; }
         public string MimeType { get; set; }
-
+        public long Size { get; set; }
+        public string UserId { get; set; }
         protected override string GetEntityPerfix()
         {
             string perfix = "med";
@@ -16,4 +16,10 @@ namespace Vogel.Domain
             return perfix;
         }
     }
+
+    public enum MediaType 
+    {
+        Image = 0,
+        Video = 5
+    };
 }

@@ -1,4 +1,5 @@
-﻿namespace Vogel.Domain
+﻿using MongoDB.Bson;
+namespace Vogel.Domain
 {
     public abstract class Entity
     {

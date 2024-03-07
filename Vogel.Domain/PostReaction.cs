@@ -1,6 +1,6 @@
 ﻿namespace Vogel.Domain
 {
-    public class Reactions : Entity
+    public class PostReaction : Entity
     {
         public string UserId { get; set; }
         public string PostId { get; set; }

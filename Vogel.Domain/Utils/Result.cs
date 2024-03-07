@@ -18,7 +18,7 @@
             _success = false;
             Exception = exception;
         }
-        public Result<T> Success(T value) => new Result<T>(value);
-        public Result<T> Failure(Exception exception) => new Result<T>(exception);
+
+        public static implicit operator Result<T>(T value) => new Result<T>(value);
     }
 }
