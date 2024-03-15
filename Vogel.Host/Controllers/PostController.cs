@@ -72,7 +72,7 @@ namespace Vogel.Host.Controllers
 
             var response = new ApiResponse<PostAggregateDto> { Data = result.Value! };
 
-            return CreatedAtAction(nameof(GetPost), new { id = result.Value!.Id }, response);
+            return CreatedAtAction(nameof(GetPost), new { postId = result.Value!.Id }, response);
         }
 
 

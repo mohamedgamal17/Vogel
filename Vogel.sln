@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Domain", "Vogel.Domai
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Host", "Vogel.Host\Vogel.Host.csproj", "{105BD321-6A1B-4305-8C03-5715BEE11691}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vogel.Infrastructure", "Vogel.Infrastructure\Vogel.Infrastructure.csproj", "{BB86048A-7391-4AF2-B719-CA724E7AD420}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Infrastructure", "Vogel.Infrastructure\Vogel.Infrastructure.csproj", "{BB86048A-7391-4AF2-B719-CA724E7AD420}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vogel.Application", "Vogel.Application\Vogel.Application.csproj", "{EECD4E70-E712-46F0-B4CD-5A2935CA900D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Application", "Vogel.Application\Vogel.Application.csproj", "{EECD4E70-E712-46F0-B4CD-5A2935CA900D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
