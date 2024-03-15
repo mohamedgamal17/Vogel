@@ -64,8 +64,6 @@ namespace Vogel.Application.Posts.Commands
 
             var post = await _postRepository.FindByIdAsync(request.Id);
 
-
-
             if(post == null)
             {
                 return new Result<PostAggregateDto>(new EntityNotFoundException(typeof(Post), request.Id));
