@@ -14,6 +14,7 @@ namespace Vogel.Host.Controllers
     {
         public PostController(IServiceProvider serviceProvider) : base(serviceProvider)
         {
+
         }
 
         [Route("")]
@@ -25,17 +26,8 @@ namespace Vogel.Host.Controllers
 
             var result = await Mediator.Send(query);
 
-            if (result.IsFailure)
-            {
-                return BadRequest(new { Message = result.Exception!.GetType().Name });
-            }
-
-            var response = new ApiResponse<List<PostAggregateDto>> { Data = result.Value! };
-
-            return Ok(response);
+            return Ok(result);
         }
-
-
 
         [Route("{postId}")]
         [HttpGet]
@@ -46,14 +38,7 @@ namespace Vogel.Host.Controllers
 
             var result = await Mediator.Send(query);
 
-            if (result.IsFailure)
-            {
-                return BadRequest(new { Message = result.Exception!.GetType().Name });
-            }
-
-            var response = new ApiResponse<PostAggregateDto> { Data = result.Value! };
-
-            return Ok(response);
+            return Ok(result);
         }
 
         [Route("")]
@@ -65,14 +50,7 @@ namespace Vogel.Host.Controllers
 
             var result = await Mediator.Send(command);
 
-            if (result.IsFailure)
-            {
-                return BadRequest(new { Message = result.Exception!.GetType().Name });
-            }
-
-            var response = new ApiResponse<PostAggregateDto> { Data = result.Value! };
-
-            return CreatedAtAction(nameof(GetPost), new { postId = result.Value!.Id }, response);
+            return CreatedAtAction(result, nameof(GetPost), new { postId = result.Value!.Id });
         }
 
 
@@ -85,14 +63,7 @@ namespace Vogel.Host.Controllers
 
             var result = await Mediator.Send(command);
 
-            if (result.IsFailure)
-            {
-                return BadRequest(new { Message = result.Exception!.GetType().Name });
-            }
-
-            var response = new ApiResponse<PostAggregateDto> { Data = result.Value! };
-
-            return Ok(response);
+            return Ok(result);
         }
 
         [Route("{postId}")]
@@ -107,12 +78,7 @@ namespace Vogel.Host.Controllers
 
             var result = await Mediator.Send(command);
 
-            if (result.IsFailure)
-            {
-                return BadRequest(new { Message = result.Exception!.GetType().Name });
-            }
-
-            return NoContent();
+            return NoContent(result);
         }
 
     }

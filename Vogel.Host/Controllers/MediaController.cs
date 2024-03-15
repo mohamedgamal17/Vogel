@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Vogel.Application.Medias.Commands;
 using Vogel.Application.Medias.Dtos;
 using Vogel.Host.Models;
 namespace Vogel.Host.Controllers
@@ -31,17 +32,20 @@ namespace Vogel.Host.Controllers
 
             var result = await Mediator.Send(command);
 
-            if (result.IsFailure)
-            {
-                return BadRequest(new { Message = result.Exception!.GetType().Name });
-            }
+            return CreatedAtAction(result, nameof(GetMedia), new { mediaId = result.Value!.Id });
+        }
 
-            var response = new ApiResponse<MediaAggregateDto>
-            {
-                Data = result.Value!
-            };
 
-            return CreatedAtAction(nameof(GetMedia), new { mediaId = result.Value!.Id }, response);
+        [Route("{mediaId}")]
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> RemoveMedia(string mediaId)
+        {
+            var command = new RemoveMediaCommand { Id = mediaId };
+
+            var result = await Mediator.Send(command);
+
+            return NoContent(result);
         }
     }
 }
