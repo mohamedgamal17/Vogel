@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Vogel.Application.Medias.Commands;
 using Vogel.Application.Medias.Dtos;
+using Vogel.Application.Medias.Queries;
 using Vogel.Host.Models;
 namespace Vogel.Host.Controllers
 {
@@ -14,13 +15,26 @@ namespace Vogel.Host.Controllers
         {
         }
 
-        [Route("{mediaId}")]
+        [Route("")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<MediaAggregateDto>))]
+        public async Task<IActionResult> ListMedias()
+        {
+            var query = new ListMediaQuery();
+            var result = await Mediator.Send(query);
+            return Ok(result);
+        }
 
+        [Route("{mediaId}")]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(MediaAggregateDto))]
         public async Task<IActionResult> GetMedia(string mediaId)
         {
-            throw new NotImplementedException();
+            var query = new GetMediaByIdQuery { Id = mediaId };
+
+            var result = await Mediator.Send(query);
+
+            return Ok(result);
         }
 
         [Route("")]

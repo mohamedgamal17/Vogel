@@ -19,7 +19,7 @@ namespace Vogel.Application.Medias.Factories
             _s3ObjectStorageService = s3ObjectStorageService;
         }
 
-        public async Task<List<MediaAggregateDto>> PrepareListMediaAggregateDto(List<MediaLookupDto> medias)
+        public async Task<List<MediaAggregateDto>> PrepareListMediaAggregateDto(List<Media> medias)
         {
             var task = medias.Select(PrepareMedaiAggregateDto);
 
@@ -28,39 +28,8 @@ namespace Vogel.Application.Medias.Factories
             return result.ToList();
         }
 
-        public async Task<MediaAggregateDto> PrepareMedaiAggregateDto(MediaLookupDto media)
-        {
-            var result = new MediaAggregateDto
-            {
-                Id = media.Id,
-                MediaType = media.MediaType,
-                MimeType = media.MimeType,
-                Size = media.Size,
-                Reference = await _s3ObjectStorageService.GeneratePresignedDownloadUrlAsync(media.File),
-                User = media.User
-            };
-
-            return result;
-        }
-
-
         public async Task<MediaAggregateDto> PrepareMedaiAggregateDto(Media media)
         {
-            var user = await _userRepository.AsMongoCollection()
-                .Find(new FilterDefinitionBuilder<User>()
-                    .Eq(x => x.Id, media.UserId)
-                )
-                .Project(x => new MediaUserDto
-                {
-                    Id = x.Id,
-                    FirstName = x.FirstName,
-                    LastName = x.LastName,
-                    BirthDate = x.BirthDate,
-                    Gender = x.Gender
-                })
-                .SingleOrDefaultAsync();
-
-
             var result = new MediaAggregateDto
             {
                 Id = media.Id,
@@ -68,7 +37,7 @@ namespace Vogel.Application.Medias.Factories
                 MimeType = media.MimeType,
                 Size = media.Size,
                 Reference = await _s3ObjectStorageService.GeneratePresignedDownloadUrlAsync(media.File),
-                User = user
+                UserId = media.Id
             };
 
             return result;

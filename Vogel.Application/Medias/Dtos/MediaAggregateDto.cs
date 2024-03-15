@@ -9,6 +9,6 @@ namespace Vogel.Application.Medias.Dtos
         public MediaType MediaType { get; set; }
         public string MimeType { get; set; }
         public long Size { get; set; }
-        public MediaUserDto User { get; set; }
+        public string UserId { get; set; }
     }
 }

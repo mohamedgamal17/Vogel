@@ -6,8 +6,7 @@ namespace Vogel.Application.Medias.Factories
 {
     public interface IMediaResponseFactory : IResponseFactory
     {
-        Task<List<MediaAggregateDto>> PrepareListMediaAggregateDto(List<MediaLookupDto> medias);
+        Task<List<MediaAggregateDto>> PrepareListMediaAggregateDto(List<Media> medias);
         Task<MediaAggregateDto> PrepareMedaiAggregateDto(Media media);
-        Task<MediaAggregateDto> PrepareMedaiAggregateDto(MediaLookupDto media);
     }
 }

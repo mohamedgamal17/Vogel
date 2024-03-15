@@ -1,5 +1,6 @@
 ﻿using MongoDB.Driver;
 using Vogel.Application.Common.Interfaces;
+using Vogel.Application.Medias.Dtos;
 using Vogel.Application.Posts.Dtos;
 using Vogel.Domain;
 namespace Vogel.Application.Posts.Factories
@@ -41,11 +42,12 @@ namespace Vogel.Application.Posts.Factories
 
             if(post.Media != null)
             {
-                result.Media = new PostMedia
+                result.Media = new MediaAggregateDto
                 {
                     Id = post.Media.Id,
                     MimeType = post.Media.MimeType,
                     MediaType = post.Media.MediaType,
+                    UserId = post.Media.UserId,
                     Reference = await _s3ObjectStorageService.GeneratePresignedDownloadUrlAsync(post.Media.File)
                 };
             }
