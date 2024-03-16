@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Vogel.Application.Common.Exceptions;
+using Vogel.Application.Common.Models;
 using Vogel.Domain.Utils;
 using Vogel.Host.Models;
 
@@ -17,6 +18,23 @@ namespace Vogel.Host.Controllers
             ServiceProvider = serviceProvider;
             Mediator = ServiceProvider.GetRequiredService<IMediator>();
         }
+
+        public IActionResult Ok<T>(Result<Paging<T>> result)
+        {
+            if (result.IsSuccess)
+            {
+                var apiResponse = new ApiResponse<List<T>>() 
+                { 
+                    Data = result.Value!.Data ,
+                    PagingInfo = result.Value!.Info
+                };
+
+                return base.Ok(apiResponse);
+            }
+
+            return HandleFailureResult(result);
+        }
+
 
         public IActionResult Ok<T>(Result<T> result)
         {

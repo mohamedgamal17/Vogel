@@ -20,9 +20,13 @@ namespace Vogel.Host.Controllers
         [Route("")]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<List<PostAggregateDto>>))]
-        public async Task<IActionResult> ListPostAsync()
+        public async Task<IActionResult> ListPostAsync(string? cursor = null , int limit = 10)
         {
-            var query = new ListPostPostQuery();
+            var query = new ListPostPostQuery()
+            {
+                Cursor = cursor,
+                Limit = limit
+            };
 
             var result = await Mediator.Send(query);
 
