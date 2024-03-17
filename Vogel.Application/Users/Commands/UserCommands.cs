@@ -1,4 +1,5 @@
-﻿using Vogel.Application.Common.Interfaces;
+﻿using Microsoft.AspNetCore.Authorization;
+using Vogel.Application.Common.Interfaces;
 using Vogel.Application.Users.Dtos;
 using Vogel.Domain;
 
@@ -10,13 +11,14 @@ namespace Vogel.Application.Users.Commands
         public string LastName { get; set; }
         public DateTime BirthDate { get; set; }
         public Gender Gender { get; set; }
-        public string MediaId { get; set; }
+        public string? AvatarId { get; set; }
     }
 
-    public class CreateUserCommand : UserCommandBase , ICommand<UserDto> { }
+    [Authorize]
+    public class CreateUserCommand : UserCommandBase , ICommand<UserAggregateDto> { }
 
-    public class UpdateUserCommand : UserCommandBase , ICommand<UserDto> 
+    [Authorize]
+    public class UpdateUserCommand : UserCommandBase , ICommand<UserAggregateDto> 
     {
-        public string Id { get; set; }
     }
 }

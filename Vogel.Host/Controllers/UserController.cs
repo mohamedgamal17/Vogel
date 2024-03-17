@@ -1,72 +1,53 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
-using Vogel.Application.Common.Interfaces;
-using Vogel.Domain;
+using Vogel.Application.Users.Dtos;
+using Vogel.Application.Users.Queries;
 using Vogel.Host.Models;
-
 namespace Vogel.Host.Controllers
 {
+    [Authorize]
     [ApiController]
-    [Route("api/users")]
-    public class UserController : Controller
+    [Route("api/user")]
+    public class UserController : VogelController
     {
-        IAuthorizationService _auth;
-        private readonly IMongoDbRepository<User> _userRepository;
-
-        //public UserController(IMongoDbRepository<User> userRepository)
-        //{
-        //    _userRepository = userRepository;
-        //}
-
-        private ISecurityContext securityContext;
-
-        public UserController(ISecurityContext securityContext)
+        public UserController(IServiceProvider serviceProvider) : base(serviceProvider)
         {
-            this.securityContext = securityContext;
+        }
+        [Route("")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserAggregateDto))]
+        public async Task<IActionResult> GetCurrentUser()
+        {
+            var query = new GetCurrentUserQuery();
+
+            var result = await SendAsync(query);
+
+            return Ok(result);
+        }
+
+
+        [Route("")]
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UserAggregateDto))]
+        public async Task<IActionResult> CreateUser(UserModel model)
+        {
+            var command = model.ToCreateUserCommand();
+
+            var result = await SendAsync(command);
+
+            return CreatedAtAction(result, nameof(GetCurrentUser));
         }
 
         [Route("")]
-        [HttpGet]
-        [Authorize]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<User>))]
-        public async Task<IActionResult> ListAsync()
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UserAggregateDto))]
+        public async Task<IActionResult> UpdateUser(UserModel model)
         {
-            return Ok(securityContext.User);
+            var command = model.ToUpdateUserCommand();
+
+            var result = await SendAsync(command);
+
+            return Ok(result);
         }
-        //[Route("{id}")]
-        //[HttpPost]
-        //[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(User))]
-        //public async Task<IActionResult> GetUser(string id)
-        //{
-        //    var filter = new FilterDefinitionBuilder<User>()
-        //        .Eq(x => x.Id, id);
-
-        //    var cursor = await _userRepository.AsMongoCollection().FindAsync(filter);
-
-        //    var user = await cursor.FirstAsync();
-
-        //    return Ok(user);
-        //}
-
-        //[Route("")]
-        //[HttpPost]
-        //[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(User))]
-        //public async Task<IActionResult> CreateUser(UserModel model)
-        //{
-        //    var user = new User
-        //    {
-        //        FirstName = model.FirstName,
-        //        LastName = model.LastName,
-        //        BirthDate = model.BirthDate,
-        //        MediaId = model.MediaId
-        //    };
-
-        //    await _userRepository.InsertAsync(user);
-
-        //    return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
-        //}
-
-
     }
 }

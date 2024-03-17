@@ -15,7 +15,7 @@ namespace Vogel.Infrastructure.Presistance.Mapping
 
             cm.MapMember(x => x.BirthDate);
 
-            cm.MapMember(x => x.MediaId);
+            cm.MapMember(x => x.AvatarId);
 
 
         }

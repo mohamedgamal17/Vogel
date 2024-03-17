@@ -18,8 +18,4 @@
     <ProjectReference Include="..\Vogel.Domain\Vogel.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Users\Queries\" />
-  </ItemGroup>
-
 </Project>

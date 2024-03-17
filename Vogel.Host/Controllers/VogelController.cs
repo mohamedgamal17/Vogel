@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Vogel.Application.Common.Exceptions;
+using Vogel.Application.Common.Interfaces;
 using Vogel.Application.Common.Models;
 using Vogel.Domain.Utils;
 using Vogel.Host.Models;
@@ -12,13 +13,15 @@ namespace Vogel.Host.Controllers
     {
         public IServiceProvider ServiceProvider { get;  }
         public IMediator Mediator { get;  }
-
         public VogelController(IServiceProvider serviceProvider)
         {
             ServiceProvider = serviceProvider;
             Mediator = ServiceProvider.GetRequiredService<IMediator>();
         }
-
+        protected async Task<Result<T>> SendAsync<T>(IApplicationReuest<T> request)
+        {
+            return await Mediator.Send(request);
+        }
         public IActionResult Ok<T>(Result<Paging<T>> result)
         {
             if (result.IsSuccess)
@@ -48,7 +51,7 @@ namespace Vogel.Host.Controllers
             return HandleFailureResult(result);
         }
 
-        public IActionResult CreatedAtAction<T>(Result<T> result , string actionName ,object routeValues)
+        public IActionResult CreatedAtAction<T>(Result<T> result , string actionName ,object? routeValues = null)
         {
             if (result.IsSuccess)
             {
