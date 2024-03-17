@@ -15,8 +15,7 @@ using Vogel.Infrastructure;
 using Vogel.Infrastructure.Presistance;
 using Autofac.Extensions.DependencyInjection;
 using Autofac;
-using System.Reflection.Metadata;
-using System.Threading;
+
 namespace Vogel.Application.IntegrationTest
 {
     [SetUpFixture]
@@ -93,8 +92,7 @@ namespace Vogel.Application.IntegrationTest
             await mongoClient.DropDatabaseAsync(mongoConfiguration.Database);
         }
 
-        public static async Task<Result<TResponse>> SendAsync<TRequest, TResponse>(TRequest request)
-            where TRequest : IApplicationReuest<TResponse>
+        public static async Task<Result<TResponse>> SendAsync<TResponse>(IApplicationReuest<TResponse> request)
         {
             using var scope = _serviceProvider.CreateScope();
 

@@ -25,7 +25,7 @@ namespace Vogel.Application.IntegrationTest.Posts
                 Caption = Guid.NewGuid().ToString()
             };
 
-            var result = await SendAsync<CreatePostCommand, PostAggregateDto>(command);
+            var result = await SendAsync(command);
 
             result.IsSuccess.Should().BeTrue();
 
@@ -48,7 +48,7 @@ namespace Vogel.Application.IntegrationTest.Posts
                 Caption = Guid.NewGuid().ToString()
             };
 
-            var result = await SendAsync<CreatePostCommand, PostAggregateDto>(command);
+            var result = await SendAsync(command);
 
             result.IsFailure.Should().BeTrue();
 
@@ -70,7 +70,7 @@ namespace Vogel.Application.IntegrationTest.Posts
                 Caption = Guid.NewGuid().ToString()
             };
 
-            var result = await SendAsync<CreatePostCommand, PostAggregateDto>(command);
+            var result = await SendAsync(command);
 
             result.IsSuccess.Should().BeFalse();
 
@@ -95,7 +95,7 @@ namespace Vogel.Application.IntegrationTest.Posts
                 MediaId = fakeMedia1.Id
             };
 
-            var result = await SendAsync<UpdatePostCommand, PostAggregateDto>(command);
+            var result = await SendAsync(command);
 
             result.IsSuccess.Should().BeTrue();
 
@@ -123,7 +123,7 @@ namespace Vogel.Application.IntegrationTest.Posts
             };
 
 
-            var result = await SendAsync<UpdatePostCommand, PostAggregateDto>(command);
+            var result = await SendAsync(command);
 
             result.IsFailure.Should().BeTrue();
 
@@ -150,7 +150,7 @@ namespace Vogel.Application.IntegrationTest.Posts
                 MediaId = fakeMedia1.Id
             };
 
-            var result = await SendAsync<UpdatePostCommand, PostAggregateDto>(command);
+            var result = await SendAsync(command);
 
             result.IsSuccess.Should().BeFalse();
 
@@ -178,7 +178,7 @@ namespace Vogel.Application.IntegrationTest.Posts
                 MediaId = fakeMedia.Id
             };
 
-            var result = await SendAsync<UpdatePostCommand, PostAggregateDto>(command);
+            var result = await SendAsync(command);
 
             result.IsSuccess.Should().BeFalse();
 
@@ -199,7 +199,7 @@ namespace Vogel.Application.IntegrationTest.Posts
                 Id = fakePost.Id,
             };
 
-            var result = await SendAsync<RemovePostCommand, Unit>(command);
+            var result = await SendAsync(command);
 
             result.IsSuccess.Should().BeTrue();
 
@@ -222,7 +222,7 @@ namespace Vogel.Application.IntegrationTest.Posts
                 Id = fakePost.Id,
             };
 
-            var result = await SendAsync<RemovePostCommand, Unit>(command);
+            var result = await SendAsync(command);
 
             result.IsFailure.Should().BeTrue();
 
@@ -245,7 +245,7 @@ namespace Vogel.Application.IntegrationTest.Posts
                 Id = fakePost.Id,
             };
 
-            var result = await SendAsync<RemovePostCommand, Unit>(command);
+            var result = await SendAsync(command);
 
             result.IsSuccess.Should().BeFalse();
 

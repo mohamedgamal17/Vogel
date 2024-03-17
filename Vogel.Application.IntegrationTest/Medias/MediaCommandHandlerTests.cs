@@ -1,13 +1,10 @@
 ﻿using FluentAssertions;
-using MediatR;
-using Minio.Exceptions;
 using MongoDB.Driver;
 using System.Security.Claims;
 using Vogel.Application.Common.Exceptions;
 using Vogel.Application.IntegrationTest.Extensions;
 using Vogel.Application.IntegrationTest.Utilites;
 using Vogel.Application.Medias.Commands;
-using Vogel.Application.Medias.Dtos;
 using Vogel.Domain;
 using static Vogel.Application.IntegrationTest.Testing;
 namespace Vogel.Application.IntegrationTest.Medias
@@ -21,7 +18,7 @@ namespace Vogel.Application.IntegrationTest.Medias
 
             var command = await PrepareCreateMediaCommand();
 
-            var result = await SendAsync<CreateMediaCommand,MediaAggregateDto>(command);
+            var result = await SendAsync(command);
 
             result.IsSuccess.Should().BeTrue();
 
@@ -38,7 +35,7 @@ namespace Vogel.Application.IntegrationTest.Medias
 
             var command = await PrepareCreateMediaCommand();
 
-            var result = await SendAsync<CreateMediaCommand, MediaAggregateDto>(command);
+            var result = await SendAsync(command);
 
             result.IsSuccess.Should().BeFalse();
 
@@ -53,7 +50,7 @@ namespace Vogel.Application.IntegrationTest.Medias
 
             var command = new RemoveMediaCommand() { Id = fakeMedia.Id };
 
-            var result = await SendAsync<RemoveMediaCommand, Unit>(command);
+            var result = await SendAsync(command);
 
             result.IsSuccess.Should().BeTrue();
 
@@ -72,7 +69,7 @@ namespace Vogel.Application.IntegrationTest.Medias
 
             var command = new RemoveMediaCommand() { Id = media.Id };
 
-            var result = await SendAsync<RemoveMediaCommand, Unit>(command);
+            var result = await SendAsync(command);
 
             result.IsSuccess.Should().BeFalse();
 
@@ -89,7 +86,7 @@ namespace Vogel.Application.IntegrationTest.Medias
 
             var command = new RemoveMediaCommand() { Id = media.Id };
 
-            var result = await SendAsync<RemoveMediaCommand, Unit>(command);
+            var result = await SendAsync(command);
 
             result.IsSuccess.Should().BeFalse();
 
