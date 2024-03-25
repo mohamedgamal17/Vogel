@@ -37,7 +37,7 @@ namespace Vogel.Application.Users.Factories
                 LastName = user.LastName,
                 Gender = user.Gender,
                 AvatarId = user.AvatarId,
-                BirthDate = user.BirthDate
+                BirthDate = user.BirthDate.ToShortDateString()
             };
 
             if (user.Avatar != null)

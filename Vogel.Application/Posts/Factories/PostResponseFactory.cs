@@ -59,7 +59,7 @@ namespace Vogel.Application.Posts.Factories
                     Id = post.Id,
                     FirstName = post.User.FirstName,
                     LastName = post.User.LastName,
-                    BirthDate = post.User.BirthDate,
+                    BirthDate = post.User.BirthDate.ToShortDateString(),
                     Gender = post.User.Gender
                 };
             }

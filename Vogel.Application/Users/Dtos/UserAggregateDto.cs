@@ -9,7 +9,7 @@ namespace Vogel.Application.Users.Dtos
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public Gender Gender { get; set; }
-        public DateTime BirthDate { get; set; }
+        public string BirthDate { get; set; }
         public string? AvatarId { get; set; }
         public MediaAggregateDto? Avatar { get; set; }
     }
