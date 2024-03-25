@@ -100,29 +100,42 @@ namespace Vogel.Host.Controllers
 
                 return StatusCode(StatusCodes.Status401Unauthorized, problemDetails);
             }
-            else if(exception is NotFoundException notFoundException)
+            else if(exception is EntityNotFoundException notFoundException)
             {
                 var problemDetails = new ProblemDetails
                 {
                     Status = StatusCodes.Status404NotFound,
                     Type = "https://tools.ietf.org/html/rfc7231#section-6.5.4",
                     Title = "The specified resource was not found.",
-                    Detail = exception.Message
+                    Detail = notFoundException.Message
                 };
 
                 return StatusCode(StatusCodes.Status404NotFound, problemDetails);
-            }else 
+            }
+            else if (exception is BusinessLogicException businessLogicException)
+            {
+                var problemDetails = new ProblemDetails
+                {
+                    Status = StatusCodes.Status400BadRequest,
+                    Type = "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+                    Title = "Invalid entity state.",
+                    Detail = businessLogicException.Message
+                };
+
+                return StatusCode(StatusCodes.Status404NotFound, problemDetails);
+            }
+            else 
             {
                 var problemDetails = new ProblemDetails
                 {
                     Status = StatusCodes.Status404NotFound,
                     Type = "https://tools.ietf.org/html/rfc7231#section-6.5.4",
-                    Title = "The specified resource was not found.",
+                    Title = "Internal server error",
                     Detail = exception.Message
                 };
 
 
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError , problemDetails);
             }
         }
 

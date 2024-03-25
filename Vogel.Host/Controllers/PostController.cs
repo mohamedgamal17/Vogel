@@ -60,7 +60,7 @@ namespace Vogel.Host.Controllers
 
         [Route("{postId}")]
         [HttpPut]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<PostDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<PostAggregateDto>))]
         public async Task<IActionResult> UpdatePost(string postId , [FromBody] PostModel model)
         {
             var command = model.ToUpdatePostCommand(postId);
