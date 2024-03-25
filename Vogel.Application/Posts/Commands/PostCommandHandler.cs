@@ -122,17 +122,5 @@ namespace Vogel.Application.Posts.Commands
             return Unit.Value;       
         }
 
-        private PostDto PreparePostDto(Post post)
-        {
-            var dto = new PostDto
-            {
-                Id = post.Id,
-                UserId = post.UserId,
-                Caption = post.Caption,
-                MediaId = post.MediaId
-            };
-
-            return dto;
-        }
     }
 }

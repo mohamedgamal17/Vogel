@@ -98,23 +98,6 @@ namespace Vogel.Application.Users.Commands
             user.BirthDate = command.BirthDate;
             user.Gender = command.Gender;
             user.AvatarId = command.AvatarId;
-        }
-
-
-        private UserDto MapUserToUserDto(User user)
-        {
-            var dto = new UserDto
-            {
-                Id = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Gender = user.Gender,
-                BirthDate = user.BirthDate
-            };
-
-            return dto;
-        }
-
-    
+        }   
     }
 }
