@@ -4,14 +4,29 @@ using Vogel.Application.Posts.Dtos;
 
 namespace Vogel.Application.Posts.Queries
 {
-    public class ListPostPostQuery: PagingParams  ,IQuery<Paging<PostAggregateDto>>
+    public abstract class ListPostQueryBase : PagingParams, IQuery<Paging<PostAggregateDto>>
+    { }
+
+    public class ListPostQuery: ListPostQueryBase
     {
 
+    }
+
+    public class ListUserPostQuery : ListPostQueryBase
+    {
+        public string UserId { get; set; }
     }
 
     public class GetPostByIdQuery : IQuery<PostAggregateDto>
     {
         public string Id { get; set; }
+    }
+
+    public class GetUserPostById : IQuery<PostAggregateDto>
+    {
+        public string Id { get; set; }
+        public string UserId { get; set; }
+
     }
 
 

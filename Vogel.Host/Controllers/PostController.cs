@@ -22,7 +22,7 @@ namespace Vogel.Host.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<List<PostAggregateDto>>))]
         public async Task<IActionResult> ListPostAsync(string? cursor = null , int limit = 10)
         {
-            var query = new ListPostPostQuery()
+            var query = new ListPostQuery()
             {
                 Cursor = cursor,
                 Limit = limit
