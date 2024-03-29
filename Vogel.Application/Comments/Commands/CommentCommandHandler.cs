@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using MongoDB.Driver;
 using Vogel.Application.Comments.Dtos;
+using Vogel.Application.Comments.Polices;
 using Vogel.Application.Common.Exceptions;
 using Vogel.Application.Common.Interfaces;
 using Vogel.Domain;
@@ -16,12 +17,14 @@ namespace Vogel.Application.Comments.Commands
         private readonly IMongoDbRepository<Comment> _commentRepository;
         private readonly IMongoDbRepository<Post> _postRepository;
         private readonly ISecurityContext _securityContext;
+        private readonly IApplicationAuthorizationService _applicationAuthorizationService;
 
-        public CommentCommandHandler(IMongoDbRepository<Comment> commentRepository, IMongoDbRepository<Post> postRepository, ISecurityContext securityContext)
+        public CommentCommandHandler(IMongoDbRepository<Comment> commentRepository, IMongoDbRepository<Post> postRepository, ISecurityContext securityContext, IApplicationAuthorizationService applicationAuthorizationService)
         {
             _commentRepository = commentRepository;
             _postRepository = postRepository;
             _securityContext = securityContext;
+            _applicationAuthorizationService = applicationAuthorizationService;
         }
 
         public async Task<Result<CommentDto>> Handle(CreateCommentCommand request, CancellationToken cancellationToken)
@@ -61,6 +64,14 @@ namespace Vogel.Application.Comments.Commands
                 return new Result<CommentDto>(new EntityNotFoundException(typeof(Comment), request.Id));
             }
 
+            var authorizationResult = await _applicationAuthorizationService
+                .AuthorizeAsync(comment,CommentOperationAuthorizationRequirement.Edit);
+
+            if (authorizationResult.IsFailure)
+            {
+                return new Result<CommentDto>(authorizationResult.Exception!);
+            }
+
             comment.Content = request.Content;
 
             await _commentRepository.UpdateAsync(comment);
@@ -81,6 +92,14 @@ namespace Vogel.Application.Comments.Commands
             if (comment == null)
             {
                 return new Result<Unit>(new EntityNotFoundException(typeof(Comment), request.Id));
+            }
+
+            var authorizationResult = await _applicationAuthorizationService
+                    .AuthorizeAsync(comment, CommentOperationAuthorizationRequirement.Delete);
+
+            if (authorizationResult.IsFailure)
+            {
+                return authorizationResult;
             }
 
             await _commentRepository.DeleteAsync(comment);

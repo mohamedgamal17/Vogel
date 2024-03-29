@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Vogel.Application.Comments.Commands;
+using Vogel.Application.Comments.Dtos;
 using Vogel.Application.Posts.Commands;
 using Vogel.Application.Posts.Dtos;
 using Vogel.Application.Posts.Queries;
@@ -78,6 +80,56 @@ namespace Vogel.Host.Controllers
             var command = new RemovePostCommand
             {
                 Id = postId
+            };
+
+            var result = await Mediator.Send(command);
+
+            return NoContent(result);
+        }
+
+        [Route("{postId}/comments")]
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CommentDto))]
+        public async Task<IActionResult> CreatePostComment(string postId , CommentModel model)
+        {
+            var command = new CreateCommentCommand
+            {
+                Content = model.Content,
+                PostId = postId
+            };
+
+            var result = await Mediator.Send(command);
+
+            return Ok(result);
+        }
+
+        [Route("{postId}/comments/{commentId}")]
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CommentDto))]
+        public async Task<IActionResult> UpdatePostComment(string postId , string commentId , CommentModel model)
+        {
+            var command = new UpdateCommentCommand
+            {
+                Id = commentId,
+                PostId = postId,
+                Content = model.Content
+            };
+
+            var result = await Mediator.Send(command);
+
+            return Ok(result);
+       
+        }
+
+        [Route("{postId}/comments/{commentId}")]
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> RemoveePostComment(string postId, string commentId)
+        {
+            var command = new RemoveCommentCommand
+            {
+                Id = commentId,
+                PostId = postId,
             };
 
             var result = await Mediator.Send(command);

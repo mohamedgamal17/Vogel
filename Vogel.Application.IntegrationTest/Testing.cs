@@ -181,6 +181,17 @@ namespace Vogel.Application.IntegrationTest
             await RunAsUserAsync(id, userName, givenName, surName, birthDate);
         }
 
+        public static async Task RunAsUserAsync(string id)
+        {
+            Faker faker = new Faker();
+            Person fakePerson = faker.Person;
+            string userId  = id;
+            string userName = fakePerson.UserName;
+            string givenName = fakePerson.FirstName;
+            string surName = fakePerson.LastName;
+            DateTime birthDate = fakePerson.DateOfBirth;
+            await RunAsUserAsync(id, userName, givenName, surName, birthDate);
+        }
         public static Task RunAsUserAsync(string id ,string userName , string givenName , string surname, 
             DateTime birthDate)
 

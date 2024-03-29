@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using Vogel.Application.Comments.Polices;
 using Vogel.Application.Common.Behaviours;
 using Vogel.Application.Common.Interfaces;
 using Vogel.Application.Medias.Factories;
@@ -31,6 +32,7 @@ namespace Vogel.Application
         {
             services.AddTransient<IAuthorizationHandler, PostOperationAuthorizationHandler>();
             services.AddTransient<IAuthorizationHandler, IsMediaOwnerAuthorizationHandler>();
+            services.AddTransient<IAuthorizationHandler, CommentOperationAuthorizationHandler>();
         }
 
         private static void RegiesterResponseFactories(IServiceCollection services)
