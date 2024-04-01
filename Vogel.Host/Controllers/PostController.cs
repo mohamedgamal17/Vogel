@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Vogel.Application.Comments.Commands;
 using Vogel.Application.Comments.Dtos;
+using Vogel.Application.Comments.Queries;
 using Vogel.Application.Posts.Commands;
 using Vogel.Application.Posts.Dtos;
 using Vogel.Application.Posts.Queries;
@@ -88,8 +89,41 @@ namespace Vogel.Host.Controllers
         }
 
         [Route("{postId}/comments")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK,Type = typeof(ApiResponse<CommentAggregateDto>))]
+        public async Task<IActionResult> ListPostComments(string postId , string? cursor = null, int limit = 10)
+        {
+            var query = new ListCommentsQuery
+            {
+                PostId = postId,
+                Cursor = cursor,
+                Limit = limit
+            };
+
+            var result = await Mediator.Send(query);
+
+            return Ok(result);
+        }
+
+        [Route("{postId}/comments/{commentId}")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<CommentAggregateDto>))]
+        public async Task<IActionResult> GetComment(string postId, string commentId)
+        {
+            var query = new GetCommentQuery
+            {
+                PostId = postId,
+                CommentId = commentId
+            };
+
+            var result = await Mediator.Send(query);
+
+            return Ok(result);
+        }
+
+        [Route("{postId}/comments")]
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CommentDto))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CommentAggregateDto))]
         public async Task<IActionResult> CreatePostComment(string postId , CommentModel model)
         {
             var command = new CreateCommentCommand
@@ -100,7 +134,7 @@ namespace Vogel.Host.Controllers
 
             var result = await Mediator.Send(command);
 
-            return Ok(result);
+            return CreatedAtAction(result, nameof(GetComment), new {postId = result.Value?.Id, commentId = result.Value?.Id});
         }
 
         [Route("{postId}/comments/{commentId}")]
@@ -124,7 +158,7 @@ namespace Vogel.Host.Controllers
         [Route("{postId}/comments/{commentId}")]
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> RemoveePostComment(string postId, string commentId)
+        public async Task<IActionResult> RemovePostComment(string postId, string commentId)
         {
             var command = new RemoveCommentCommand
             {

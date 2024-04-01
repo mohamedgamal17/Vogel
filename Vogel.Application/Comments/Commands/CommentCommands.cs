@@ -8,12 +8,11 @@ namespace Vogel.Application.Comments.Commands
     public abstract class CommentCommandBase
     {
         public string Content { get; set; }
-
         public string PostId { get; set; }
     }
 
     [Authorize]
-    public class CreateCommentCommand : CommentCommandBase , ICommand<CommentDto>
+    public class CreateCommentCommand : CommentCommandBase , ICommand<CommentAggregateDto>
     { }
 
     [Authorize]

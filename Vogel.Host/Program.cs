@@ -1,4 +1,5 @@
 using Autofac.Extensions.DependencyInjection;
+using Vogel.Host;
 
 var builder = WebApplication.CreateBuilder(args);
 

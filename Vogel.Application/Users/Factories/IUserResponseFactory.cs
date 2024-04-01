@@ -9,6 +9,6 @@ namespace Vogel.Application.Users.Factories
         Task<List<UserAggregateDto>> PrepareListUserAggregateDto(List<UserAggregate> users);
         Task<UserAggregateDto> PrepareUserAggregateDto(UserAggregate user);
         Task<UserAggregateDto> PrepareUserAggregateDto(User user);
-
+        Task<PublicUserDto> PreparePublicUserDto(PublicUserView user);
     }
 }

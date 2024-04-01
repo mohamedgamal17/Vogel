@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using MongoDB.Driver;
 using Vogel.Application.Comments.Dtos;
+using Vogel.Application.Comments.Factories;
 using Vogel.Application.Comments.Polices;
 using Vogel.Application.Common.Exceptions;
 using Vogel.Application.Common.Interfaces;
@@ -10,30 +11,32 @@ using Vogel.Domain.Utils;
 namespace Vogel.Application.Comments.Commands
 {
     public class CommentCommandHandler :
-        IApplicationRequestHandler<CreateCommentCommand, CommentDto>,
+        IApplicationRequestHandler<CreateCommentCommand, CommentAggregateDto>,
         IApplicationRequestHandler<UpdateCommentCommand, CommentDto>,
         IApplicationRequestHandler<RemoveCommentCommand , Unit>
     {
-        private readonly IMongoDbRepository<Comment> _commentRepository;
+        private readonly ICommentRepository _commentRepository;
         private readonly IMongoDbRepository<Post> _postRepository;
         private readonly ISecurityContext _securityContext;
+        private readonly ICommentResponseFactory _commentResponseFactory;
         private readonly IApplicationAuthorizationService _applicationAuthorizationService;
 
-        public CommentCommandHandler(IMongoDbRepository<Comment> commentRepository, IMongoDbRepository<Post> postRepository, ISecurityContext securityContext, IApplicationAuthorizationService applicationAuthorizationService)
+        public CommentCommandHandler(ICommentRepository commentRepository, IMongoDbRepository<Post> postRepository, ISecurityContext securityContext, ICommentResponseFactory commentResponseFactory, IApplicationAuthorizationService applicationAuthorizationService)
         {
             _commentRepository = commentRepository;
             _postRepository = postRepository;
             _securityContext = securityContext;
+            _commentResponseFactory = commentResponseFactory;
             _applicationAuthorizationService = applicationAuthorizationService;
         }
 
-        public async Task<Result<CommentDto>> Handle(CreateCommentCommand request, CancellationToken cancellationToken)
+        public async Task<Result<CommentAggregateDto>> Handle(CreateCommentCommand request, CancellationToken cancellationToken)
         {
             var post = await _postRepository.FindByIdAsync(request.PostId);
 
             if(post == null)
             {
-                return new Result<CommentDto>(new EntityNotFoundException(typeof(Post), request.PostId));
+                return new Result<CommentAggregateDto>(new EntityNotFoundException(typeof(Post), request.PostId));
             }
 
             var comment = new Comment
@@ -43,10 +46,13 @@ namespace Vogel.Application.Comments.Commands
                 UserId = _securityContext.User!.Id
             };
 
-
             await _commentRepository.InsertAsync(comment);
 
-            return PrepareCommentDto(comment);
+            var commentAggregate = await _commentRepository.GetCommentAggregateView()
+                .Match(x => x.Id == comment.Id)
+                .SingleAsync();
+
+            return await _commentResponseFactory.PrepareCommentAggregateDto(commentAggregate);
         }
 
         public async Task<Result<CommentDto>> Handle(UpdateCommentCommand request, CancellationToken cancellationToken)

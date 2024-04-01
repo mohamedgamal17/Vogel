@@ -26,8 +26,7 @@ namespace Vogel.Application.Users.Factories
             var results =  await Task.WhenAll(tasks);
 
             return results.ToList();
-        }
-
+        }    
         public async Task<UserAggregateDto> PrepareUserAggregateDto(UserAggregate user)
         {
             var result = new UserAggregateDto
@@ -55,7 +54,6 @@ namespace Vogel.Application.Users.Factories
 
             return result;
         }
-
         public async Task<UserAggregateDto> PrepareUserAggregateDto(User user)
         {
             var mediaCollection = _mediaRepository.AsMongoCollection();
@@ -71,6 +69,34 @@ namespace Vogel.Application.Users.Factories
                 .FirstAsync();
 
             return await PrepareUserAggregateDto(result);
+        }
+        public async Task<PublicUserDto> PreparePublicUserDto(PublicUserView user)
+        {
+            var result = new PublicUserDto
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                BirthDate = user.BirthDate.ToShortDateString(),
+                Gender = user.Gender,
+                AvatarId = user.AvatarId,
+
+            };
+
+            if(user.Avatar != null)
+            {
+                result.Avatar = new MediaAggregateDto
+                {
+                    Id = user.Avatar!.Id,
+                    UserId = user.Avatar.UserId,
+                    MediaType = user.Avatar.MediaType,
+                    MimeType = user.Avatar.MimeType,
+                    Size = user.Avatar.Size,
+                    Reference = await _s3ObjectStorageService.GeneratePresignedDownloadUrlAsync(user.Avatar.File)
+                };
+            }
+
+            return result;         
         }
     }
 }

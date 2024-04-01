@@ -6,10 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
 using Vogel.Application;
 using Vogel.Application.Common.Interfaces;
-using Vogel.Host;
 using Vogel.Host.Infrastructure;
 using Vogel.Infrastructure;
-namespace Microsoft.Extensions.DependencyInjection
+namespace Vogel.Host
 {
     public static class DependencyInjection
     {

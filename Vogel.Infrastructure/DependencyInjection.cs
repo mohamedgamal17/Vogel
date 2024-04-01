@@ -5,6 +5,7 @@ using MongoDB.Driver;
 using Vogel.Application.Common.Interfaces;
 using Vogel.Infrastructure.Auhtorization;
 using Vogel.Infrastructure.Presistance;
+using Vogel.Infrastructure.Presistance.Repositories;
 namespace Vogel.Infrastructure
 {
     public static class DependencyInjection
@@ -14,6 +15,8 @@ namespace Vogel.Infrastructure
             AddMongoDb(services, configuration);
 
             ConfigureS3StorageProvider(services, configuration);
+
+            RegisterRepositories(services);
 
             services.AddTransient<IApplicationAuthorizationService, ApplicationAuthorizationService>();
                 
@@ -63,6 +66,12 @@ namespace Vogel.Infrastructure
             services.AddTransient<IMinioClient, MinioClient>();
 
             services.AddTransient<IS3ObjectStorageService, S3ObjectStorageService>();
+        }
+
+        private static void RegisterRepositories(IServiceCollection services)
+        {
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<ICommentRepository, CommentRepository>();
         }
     }
 }
