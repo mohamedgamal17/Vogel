@@ -12,7 +12,7 @@ namespace Vogel.Application.Comments.Commands
 {
     public class CommentCommandHandler :
         IApplicationRequestHandler<CreateCommentCommand, CommentAggregateDto>,
-        IApplicationRequestHandler<UpdateCommentCommand, CommentDto>,
+        IApplicationRequestHandler<UpdateCommentCommand, CommentAggregateDto>,
         IApplicationRequestHandler<RemoveCommentCommand , Unit>
     {
         private readonly ICommentRepository _commentRepository;
@@ -55,7 +55,7 @@ namespace Vogel.Application.Comments.Commands
             return await _commentResponseFactory.PrepareCommentAggregateDto(commentAggregate);
         }
 
-        public async Task<Result<CommentDto>> Handle(UpdateCommentCommand request, CancellationToken cancellationToken)
+        public async Task<Result<CommentAggregateDto>> Handle(UpdateCommentCommand request, CancellationToken cancellationToken)
         {
             var filter = new FilterDefinitionBuilder<Comment>()
                 .And(
@@ -67,7 +67,7 @@ namespace Vogel.Application.Comments.Commands
             
             if(comment == null)
             {
-                return new Result<CommentDto>(new EntityNotFoundException(typeof(Comment), request.Id));
+                return new Result<CommentAggregateDto>(new EntityNotFoundException(typeof(Comment), request.Id));
             }
 
             var authorizationResult = await _applicationAuthorizationService
@@ -75,14 +75,18 @@ namespace Vogel.Application.Comments.Commands
 
             if (authorizationResult.IsFailure)
             {
-                return new Result<CommentDto>(authorizationResult.Exception!);
+                return new Result<CommentAggregateDto>(authorizationResult.Exception!);
             }
 
             comment.Content = request.Content;
 
             await _commentRepository.UpdateAsync(comment);
 
-            return PrepareCommentDto(comment);
+            var commentAggregate = await _commentRepository.GetCommentAggregateView()
+                .Match(x => x.Id == comment.Id)
+                .SingleAsync();
+
+            return await _commentResponseFactory.PrepareCommentAggregateDto(commentAggregate);
         }
 
         public async Task<Result<Unit>> Handle(RemoveCommentCommand request, CancellationToken cancellationToken)

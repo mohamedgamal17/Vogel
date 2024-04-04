@@ -139,7 +139,7 @@ namespace Vogel.Host.Controllers
 
         [Route("{postId}/comments/{commentId}")]
         [HttpPut]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CommentDto))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CommentAggregateDto))]
         public async Task<IActionResult> UpdatePostComment(string postId , string commentId , CommentModel model)
         {
             var command = new UpdateCommentCommand

@@ -9,8 +9,7 @@ namespace Vogel.Application.IntegrationTest.Extensions
 
         public static void AssertComment(this Comment comment , CommentCommandBase command)
         {
-            comment.PostId.Should().Be(comment.PostId);
-            comment.Content.Should().Be(comment.Content);
+            comment.Content.Should().Be(command.Content);
         }
     }
 }
