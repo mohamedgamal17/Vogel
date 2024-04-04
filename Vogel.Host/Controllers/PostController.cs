@@ -138,7 +138,7 @@ namespace Vogel.Host.Controllers
         }
 
         [Route("{postId}/comments/{commentId}")]
-        [HttpDelete]
+        [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CommentDto))]
         public async Task<IActionResult> UpdatePostComment(string postId , string commentId , CommentModel model)
         {
@@ -156,7 +156,7 @@ namespace Vogel.Host.Controllers
         }
 
         [Route("{postId}/comments/{commentId}")]
-        [HttpPut]
+        [HttpDelete]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> RemovePostComment(string postId, string commentId)
         {
