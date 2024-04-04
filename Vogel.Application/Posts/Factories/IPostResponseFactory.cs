@@ -6,8 +6,8 @@ namespace Vogel.Application.Posts.Factories
 {
     public interface IPostResponseFactory : IResponseFactory
     {
-        Task<List<PostAggregateDto>> PrepareListPostAggregateDto(List<PostAggregate> posts);
+        Task<List<PostAggregateDto>> PrepareListPostAggregateDto(List<PostAggregateView> posts);
         Task<PostAggregateDto> PreparePostAggregateDto(Post post);
-        Task<PostAggregateDto> PreparePostAggregateDto(PostAggregate post);
+        Task<PostAggregateDto> PreparePostAggregateDto(PostAggregateView post);
     }
 }

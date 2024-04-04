@@ -2,6 +2,7 @@
 using Vogel.Application.Common.Interfaces;
 using Vogel.Application.Medias.Dtos;
 using Vogel.Application.Posts.Dtos;
+using Vogel.Application.Users.Factories;
 using Vogel.Domain;
 namespace Vogel.Application.Posts.Factories
 {
@@ -15,15 +16,18 @@ namespace Vogel.Application.Posts.Factories
 
         private readonly IS3ObjectStorageService _s3ObjectStorageService;
 
-        public PostResponseFactory(IMongoDbRepository<Media> mediaRepository, IMongoDbRepository<Post> postRepository, IMongoDbRepository<User> userRepository, IS3ObjectStorageService s3ObjectStorageService)
+        private readonly IUserResponseFactory _userResponseFactory;
+
+        public PostResponseFactory(IMongoDbRepository<Media> mediaRepository, IMongoDbRepository<Post> postRepository, IMongoDbRepository<User> userRepository, IS3ObjectStorageService s3ObjectStorageService, IUserResponseFactory userResponseFactory)
         {
             _mediaRepository = mediaRepository;
             _postRepository = postRepository;
             _userRepository = userRepository;
             _s3ObjectStorageService = s3ObjectStorageService;
+            _userResponseFactory = userResponseFactory;
         }
 
-        public async Task<List<PostAggregateDto>> PrepareListPostAggregateDto(List<PostAggregate> posts)
+        public async Task<List<PostAggregateDto>> PrepareListPostAggregateDto(List<PostAggregateView> posts)
         {
             var tasks = posts.Select(PreparePostAggregateDto);
 
@@ -32,7 +36,7 @@ namespace Vogel.Application.Posts.Factories
             return results.ToList();
         }
 
-        public async Task<PostAggregateDto> PreparePostAggregateDto(PostAggregate post)
+        public async Task<PostAggregateDto> PreparePostAggregateDto(PostAggregateView post)
         {
             var result = new PostAggregateDto
             {
@@ -54,14 +58,7 @@ namespace Vogel.Application.Posts.Factories
 
             if(post.User != null)
             {
-                result.User = new PostUserDto
-                {
-                    Id = post.Id,
-                    FirstName = post.User.FirstName,
-                    LastName = post.User.LastName,
-                    BirthDate = post.User.BirthDate.ToShortDateString(),
-                    Gender = post.User.Gender
-                };
+                result.User = await _userResponseFactory.PreparePublicUserDto(post.User);
             }
 
             return result;
@@ -75,20 +72,20 @@ namespace Vogel.Application.Posts.Factories
 
             var result = await _postRepository.AsMongoCollection().Aggregate()
                 .Match(x => x.Id == post.Id)
-                .Lookup<Post, Media, PostAggregate>(mediaCollection,
+                .Lookup<Post, Media, PostAggregateView>(mediaCollection,
                     x => x.MediaId,
                     x => x.Id,
                     x => x.Media
                 )
-                .Unwind<PostAggregate, PostAggregate> (x=> x.Media , 
-                    new AggregateUnwindOptions<PostAggregate> { PreserveNullAndEmptyArrays = true })
-                .Lookup<PostAggregate, User, PostAggregate>(userCollection,
+                .Unwind<PostAggregateView, PostAggregateView> (x=> x.Media , 
+                    new AggregateUnwindOptions<PostAggregateView> { PreserveNullAndEmptyArrays = true })
+                .Lookup<PostAggregateView, User, PostAggregateView>(userCollection,
                     x => x.UserId,
                     x => x.Id,
                     x => x.User
                 )
-                .Unwind<PostAggregate, PostAggregate>(x => x.User,
-                    new AggregateUnwindOptions<PostAggregate> { PreserveNullAndEmptyArrays = true }
+                .Unwind<PostAggregateView, PostAggregateView>(x => x.User,
+                    new AggregateUnwindOptions<PostAggregateView> { PreserveNullAndEmptyArrays = true }
                 )
                 .SingleAsync();
 
