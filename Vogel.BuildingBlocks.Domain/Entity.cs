@@ -1,6 +1,4 @@
-﻿using Vogel.BuildingBlocks.Domain.Interfaces;
-
-namespace Vogel.BuildingBlocks.Domain
+﻿namespace Vogel.BuildingBlocks.Domain
 {
     public abstract class Entity<TKey> : IEntity<TKey>
     {

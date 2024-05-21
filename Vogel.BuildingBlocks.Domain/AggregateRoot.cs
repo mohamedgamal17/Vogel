@@ -1,5 +1,4 @@
 ﻿using Vogel.BuildingBlocks.Domain.Events;
-using Vogel.BuildingBlocks.Domain.Interfaces;
 
 namespace Vogel.BuildingBlocks.Domain
 {
