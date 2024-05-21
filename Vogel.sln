@@ -11,11 +11,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Infrastructure", "Vog
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Application", "Vogel.Application\Vogel.Application.csproj", "{EECD4E70-E712-46F0-B4CD-5A2935CA900D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vogel.Application.IntegrationTest", "Vogel.Application.IntegrationTest\Vogel.Application.IntegrationTest.csproj", "{29F15B88-B4A7-4076-8CBC-47330003615C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Application.IntegrationTest", "Vogel.Application.IntegrationTest\Vogel.Application.IntegrationTest.csproj", "{29F15B88-B4A7-4076-8CBC-47330003615C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{3586116B-B295-4BE5-B9CF-995158B9C038}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{485EC930-3FBF-4771-B413-317F001C87A0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs", "libs", "{3058D2E6-D22D-41C6-84EB-36F96C245F1C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vogel.BuildingBlocks.EntityFramework", "Vogel.BuildingBlocks.EntityFramework\Vogel.BuildingBlocks.EntityFramework.csproj", "{29C145C2-A41E-4106-B47C-59D465111FD0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vogel.BuildingBlocks.Domain", "Vogel.BuildingBlocks.Domain\Vogel.BuildingBlocks.Domain.csproj", "{C2D6AAFD-E205-4DC6-A3C9-B24FFE9C8DB0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +49,14 @@ Global
 		{29F15B88-B4A7-4076-8CBC-47330003615C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{29F15B88-B4A7-4076-8CBC-47330003615C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29F15B88-B4A7-4076-8CBC-47330003615C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29C145C2-A41E-4106-B47C-59D465111FD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29C145C2-A41E-4106-B47C-59D465111FD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29C145C2-A41E-4106-B47C-59D465111FD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29C145C2-A41E-4106-B47C-59D465111FD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2D6AAFD-E205-4DC6-A3C9-B24FFE9C8DB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2D6AAFD-E205-4DC6-A3C9-B24FFE9C8DB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2D6AAFD-E205-4DC6-A3C9-B24FFE9C8DB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2D6AAFD-E205-4DC6-A3C9-B24FFE9C8DB0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -53,6 +67,9 @@ Global
 		{BB86048A-7391-4AF2-B719-CA724E7AD420} = {485EC930-3FBF-4771-B413-317F001C87A0}
 		{EECD4E70-E712-46F0-B4CD-5A2935CA900D} = {485EC930-3FBF-4771-B413-317F001C87A0}
 		{29F15B88-B4A7-4076-8CBC-47330003615C} = {3586116B-B295-4BE5-B9CF-995158B9C038}
+		{3058D2E6-D22D-41C6-84EB-36F96C245F1C} = {485EC930-3FBF-4771-B413-317F001C87A0}
+		{29C145C2-A41E-4106-B47C-59D465111FD0} = {3058D2E6-D22D-41C6-84EB-36F96C245F1C}
+		{C2D6AAFD-E205-4DC6-A3C9-B24FFE9C8DB0} = {3058D2E6-D22D-41C6-84EB-36F96C245F1C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A7AC3C50-99B3-48CD-965D-64A3D2BDD554}
