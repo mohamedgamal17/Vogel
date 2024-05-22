@@ -6,6 +6,11 @@ namespace Vogel.BuildingBlocks.Domain
     {
         private readonly List<IEvent> _events = new List<IEvent>();
         public IReadOnlyList<IEvent> Events => _events.AsReadOnly();
-        public void AppendEvent(IEvent @event) => _events.Add(@event);
+        protected void AppendEvent(IEvent @event) => _events.Add(@event);
+        public void ClearDomainEvents()
+        {
+            _events.Clear();
+        }
+
     }
 }

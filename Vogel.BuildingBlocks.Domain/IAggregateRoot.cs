@@ -2,9 +2,13 @@
 
 namespace Vogel.BuildingBlocks.Domain
 {
-    public interface IAggregateRoot<TKey> : IEntity<TKey>
+    public interface IAggregateRoot : IEntity
     {
         IReadOnlyList<IEvent> Events { get; }
-        void AppendEvent(IEvent @event);
+        void ClearDomainEvents();
+    }
+    public interface IAggregateRoot<TKey> : IAggregateRoot, IEntity<TKey>
+    {
+
     }
 }
