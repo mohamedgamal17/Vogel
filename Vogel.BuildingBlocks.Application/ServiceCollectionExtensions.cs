@@ -5,6 +5,7 @@ using System.Reflection;
 using Vogel.BuildingBlocks.Application.Behaviours;
 using Vogel.BuildingBlocks.Application.Factories;
 using Vogel.BuildingBlocks.Application.Security;
+using Vogel.BuildingBlocks.Application.Uow;
 
 namespace Vogel.BuildingBlocks.Application
 {
@@ -33,6 +34,10 @@ namespace Vogel.BuildingBlocks.Application
 
                 RegisterResponseFactories(services, assembly);
             }
+
+            services.AddSingleton<IUnitOfWorkManager, UnitOfWorkManager>();
+
+            services.AddSingleton<AmbientUnitOfWork>();
 
             return services;
         }
