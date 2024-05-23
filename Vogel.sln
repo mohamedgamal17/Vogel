@@ -27,6 +27,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.BuildingBlocks.Applic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vogel.BuildingBlocks.MongoDb", "Vogel.BuildingBlocks.MongoDb\Vogel.BuildingBlocks.MongoDb.csproj", "{5C882639-710A-4C9E-8AA4-4D80861FC8ED}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vogel.MongoDb.Entities", "Vogel.MongoDb.Entities\Vogel.MongoDb.Entities.csproj", "{D2BD80B3-0EBD-4EE4-BD4F-3FD1FF39066C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,10 @@ Global
 		{5C882639-710A-4C9E-8AA4-4D80861FC8ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C882639-710A-4C9E-8AA4-4D80861FC8ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C882639-710A-4C9E-8AA4-4D80861FC8ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2BD80B3-0EBD-4EE4-BD4F-3FD1FF39066C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2BD80B3-0EBD-4EE4-BD4F-3FD1FF39066C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2BD80B3-0EBD-4EE4-BD4F-3FD1FF39066C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2BD80B3-0EBD-4EE4-BD4F-3FD1FF39066C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,6 +90,7 @@ Global
 		{C2D6AAFD-E205-4DC6-A3C9-B24FFE9C8DB0} = {3058D2E6-D22D-41C6-84EB-36F96C245F1C}
 		{A4B2F42A-558B-4AD8-A889-49C66BF97D81} = {3058D2E6-D22D-41C6-84EB-36F96C245F1C}
 		{5C882639-710A-4C9E-8AA4-4D80861FC8ED} = {3058D2E6-D22D-41C6-84EB-36F96C245F1C}
+		{D2BD80B3-0EBD-4EE4-BD4F-3FD1FF39066C} = {485EC930-3FBF-4771-B413-317F001C87A0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A7AC3C50-99B3-48CD-965D-64A3D2BDD554}
