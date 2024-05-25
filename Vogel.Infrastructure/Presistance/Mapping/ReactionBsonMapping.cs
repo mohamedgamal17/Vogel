@@ -1,5 +1,5 @@
 ﻿using MongoDB.Bson.Serialization;
-using Vogel.Domain;
+using Vogel.Domain.Posts;
 
 namespace Vogel.Infrastructure.Presistance.Mapping
 {

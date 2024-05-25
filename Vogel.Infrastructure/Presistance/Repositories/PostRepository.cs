@@ -1,6 +1,7 @@
 ﻿using MongoDB.Driver;
 using Vogel.Application.Common.Interfaces;
-using Vogel.Domain;
+using Vogel.Domain.Medias;
+using Vogel.Domain.Posts;
 
 namespace Vogel.Infrastructure.Presistance.Repositories
 {
