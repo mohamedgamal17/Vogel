@@ -4,7 +4,7 @@ using System.Security.Claims;
 using Vogel.Application.Comments.Commands;
 using Vogel.Application.Common.Exceptions;
 using Vogel.Application.IntegrationTest.Extensions;
-using Vogel.Domain;
+using Vogel.Domain.Posts;
 using static Vogel.Application.IntegrationTest.Testing;
 namespace Vogel.Application.IntegrationTest.Comments
 {

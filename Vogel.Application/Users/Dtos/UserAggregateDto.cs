@@ -1,6 +1,6 @@
 ﻿using Vogel.Application.Common.Dtos;
 using Vogel.Application.Medias.Dtos;
-using Vogel.Domain;
+using Vogel.Domain.Users;
 
 namespace Vogel.Application.Users.Dtos
 {

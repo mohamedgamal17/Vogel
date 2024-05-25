@@ -1,23 +1,24 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Vogel.BuildingBlocks.Domain;
+using Vogel.BuildingBlocks.Domain.Auditing;
 
-namespace Vogel.Domain
+namespace Vogel.Domain.Medias
 {
-    public class Media : Entity
+    public class Media : AuditedAggregateRoot<string>
     {
+        public Media()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
         public string File { get; set; }
         public MediaType MediaType { get; set; }
         public string MimeType { get; set; }
         public long Size { get; set; }
         public string UserId { get; set; }
-        protected override string GetEntityPerfix()
-        {
-            string perfix = "med";
 
-            return perfix;
-        }
     }
 
-    public enum MediaType 
+    public enum MediaType
     {
         Image = 0,
         Video = 5

@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using System.Security.Claims;
 using Vogel.Application.Posts.Commands;
-using Vogel.Domain;
+using Vogel.Domain.Posts;
 using static Vogel.Application.IntegrationTest.Testing;
 namespace Vogel.Application.IntegrationTest.Extensions
 {

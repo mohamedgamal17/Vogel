@@ -5,7 +5,7 @@ using Vogel.Application.Common.Exceptions;
 using Vogel.Application.IntegrationTest.Extensions;
 using Vogel.Application.IntegrationTest.Utilites;
 using Vogel.Application.Medias.Commands;
-using Vogel.Domain;
+using Vogel.Domain.Medias;
 using static Vogel.Application.IntegrationTest.Testing;
 namespace Vogel.Application.IntegrationTest.Medias
 {
@@ -101,7 +101,7 @@ namespace Vogel.Application.IntegrationTest.Medias
             var command = new CreateMediaCommand
             {
                 Content = stream,
-                MediaType = Domain.MediaType.Image,
+                MediaType = MediaType.Image,
                 MimeType = "image/png",
                 Name = Guid.NewGuid().ToString()
             };

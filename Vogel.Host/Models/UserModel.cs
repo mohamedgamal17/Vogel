@@ -1,6 +1,6 @@
 ﻿using Vogel.Application.Comments.Commands;
 using Vogel.Application.Users.Commands;
-using Vogel.Domain;
+using Vogel.Domain.Users;
 
 namespace Vogel.Host.Models
 {

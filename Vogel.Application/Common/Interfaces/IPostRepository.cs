@@ -1,5 +1,5 @@
 ﻿using MongoDB.Driver;
-using Vogel.Domain;
+using Vogel.Domain.Posts;
 
 namespace Vogel.Application.Common.Interfaces
 {

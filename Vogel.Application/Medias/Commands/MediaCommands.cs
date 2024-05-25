@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Vogel.Application.Common.Interfaces;
 using Vogel.Application.Medias.Dtos;
-using Vogel.Domain;
+using Vogel.Domain.Medias;
 
 namespace Vogel.Application.Medias.Commands
 {

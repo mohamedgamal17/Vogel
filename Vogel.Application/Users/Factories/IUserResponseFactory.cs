@@ -1,6 +1,7 @@
 ﻿using Vogel.Application.Common.Interfaces;
 using Vogel.Application.Users.Dtos;
 using Vogel.Domain;
+using Vogel.Domain.Users;
 
 namespace Vogel.Application.Users.Factories
 {

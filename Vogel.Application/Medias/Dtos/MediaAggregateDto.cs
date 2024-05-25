@@ -1,5 +1,5 @@
 ﻿using Vogel.Application.Common.Dtos;
-using Vogel.Domain;
+using Vogel.Domain.Medias;
 
 namespace Vogel.Application.Medias.Dtos
 {

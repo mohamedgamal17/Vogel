@@ -1,6 +1,6 @@
 ﻿using MimeMapping;
 using Vogel.Application.Medias.Commands;
-using Vogel.Domain;
+using Vogel.Domain.Medias;
 
 namespace Vogel.Host.Models
 {

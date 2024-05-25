@@ -6,7 +6,8 @@ using Vogel.Application.Medias.Policies;
 using Vogel.Application.Posts.Dtos;
 using Vogel.Application.Posts.Factories;
 using Vogel.Application.Posts.Policies;
-using Vogel.Domain;
+using Vogel.Domain.Medias;
+using Vogel.Domain.Posts;
 using Vogel.Domain.Utils;
 
 namespace Vogel.Application.Posts.Commands

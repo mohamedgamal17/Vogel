@@ -4,7 +4,8 @@ using Vogel.Application.Common.Interfaces;
 using Vogel.Application.Common.Models;
 using Vogel.Application.Users.Dtos;
 using Vogel.Application.Users.Factories;
-using Vogel.Domain;
+using Vogel.Domain.Medias;
+using Vogel.Domain.Users;
 using Vogel.Domain.Utils;
 
 namespace Vogel.Application.Users.Queries

@@ -3,6 +3,8 @@ using Vogel.Application.Common.Interfaces;
 using Vogel.Application.Medias.Dtos;
 using Vogel.Application.Users.Dtos;
 using Vogel.Domain;
+using Vogel.Domain.Medias;
+using Vogel.Domain.Users;
 
 namespace Vogel.Application.Users.Factories
 {

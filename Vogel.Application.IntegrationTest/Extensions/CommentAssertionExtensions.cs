@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Vogel.Application.Comments.Commands;
-using Vogel.Domain;
+using Vogel.Domain.Posts;
 
 namespace Vogel.Application.IntegrationTest.Extensions
 {

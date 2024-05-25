@@ -1,7 +1,7 @@
 ﻿
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
-using Vogel.Domain;
+using Vogel.Domain.Medias;
 
 namespace Vogel.Application.Medias.Policies
 {

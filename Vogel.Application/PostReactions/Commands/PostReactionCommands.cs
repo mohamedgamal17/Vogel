@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Vogel.Application.Common.Interfaces;
 using Vogel.Application.PostReactions.Dtos;
-using Vogel.Domain;
+using Vogel.Domain.Posts;
 
 namespace Vogel.Application.PostReactions.Commands
 {

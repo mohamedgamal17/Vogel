@@ -3,7 +3,8 @@ using Vogel.Application.Common.Interfaces;
 using Vogel.Application.Medias.Dtos;
 using Vogel.Application.Posts.Dtos;
 using Vogel.Application.Users.Factories;
-using Vogel.Domain;
+using Vogel.Domain.Medias;
+using Vogel.Domain.Posts;
 namespace Vogel.Application.Posts.Factories
 {
     public class PostResponseFactory : IPostResponseFactory

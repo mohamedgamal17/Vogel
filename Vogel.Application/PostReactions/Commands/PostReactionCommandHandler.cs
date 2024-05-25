@@ -3,7 +3,7 @@ using MongoDB.Driver;
 using Vogel.Application.Common.Exceptions;
 using Vogel.Application.Common.Interfaces;
 using Vogel.Application.PostReactions.Dtos;
-using Vogel.Domain;
+using Vogel.Domain.Posts;
 using Vogel.Domain.Utils;
 namespace Vogel.Application.PostReactions.Commands
 {

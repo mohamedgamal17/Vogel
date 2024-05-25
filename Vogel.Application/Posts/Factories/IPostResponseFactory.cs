@@ -1,6 +1,6 @@
 ﻿using Vogel.Application.Common.Interfaces;
 using Vogel.Application.Posts.Dtos;
-using Vogel.Domain;
+using Vogel.Domain.Posts;
 
 namespace Vogel.Application.Posts.Factories
 {

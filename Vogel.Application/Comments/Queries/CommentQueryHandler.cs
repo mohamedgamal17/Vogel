@@ -5,6 +5,7 @@ using Vogel.Application.Common.Exceptions;
 using Vogel.Application.Common.Interfaces;
 using Vogel.Application.Common.Models;
 using Vogel.Domain;
+using Vogel.Domain.Posts;
 using Vogel.Domain.Utils;
 
 namespace Vogel.Application.Comments.Queries

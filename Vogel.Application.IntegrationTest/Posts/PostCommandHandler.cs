@@ -6,7 +6,8 @@ using Vogel.Application.Common.Exceptions;
 using Vogel.Application.IntegrationTest.Extensions;
 using Vogel.Application.Posts.Commands;
 using Vogel.Application.Posts.Dtos;
-using Vogel.Domain;
+using Vogel.Domain.Medias;
+using Vogel.Domain.Posts;
 using static Vogel.Application.IntegrationTest.Testing;
 namespace Vogel.Application.IntegrationTest.Posts
 {

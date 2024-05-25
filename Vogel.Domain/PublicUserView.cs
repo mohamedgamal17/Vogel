@@ -1,4 +1,7 @@
 ﻿
+using Vogel.Domain.Medias;
+using Vogel.Domain.Users;
+
 namespace Vogel.Domain
 {
     public class PublicUserView : Entity

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using System.Security.Claims;
 using Vogel.Application.Common.Interfaces;
-using Vogel.Domain;
+using Vogel.Domain.Posts;
 
 namespace Vogel.Application.Comments.Polices
 {

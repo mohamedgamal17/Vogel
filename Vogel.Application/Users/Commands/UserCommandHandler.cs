@@ -4,7 +4,7 @@ using Vogel.Application.Common.Interfaces;
 using Vogel.Application.Medias.Policies;
 using Vogel.Application.Users.Dtos;
 using Vogel.Application.Users.Factories;
-using Vogel.Domain;
+using Vogel.Domain.Medias;
 using Vogel.Domain.Utils;
 
 namespace Vogel.Application.Users.Commands

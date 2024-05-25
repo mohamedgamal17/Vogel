@@ -5,7 +5,8 @@ using System.Security.Claims;
 using Vogel.Application.Common.Exceptions;
 using Vogel.Application.IntegrationTest.Extensions;
 using Vogel.Application.Users.Commands;
-using Vogel.Domain;
+using Vogel.Domain.Medias;
+using Vogel.Domain.Users;
 using static Vogel.Application.IntegrationTest.Testing;
 namespace Vogel.Application.IntegrationTest.Users
 {

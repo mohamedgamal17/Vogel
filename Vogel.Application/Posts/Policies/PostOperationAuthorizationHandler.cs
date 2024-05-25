@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using MongoDB.Driver.Core.Authentication;
 using System.Security.Claims;
-using Vogel.Domain;
+using Vogel.Domain.Posts;
 
 namespace Vogel.Application.Posts.Policies
 {

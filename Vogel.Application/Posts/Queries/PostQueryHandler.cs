@@ -4,7 +4,8 @@ using Vogel.Application.Common.Interfaces;
 using Vogel.Application.Common.Models;
 using Vogel.Application.Posts.Dtos;
 using Vogel.Application.Posts.Factories;
-using Vogel.Domain;
+using Vogel.Domain.Medias;
+using Vogel.Domain.Posts;
 using Vogel.Domain.Utils;
 
 namespace Vogel.Application.Posts.Queries

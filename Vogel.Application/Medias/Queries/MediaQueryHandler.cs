@@ -4,7 +4,7 @@ using Vogel.Application.Common.Interfaces;
 using Vogel.Application.Medias.Dtos;
 using Vogel.Application.Medias.Factories;
 using Vogel.Application.Medias.Policies;
-using Vogel.Domain;
+using Vogel.Domain.Medias;
 using Vogel.Domain.Utils;
 namespace Vogel.Application.Medias.Queries
 {

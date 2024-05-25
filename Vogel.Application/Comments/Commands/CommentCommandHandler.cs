@@ -5,7 +5,7 @@ using Vogel.Application.Comments.Factories;
 using Vogel.Application.Comments.Polices;
 using Vogel.Application.Common.Exceptions;
 using Vogel.Application.Common.Interfaces;
-using Vogel.Domain;
+using Vogel.Domain.Posts;
 using Vogel.Domain.Utils;
 
 namespace Vogel.Application.Comments.Commands

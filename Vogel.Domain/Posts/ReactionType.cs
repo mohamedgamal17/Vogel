@@ -1,7 +1,7 @@
-﻿namespace Vogel.Domain
+﻿namespace Vogel.Domain.Posts
 {
-    public enum ReactionType 
-    {   
+    public enum ReactionType
+    {
         Like = 0,
         Love = 5,
         Laugh = 10,

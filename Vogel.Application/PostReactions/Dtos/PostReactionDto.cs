@@ -1,5 +1,5 @@
 ﻿using Vogel.Application.Common.Dtos;
-using Vogel.Domain;
+using Vogel.Domain.Posts;
 
 namespace Vogel.Application.PostReactions.Dtos
 {
