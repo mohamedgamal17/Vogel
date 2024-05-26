@@ -1,9 +1,12 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Minio;
 using MongoDB.Driver;
 using Vogel.Application.Common.Interfaces;
+using Vogel.BuildingBlocks.EntityFramework;
 using Vogel.Infrastructure.Auhtorization;
+using Vogel.Infrastructure.EntityFramework;
 using Vogel.Infrastructure.Presistance;
 using Vogel.Infrastructure.Presistance.Repositories;
 namespace Vogel.Infrastructure
@@ -12,17 +15,60 @@ namespace Vogel.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            AddMongoDb(services, configuration);
+            RegisterEntityFramework(services, configuration);
+
+            RegisterMongoDb(services, configuration);
 
             ConfigureS3StorageProvider(services, configuration);
-
-            RegisterRepositories(services);
 
             services.AddTransient<IApplicationAuthorizationService, ApplicationAuthorizationService>();
                 
             return services;
         }
 
+
+        private static void RegisterEntityFramework(IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddDbContext<ApplicationDbContext>(opt =>
+            {
+                opt.UseSqlServer(configuration.GetConnectionString("Default"), op =>
+                {
+                    op.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+                });
+            });
+
+            services.AddVogelEfCore();
+        }
+
+        private static void RegisterMongoDb(IServiceCollection services,IConfiguration configuration)
+        {
+            var mongoDbSettings = new MongoDbSettings();
+
+            configuration.Bind(MongoDbSettings.CONFIG_KEY, mongoDbSettings);
+
+            services.AddSingleton(mongoDbSettings);
+
+            services.AddScoped<IMongoClient>(sp =>
+            {
+                var settings = sp.GetRequiredService<MongoDbSettings>();
+
+                return new MongoClient(settings.ConnectionString);
+            });
+
+            services.AddScoped(sp =>
+            {
+                var settings = sp.GetRequiredService<MongoDbSettings>();
+
+                var client = sp.GetRequiredService<IMongoClient>();
+
+                var dbContext = new MongoDbContext(client, sp, settings);
+
+                dbContext.Initialize();
+
+                return dbContext;
+            });
+
+        }
 
         private static void AddMongoDb(IServiceCollection services, IConfiguration configuration)
         {
