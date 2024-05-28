@@ -3,7 +3,10 @@ using MongoDB.Driver;
 
 namespace Vogel.BuildingBlocks.MongoDb
 {
-    public abstract class MongoBase<TEntity>
+    public interface IMongoRepository
+    {
+    }
+    public abstract class MongoRepositoryBase<TEntity> : IMongoRepository
     {
         protected  readonly FilterDefinitionBuilder<TEntity> Filter =
             Builders<TEntity>.Filter;

@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace Vogel.BuildingBlocks.MongoDb
 {
-    public abstract class MongoRepository<TEntity,TKey> : MongoBase<TEntity>
+    public abstract class MongoRepository<TEntity,TKey> : MongoRepositoryBase<TEntity>
         where TEntity : IMongoEntity<TKey> 
     {
         protected IMongoCollection<TEntity> MongoDbCollection { get; }
@@ -40,9 +40,13 @@ namespace Vogel.BuildingBlocks.MongoDb
             return entity;
         }
 
+        public async Task DeleteAsync(TKey id)
+        {
+            await MongoDbCollection.DeleteOneAsync(Filter.Eq(x => x.Id, id));
+        }
         public async Task DeleteAsync(TEntity entity)
         {
-            await MongoDbCollection.DeleteOneAsync(Filter.Eq(x=> x.Id , entity.Id));
+            await DeleteAsync(entity.Id);
         }
 
 
