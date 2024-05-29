@@ -8,9 +8,9 @@ namespace Vogel.BuildingBlocks.MongoDb.Extensions
     public static class ServiceCollectionExtensions
     {
 
-        public static VogelMongoDbBuilder AddVogelMongoDb(this IServiceCollection services, Action<MongoDatabaseSettings> opt)
+        public static VogelMongoDbBuilder AddVogelMongoDb(this IServiceCollection services, Action<MongoDbSettings> opt)
         {
-            var settings = new MongoDatabaseSettings();
+            var settings = new MongoDbSettings();
 
             opt.Invoke(settings);
 
