@@ -1,20 +1,21 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Vogel.MongoDb.Entities.Comments;
-using Vogel.MongoDb.Entities.Medias;
-using Vogel.MongoDb.Entities.Posts;
-using Vogel.MongoDb.Entities.Users;
-
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
+using Vogel.BuildingBlocks.MongoDb.Extensions;
 namespace Vogel.MongoDb.Entities
 {
     public static class ServiceCollectionExtensions
     {   
-        public static  IServiceCollection AddMongoDbEntites(this IServiceCollection services)
+        public static  IServiceCollection AddMongoDbEntites(this IServiceCollection services , IConfiguration configuration)
         {
-            services.AddTransient<UserMongoRepository>();
-            services.AddTransient<PostMongoRepository>();
-            services.AddTransient<MediaMongoRepository>();
-            services.AddTransient<PostReactionMongoRepository>();
-            services.AddTransient<CommentMongoRepository>();
+            services.AddVogelMongoDb(opt =>
+            {
+                opt.ConnectionString = configuration.GetValue<string>("MongoDb:ConnectionString")!;
+                opt.Database = configuration.GetValue<string>("MongoDb:Database")!;
+            })
+            .AssemblyRegisterRepositories(Assembly.GetExecutingAssembly())
+            .AssemblyRegisterMigration(Assembly.GetExecutingAssembly());
+
             return services;
         }
     }

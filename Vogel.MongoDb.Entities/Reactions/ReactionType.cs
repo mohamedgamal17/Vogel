@@ -1,4 +1,4 @@
-﻿namespace Vogel.MongoDb.Entities.Posts
+﻿namespace Vogel.MongoDb.Entities.Reactions
 {
     public enum ReactionType
     {
