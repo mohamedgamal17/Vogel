@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Bson.Serialization.Conventions;
 using System.Reflection;
 using Vogel.BuildingBlocks.MongoDb.Exceptions;
 using Vogel.BuildingBlocks.MongoDb.Migrations;
@@ -11,6 +12,14 @@ namespace Vogel.BuildingBlocks.MongoDb.Configuration
         public VogelMongoDbBuilder(IServiceCollection serviceCollection)
         {
             _serviceCollection = serviceCollection;
+
+            var pack = new ConventionPack();
+            pack.Add(new CamelCaseElementNameConvention());
+            ConventionRegistry.Register(
+              "Camel Case Convention",
+              pack,
+              t => true);
+
         }
 
 
