@@ -3,16 +3,17 @@ using Microsoft.AspNetCore.Authorization.Infrastructure;
 using System.Security.Claims;
 using Vogel.Application.Common.Interfaces;
 using Vogel.Domain.Posts;
+using Vogel.MongoDb.Entities.Posts;
 
 namespace Vogel.Application.Comments.Polices
 {
     public class CommentOperationAuthorizationHandler : AuthorizationHandler<OperationAuthorizationRequirement, Comment>
     {
-        private readonly IMongoDbRepository<Post> _postRepository;
+        private readonly PostMongoRepository _postMongoRepository;
 
-        public CommentOperationAuthorizationHandler(IMongoDbRepository<Post> postRepository)
+        public CommentOperationAuthorizationHandler(PostMongoRepository postMongoRepository)
         {
-            _postRepository = postRepository;
+            _postMongoRepository = postMongoRepository;
         }
 
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, OperationAuthorizationRequirement requirement, Comment resource)
@@ -32,7 +33,7 @@ namespace Vogel.Application.Comments.Polices
                 }
                 else
                 {
-                    var post = await _postRepository.FindByIdAsync(resource.PostId)!;
+                    var post = await _postMongoRepository.FindByIdAsync(resource.PostId)!;
 
                     string userId = context.User.Claims
                     .Single(x => x.Type == ClaimTypes.NameIdentifier).Value;

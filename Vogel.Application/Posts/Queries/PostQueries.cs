@@ -1,7 +1,7 @@
-﻿using Vogel.Application.Common.Interfaces;
+﻿
 using Vogel.Application.Common.Models;
 using Vogel.Application.Posts.Dtos;
-
+using Vogel.BuildingBlocks.Application.Requests;
 namespace Vogel.Application.Posts.Queries
 {
     public abstract class ListPostQueryBase : PagingParams, IQuery<Paging<PostAggregateDto>>

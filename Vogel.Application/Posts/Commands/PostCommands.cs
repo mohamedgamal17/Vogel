@@ -1,8 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Vogel.Application.Common.Interfaces;
 using Vogel.Application.Posts.Dtos;
-
+using Vogel.BuildingBlocks.Application.Requests;
 namespace Vogel.Application.Posts.Commands
 {
     public class PostCommandBase

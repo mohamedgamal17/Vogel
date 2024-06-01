@@ -1,15 +1,17 @@
 ﻿using MediatR;
 using MongoDB.Driver;
-using Vogel.Application.Common.Exceptions;
-using Vogel.Application.Common.Interfaces;
 using Vogel.Application.Medias.Policies;
 using Vogel.Application.Posts.Dtos;
 using Vogel.Application.Posts.Factories;
 using Vogel.Application.Posts.Policies;
+using Vogel.BuildingBlocks.Application.Requests;
+using Vogel.BuildingBlocks.Application.Security;
+using Vogel.BuildingBlocks.Domain.Exceptions;
+using Vogel.BuildingBlocks.Domain.Repositories;
+using Vogel.BuildingBlocks.Domain.Results;
 using Vogel.Domain.Medias;
 using Vogel.Domain.Posts;
-using Vogel.Domain.Utils;
-
+using Vogel.MongoDb.Entities.Users;
 namespace Vogel.Application.Posts.Commands
 {
     public class PostCommandHandler : 
@@ -18,16 +20,18 @@ namespace Vogel.Application.Posts.Commands
         IApplicationRequestHandler<RemovePostCommand , Unit>
     {
         private readonly ISecurityContext _securityContext;
-        private readonly IMongoDbRepository<Post> _postRepository;
-        private readonly IMongoDbRepository<Media> _mediaRepository;
+        private readonly IRepository<Post> _postRepository;
+        private readonly IRepository<Media> _mediaRepository;
+        private readonly UserMongoViewRepository _userMongoViewRepository;
         private readonly IApplicationAuthorizationService _applicationAuthorizationService;
         private readonly IPostResponseFactory _postResponseFactory;
 
-        public PostCommandHandler(ISecurityContext securityContext, IMongoDbRepository<Post> postRepository, IMongoDbRepository<Media> mediaRepository, IApplicationAuthorizationService applicationAuthorizationService, IPostResponseFactory postResponseFactory)
+        public PostCommandHandler(ISecurityContext securityContext, IRepository<Post> postRepository, IRepository<Media> mediaRepository, UserMongoViewRepository userMongoViewRepository, IApplicationAuthorizationService applicationAuthorizationService, IPostResponseFactory postResponseFactory)
         {
             _securityContext = securityContext;
             _postRepository = postRepository;
             _mediaRepository = mediaRepository;
+            _userMongoViewRepository = userMongoViewRepository;
             _applicationAuthorizationService = applicationAuthorizationService;
             _postResponseFactory = postResponseFactory;
         }
@@ -38,9 +42,9 @@ namespace Vogel.Application.Posts.Commands
 
             if(request.MediaId != null)
             {
-                media = await _mediaRepository.SingleAsync(new FilterDefinitionBuilder<Media>().Eq(x => x.Id, request.MediaId));
+                media = await _mediaRepository.FindByIdAsync(request.MediaId);
 
-                var authorizationResult = await _applicationAuthorizationService.AuthorizeAsync(media, MediaOperationRequirements.IsOwner);
+                var authorizationResult = await _applicationAuthorizationService.AuthorizeAsync(media!, MediaOperationRequirements.IsOwner);
 
                 if (authorizationResult.IsFailure)
                 {
@@ -57,7 +61,11 @@ namespace Vogel.Application.Posts.Commands
 
             post = await _postRepository.InsertAsync(post);
 
-            return await _postResponseFactory.PreparePostAggregateDto(post);
+            var user = await _userMongoViewRepository.AsPublicUserViewCollection()
+                .Find(Builders<PublicUserMongoView>.Filter.Eq(x => x.Id, post.UserId))
+                .SingleAsync();
+
+            return await _postResponseFactory.PreparePostAggregateDto(post, user!, media);
         }
 
         public async Task<Result<PostAggregateDto>> Handle(UpdatePostCommand request, CancellationToken cancellationToken)
@@ -82,9 +90,9 @@ namespace Vogel.Application.Posts.Commands
 
             if (request.MediaId != null)
             {
-                media = await _mediaRepository.SingleAsync(new FilterDefinitionBuilder<Media>().Eq(x => x.Id, request.MediaId));
+                media = await _mediaRepository.FindByIdAsync(request.MediaId);
 
-                var mediaAuthorizationResult = await _applicationAuthorizationService.AuthorizeAsync(media, MediaOperationRequirements.IsOwner);
+                var mediaAuthorizationResult = await _applicationAuthorizationService.AuthorizeAsync(media!, MediaOperationRequirements.IsOwner);
 
                 if (mediaAuthorizationResult.IsFailure)
                 {
@@ -98,7 +106,16 @@ namespace Vogel.Application.Posts.Commands
 
             await _postRepository.UpdateAsync(post);
 
-            return await _postResponseFactory.PreparePostAggregateDto(post);
+            var user = await _userMongoViewRepository.AsPublicUserViewCollection()
+             .Find(Builders<PublicUserMongoView>.Filter.Eq(x => x.Id, post.UserId))
+             .SingleAsync();
+
+            if (media == null && post.MediaId != null)
+            {
+                media = await _mediaRepository.FindByIdAsync(post.MediaId);
+            }
+
+            return await _postResponseFactory.PreparePostAggregateDto(post , user! ,media);
         }
 
         public async Task<Result<Unit>> Handle(RemovePostCommand request, CancellationToken cancellationToken)

@@ -1,30 +1,33 @@
 ﻿using MongoDB.Driver;
 using Vogel.Application.Comments.Dtos;
 using Vogel.Application.Comments.Factories;
-using Vogel.Application.Common.Exceptions;
-using Vogel.Application.Common.Interfaces;
 using Vogel.Application.Common.Models;
+using Vogel.BuildingBlocks.Application.Requests;
+using Vogel.BuildingBlocks.Domain.Exceptions;
+using Vogel.BuildingBlocks.Domain.Results;
 using Vogel.Domain;
 using Vogel.Domain.Posts;
-using Vogel.Domain.Utils;
-
+using Vogel.MongoDb.Entities.Comments;
 namespace Vogel.Application.Comments.Queries
 {
     public class CommentQueryHandler : 
         IApplicationRequestHandler<ListCommentsQuery, Paging<CommentAggregateDto>>,
         IApplicationRequestHandler<GetCommentQuery, CommentAggregateDto>
     {
-        private readonly ICommentRepository _commentRepository;
+        private readonly CommentMongoViewRepository _commentMongoViewRepository;
 
         private readonly ICommentResponseFactory _commentResponseFactory;
-        public CommentQueryHandler(ICommentRepository commentRepository, ICommentResponseFactory commentResponseFactory)
+
+        public CommentQueryHandler(CommentMongoViewRepository commentMongoViewRepository, ICommentResponseFactory commentResponseFactory)
         {
-            _commentRepository = commentRepository;
+            _commentMongoViewRepository = commentMongoViewRepository;
             _commentResponseFactory = commentResponseFactory;
         }
+
         public async Task<Result<Paging<CommentAggregateDto>>> Handle(ListCommentsQuery request, CancellationToken cancellationToken)
         {
-            var query = _commentRepository.GetCommentAggregateView()
+            var query = _commentMongoViewRepository.AsMongoCollection()
+                .Aggregate()
                 .Match(x => x.PostId == request.PostId);
 
             var sortedQuery = SortQuery(query, request);
@@ -47,7 +50,8 @@ namespace Vogel.Application.Comments.Queries
         public async Task<Result<CommentAggregateDto>> Handle(GetCommentQuery request, CancellationToken cancellationToken)
         {
 
-            var query = _commentRepository.GetCommentAggregateView()
+            var query = _commentMongoViewRepository.AsMongoCollection()
+                .Aggregate()
                 .Match(x => x.PostId == request.PostId && x.Id == request.CommentId);
 
             var comment = await query.SingleOrDefaultAsync();
@@ -62,17 +66,17 @@ namespace Vogel.Application.Comments.Queries
         }
 
 
-        private IAggregateFluent<CommentAggregateView> SortQuery(IAggregateFluent<CommentAggregateView> query, ListCommentsQuery request)
+        private IAggregateFluent<CommentMongoView> SortQuery(IAggregateFluent<CommentMongoView> query, ListCommentsQuery request)
         {
             return request.Asending ? query.SortBy(x => x.Id) : query.SortByDescending(x => x.Id);
         }
 
-        private async Task<List<CommentAggregateView>> Paginate(IAggregateFluent<CommentAggregateView> query, ListCommentsQuery request)
+        private async Task<List<CommentMongoView>> Paginate(IAggregateFluent<CommentMongoView> query, ListCommentsQuery request)
         {
             if (request.Cursor != null)
             {
-                var filter = request.Asending ? Builders<CommentAggregateView>.Filter.Gte(x => x.Id, request.Cursor)
-                    : Builders<CommentAggregateView>.Filter.Lte(x => x.Id, request.Cursor);
+                var filter = request.Asending ? Builders<CommentMongoView>.Filter.Gte(x => x.Id, request.Cursor)
+                    : Builders<CommentMongoView>.Filter.Lte(x => x.Id, request.Cursor);
 
                 query = query.Match(filter);
             }
@@ -80,15 +84,15 @@ namespace Vogel.Application.Comments.Queries
             return await query.Limit(request.Limit).ToListAsync();
         }
 
-        private async Task<PagingInfo> PreparePagingInfo(IAggregateFluent<CommentAggregateView> query, ListCommentsQuery request)
+        private async Task<PagingInfo> PreparePagingInfo(IAggregateFluent<CommentMongoView> query, ListCommentsQuery request)
         {
             if (request.Cursor != null)
             {
-                var previosFilter = request.Asending ? Builders<CommentAggregateView>.Filter.Lt(x => x.Id, request.Cursor)
-                : Builders<CommentAggregateView>.Filter.Gt(x => x.Id, request.Cursor);
+                var previosFilter = request.Asending ? Builders<CommentMongoView>.Filter.Lt(x => x.Id, request.Cursor)
+                : Builders<CommentMongoView>.Filter.Gt(x => x.Id, request.Cursor);
 
-                var nextFilter = request.Asending ? Builders<CommentAggregateView>.Filter.Gt(x => x.Id, request.Cursor)
-                    : Builders<CommentAggregateView>.Filter.Lt(x => x.Id, request.Cursor);
+                var nextFilter = request.Asending ? Builders<CommentMongoView>.Filter.Gt(x => x.Id, request.Cursor)
+                    : Builders<CommentMongoView>.Filter.Lt(x => x.Id, request.Cursor);
 
                 var next = await query.Match(nextFilter).Skip(request.Limit - 1).FirstOrDefaultAsync();
 

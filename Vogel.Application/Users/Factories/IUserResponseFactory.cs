@@ -1,15 +1,16 @@
-﻿using Vogel.Application.Common.Interfaces;
-using Vogel.Application.Users.Dtos;
-using Vogel.Domain;
+﻿using Vogel.Application.Users.Dtos;
+using Vogel.BuildingBlocks.Application.Factories;
+using Vogel.Domain.Medias;
 using Vogel.Domain.Users;
+using Vogel.MongoDb.Entities.Users;
 
 namespace Vogel.Application.Users.Factories
 {
     public interface IUserResponseFactory : IResponseFactory
     {
-        Task<List<UserAggregateDto>> PrepareListUserAggregateDto(List<UserAggregate> users);
-        Task<UserAggregateDto> PrepareUserAggregateDto(UserAggregate user);
-        Task<UserAggregateDto> PrepareUserAggregateDto(User user);
-        Task<PublicUserDto> PreparePublicUserDto(PublicUserView user);
+        Task<List<UserDto>> PrepareListUserAggregateDto(List<UserMongoView> users);
+        Task<UserDto> PrepareUserAggregateDto(UserAggregate user, Media? avatar = null);
+        Task<UserDto> PrepareUserAggregateDto(UserMongoView user);
+        Task<PublicUserDto> PreparePublicUserDto(PublicUserMongoView user);
     }
 }

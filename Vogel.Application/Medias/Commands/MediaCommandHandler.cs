@@ -1,12 +1,15 @@
 ﻿using MediatR;
-using Vogel.Application.Common.Exceptions;
 using Vogel.Application.Common.Interfaces;
 using Vogel.Application.Common.Models;
 using Vogel.Application.Medias.Dtos;
 using Vogel.Application.Medias.Factories;
 using Vogel.Application.Medias.Policies;
+using Vogel.BuildingBlocks.Application.Requests;
+using Vogel.BuildingBlocks.Application.Security;
+using Vogel.BuildingBlocks.Domain.Exceptions;
+using Vogel.BuildingBlocks.Domain.Repositories;
+using Vogel.BuildingBlocks.Domain.Results;
 using Vogel.Domain.Medias;
-using Vogel.Domain.Utils;
 namespace Vogel.Application.Medias.Commands
 {
     public class MediaCommandHandler :
@@ -15,15 +18,18 @@ namespace Vogel.Application.Medias.Commands
     {
 
         private readonly IS3ObjectStorageService _s3ObjectStorageService;
-        private readonly IMongoDbRepository<Media> _mediaDbRepository;
+        private readonly IRepository<Media> _mediaRepository;
         private readonly ISecurityContext _securityContext;
         private readonly IApplicationAuthorizationService _applicationAuthorizationService;
         private readonly IMediaResponseFactory _mediaResponeFactory;
 
-        public MediaCommandHandler(IS3ObjectStorageService s3ObjectStorageService, IMongoDbRepository<Media> mediaDbRepository, ISecurityContext securityContext, IApplicationAuthorizationService applicationAuthorizationService, IMediaResponseFactory mediaResponeFactory)
+        public MediaCommandHandler(IS3ObjectStorageService s3ObjectStorageService, 
+            IRepository<Media> mediaRepository, ISecurityContext securityContext,
+            IApplicationAuthorizationService applicationAuthorizationService, 
+            IMediaResponseFactory mediaResponeFactory)
         {
             _s3ObjectStorageService = s3ObjectStorageService;
-            _mediaDbRepository = mediaDbRepository;
+            _mediaRepository = mediaRepository;
             _securityContext = securityContext;
             _applicationAuthorizationService = applicationAuthorizationService;
             _mediaResponeFactory = mediaResponeFactory;
@@ -49,7 +55,7 @@ namespace Vogel.Application.Medias.Commands
                 UserId = _securityContext.User!.Id
             };
 
-            media = await _mediaDbRepository.InsertAsync(media);
+            media = await _mediaRepository.InsertAsync(media);
 
            
             return await _mediaResponeFactory.PrepareMedaiAggregateDto(media);
@@ -57,7 +63,7 @@ namespace Vogel.Application.Medias.Commands
 
         public async Task<Result<Unit>> Handle(RemoveMediaCommand request, CancellationToken cancellationToken)
         {
-            var media = await _mediaDbRepository.FindByIdAsync(request.Id);
+            var media = await _mediaRepository.FindByIdAsync(request.Id);
 
             if(media == null)
             {
@@ -73,7 +79,7 @@ namespace Vogel.Application.Medias.Commands
 
             await _s3ObjectStorageService.RemoveObjectAsync(media.File);
 
-            await _mediaDbRepository.DeleteAsync(media);
+            await _mediaRepository.DeleteAsync(media);
 
             return Unit.Value;
         }

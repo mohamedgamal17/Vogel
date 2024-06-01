@@ -10,6 +10,11 @@ namespace Vogel.Domain.Users
         {
             Id = Guid.NewGuid().ToString();
         }
+
+        public UserAggregate(string id)
+        {
+            Id = id;
+        }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime BirthDate { get; set; }

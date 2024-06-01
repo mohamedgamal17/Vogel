@@ -1,8 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Vogel.Application.Comments.Dtos;
-using Vogel.Application.Common.Interfaces;
-
+using Vogel.BuildingBlocks.Application.Requests;
 namespace Vogel.Application.Comments.Commands
 {
     public abstract class CommentCommandBase

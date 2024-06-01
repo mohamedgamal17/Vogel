@@ -5,23 +5,20 @@ using Vogel.Application.Users.Dtos;
 using Vogel.Domain;
 using Vogel.Domain.Medias;
 using Vogel.Domain.Users;
+using Vogel.MongoDb.Entities.Users;
 
 namespace Vogel.Application.Users.Factories
 {
     public class UserResponseFactory : IUserResponseFactory
     {
-        private readonly IMongoDbRepository<User> _userRepository;
-        private readonly IMongoDbRepository<Media> _mediaRepository;
         private readonly IS3ObjectStorageService _s3ObjectStorageService;
 
-        public UserResponseFactory(IMongoDbRepository<User> userRepository, IMongoDbRepository<Media> mediaRepository, IS3ObjectStorageService s3ObjectStorageService)
+        public UserResponseFactory(IS3ObjectStorageService s3ObjectStorageService)
         {
-            _userRepository = userRepository;
-            _mediaRepository = mediaRepository;
             _s3ObjectStorageService = s3ObjectStorageService;
         }
 
-        public async Task<List<UserAggregateDto>> PrepareListUserAggregateDto(List<UserAggregate> users)
+        public async Task<List<UserDto>> PrepareListUserAggregateDto(List<UserMongoView> users)
         {
             var tasks = users.Select(PrepareUserAggregateDto);
 
@@ -29,14 +26,41 @@ namespace Vogel.Application.Users.Factories
 
             return results.ToList();
         }    
-        public async Task<UserAggregateDto> PrepareUserAggregateDto(UserAggregate user)
+        public async Task<UserDto> PrepareUserAggregateDto(UserAggregate user , Media? avatar = null)
         {
-            var result = new UserAggregateDto
+            var result = new UserDto
             {
                 Id = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Gender = user.Gender,
+                Gender = (MongoDb.Entities.Users.Gender)user.Gender,
+                AvatarId = user.AvatarId,
+                BirthDate = user.BirthDate.ToShortDateString()
+            };
+
+            if (avatar != null)
+            {
+                result.Avatar = new MediaAggregateDto
+                {
+                    Id = avatar.Id,
+                    UserId = avatar.UserId,
+                    MediaType = (MongoDb.Entities.Medias.MediaType)avatar.MediaType,
+                    MimeType = avatar.MimeType,
+                    Size = avatar.Size,
+                    Reference = await _s3ObjectStorageService.GeneratePresignedDownloadUrlAsync(avatar.File)
+                };
+            }
+
+            return result;
+        }
+        public async Task<UserDto> PrepareUserAggregateDto(UserMongoView user)
+        {
+            var result = new UserDto
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Gender =  user.Gender,
                 AvatarId = user.AvatarId,
                 BirthDate = user.BirthDate.ToShortDateString()
             };
@@ -56,23 +80,7 @@ namespace Vogel.Application.Users.Factories
 
             return result;
         }
-        public async Task<UserAggregateDto> PrepareUserAggregateDto(User user)
-        {
-            var mediaCollection = _mediaRepository.AsMongoCollection();
-
-            var result  = await _userRepository.AsMongoCollection()
-                .Aggregate()
-                .Match(Builders<User>.Filter.Eq(x => x.Id, user.Id))
-                .Lookup<User, Media, UserAggregate>(mediaCollection,
-                    x => x.AvatarId,
-                    y => y.Id,
-                    x => x.Avatar
-                ).Unwind<UserAggregate, UserAggregate>(x => x.Avatar, new AggregateUnwindOptions<UserAggregate> { PreserveNullAndEmptyArrays = true })                
-                .FirstAsync();
-
-            return await PrepareUserAggregateDto(result);
-        }
-        public async Task<PublicUserDto> PreparePublicUserDto(PublicUserView user)
+        public async Task<PublicUserDto> PreparePublicUserDto(PublicUserMongoView user)
         {
             var result = new PublicUserDto
             {

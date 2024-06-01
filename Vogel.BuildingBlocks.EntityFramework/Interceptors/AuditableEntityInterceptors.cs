@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Vogel.Application.Common.Interfaces;
+using Vogel.BuildingBlocks.Application.Security;
 using Vogel.BuildingBlocks.Domain.Auditing;
 namespace Vogel.BuildingBlocks.EntityFramework.Interceptors
 {

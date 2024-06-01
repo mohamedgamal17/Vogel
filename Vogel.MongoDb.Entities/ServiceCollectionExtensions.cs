@@ -16,6 +16,8 @@ namespace Vogel.MongoDb.Entities
             .AssemblyRegisterRepositories(Assembly.GetExecutingAssembly())
             .AssemblyRegisterMigration(Assembly.GetExecutingAssembly());
 
+
+
             return services;
         }
     }

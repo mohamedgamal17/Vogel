@@ -11,7 +11,7 @@ namespace Vogel.BuildingBlocks.Application
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddApplication(this IServiceCollection services, Assembly? assembly = null)
+        public static IServiceCollection AddVogelCore(this IServiceCollection services, Assembly? assembly = null)
         {
             services.AddMediatR(cfg =>
             {

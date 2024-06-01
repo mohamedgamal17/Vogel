@@ -3,11 +3,13 @@ using MongoDB.Driver;
 using Vogel.Application.Comments.Dtos;
 using Vogel.Application.Comments.Factories;
 using Vogel.Application.Comments.Polices;
-using Vogel.Application.Common.Exceptions;
-using Vogel.Application.Common.Interfaces;
+using Vogel.BuildingBlocks.Application.Requests;
+using Vogel.BuildingBlocks.Application.Security;
+using Vogel.BuildingBlocks.Domain.Exceptions;
+using Vogel.BuildingBlocks.Domain.Repositories;
+using Vogel.BuildingBlocks.Domain.Results;
 using Vogel.Domain.Posts;
-using Vogel.Domain.Utils;
-
+using Vogel.MongoDb.Entities.Comments;
 namespace Vogel.Application.Comments.Commands
 {
     public class CommentCommandHandler :
@@ -15,18 +17,20 @@ namespace Vogel.Application.Comments.Commands
         IApplicationRequestHandler<UpdateCommentCommand, CommentAggregateDto>,
         IApplicationRequestHandler<RemoveCommentCommand , Unit>
     {
-        private readonly ICommentRepository _commentRepository;
-        private readonly IMongoDbRepository<Post> _postRepository;
+        private readonly IRepository<Comment> _commentRepository;
+        private readonly IRepository<Post> _postRepository;
         private readonly ISecurityContext _securityContext;
         private readonly ICommentResponseFactory _commentResponseFactory;
+        private readonly CommentMongoViewRepository _commentMongoViewRepository;
         private readonly IApplicationAuthorizationService _applicationAuthorizationService;
 
-        public CommentCommandHandler(ICommentRepository commentRepository, IMongoDbRepository<Post> postRepository, ISecurityContext securityContext, ICommentResponseFactory commentResponseFactory, IApplicationAuthorizationService applicationAuthorizationService)
+        public CommentCommandHandler(IRepository<Comment> commentRepository, IRepository<Post> postRepository, ISecurityContext securityContext, ICommentResponseFactory commentResponseFactory, CommentMongoViewRepository commentMongoViewRepository, IApplicationAuthorizationService applicationAuthorizationService)
         {
             _commentRepository = commentRepository;
             _postRepository = postRepository;
             _securityContext = securityContext;
             _commentResponseFactory = commentResponseFactory;
+            _commentMongoViewRepository = commentMongoViewRepository;
             _applicationAuthorizationService = applicationAuthorizationService;
         }
 
@@ -48,11 +52,9 @@ namespace Vogel.Application.Comments.Commands
 
             await _commentRepository.InsertAsync(comment);
 
-            var commentAggregate = await _commentRepository.GetCommentAggregateView()
-                .Match(x => x.Id == comment.Id)
-                .SingleAsync();
+            var commentAggregate = await _commentMongoViewRepository.FindByIdAsync(comment.Id);
 
-            return await _commentResponseFactory.PrepareCommentAggregateDto(commentAggregate);
+            return await _commentResponseFactory.PrepareCommentAggregateDto(commentAggregate!);
         }
 
         public async Task<Result<CommentAggregateDto>> Handle(UpdateCommentCommand request, CancellationToken cancellationToken)
@@ -63,7 +65,7 @@ namespace Vogel.Application.Comments.Commands
                     new FilterDefinitionBuilder<Comment>().Eq(x => x.Id, request.Id)
                 );
 
-            var comment = await _commentRepository.FindAsync(filter);
+            var comment = await _commentRepository.SingleOrDefaultAsync(x=> x.Id == request.Id && x.PostId == request.PostId);
             
             if(comment == null)
             {
@@ -82,22 +84,15 @@ namespace Vogel.Application.Comments.Commands
 
             await _commentRepository.UpdateAsync(comment);
 
-            var commentAggregate = await _commentRepository.GetCommentAggregateView()
-                .Match(x => x.Id == comment.Id)
-                .SingleAsync();
+            var commentAggregate = await _commentMongoViewRepository.FindByIdAsync(comment.Id);
 
-            return await _commentResponseFactory.PrepareCommentAggregateDto(commentAggregate);
+            return await _commentResponseFactory.PrepareCommentAggregateDto(commentAggregate!);
         }
 
         public async Task<Result<Unit>> Handle(RemoveCommentCommand request, CancellationToken cancellationToken)
         {
-            var filter = new FilterDefinitionBuilder<Comment>()
-               .And(
-                   new FilterDefinitionBuilder<Comment>().Eq(x => x.PostId, request.PostId),
-                   new FilterDefinitionBuilder<Comment>().Eq(x => x.Id, request.Id)
-               );
 
-            var comment = await _commentRepository.FindAsync(filter);
+            var comment = await _commentRepository.SingleOrDefaultAsync(x=> x.Id == request.Id && x.PostId == request.PostId);
 
             if (comment == null)
             {

@@ -1,13 +1,12 @@
 ﻿using MongoDB.Driver;
-using Vogel.Application.Common.Exceptions;
-using Vogel.Application.Common.Interfaces;
 using Vogel.Application.Common.Models;
 using Vogel.Application.Posts.Dtos;
 using Vogel.Application.Posts.Factories;
-using Vogel.Domain.Medias;
+using Vogel.BuildingBlocks.Application.Requests;
+using Vogel.BuildingBlocks.Domain.Exceptions;
+using Vogel.BuildingBlocks.Domain.Results;
 using Vogel.Domain.Posts;
-using Vogel.Domain.Utils;
-
+using Vogel.MongoDb.Entities.Posts;
 namespace Vogel.Application.Posts.Queries
 {
     public class PostQueryHandler :
@@ -16,22 +15,18 @@ namespace Vogel.Application.Posts.Queries
         IApplicationRequestHandler<GetUserPostById, PostAggregateDto>,
         IApplicationRequestHandler<GetPostByIdQuery, PostAggregateDto>
     {
-        private readonly IPostRepository _postRepository;
-        private readonly IMongoDbRepository<Media> _mediaRepository;
-        private readonly IMongoDbRepository<User> _userRepository;
+        private readonly PostMongoViewRepository _postMongoViewRepository;
         private readonly IPostResponseFactory _postResponseFactory;
 
-        public PostQueryHandler(IPostRepository postRepository, IMongoDbRepository<Media> mediaRepository, IMongoDbRepository<User> userRepository, IPostResponseFactory postResponseFactory)
+        public PostQueryHandler(PostMongoViewRepository postMongoViewRepository, IPostResponseFactory postResponseFactory)
         {
-            _postRepository = postRepository;
-            _mediaRepository = mediaRepository;
-            _userRepository = userRepository;
+            _postMongoViewRepository = postMongoViewRepository;
             _postResponseFactory = postResponseFactory;
         }
 
         public async Task<Result<Paging<PostAggregateDto>>> Handle(ListPostQuery request, CancellationToken cancellationToken)
         {
-            var query = _postRepository.GetPostAggregateView();
+            var query = _postMongoViewRepository.AsMongoCollection().Aggregate();
 
             query = SortQuery(query, request);
 
@@ -51,18 +46,14 @@ namespace Vogel.Application.Posts.Queries
             return paged;
         }
 
- 
-
-        private IAggregateFluent<PostAggregateView> SortQuery(IAggregateFluent<PostAggregateView> query, ListPostQueryBase request)
+        private IAggregateFluent<PostMongoView> SortQuery(IAggregateFluent<PostMongoView> query, ListPostQueryBase request)
         {
             return request.Asending ? query.SortBy(x => x.Id) : query.SortByDescending(x => x.Id);
         }
 
         public async Task<Result<PostAggregateDto>> Handle(GetPostByIdQuery request, CancellationToken cancellationToken)
         {
-            var result = await _postRepository.GetPostAggregateView()
-              .Match(x => x.Id == request.Id)
-              .SingleOrDefaultAsync();
+            var result = await _postMongoViewRepository.FindByIdAsync(request.Id);
 
             if (result == null)
             {
@@ -75,11 +66,8 @@ namespace Vogel.Application.Posts.Queries
 
         public async Task<Result<Paging<PostAggregateDto>>> Handle(ListUserPostQuery request, CancellationToken cancellationToken)
         {
-            var mediaCollection = _mediaRepository.AsMongoCollection();
-
-            var userCollection = _userRepository.AsMongoCollection();
-
-            var query = _postRepository.GetPostAggregateView()
+            var query = _postMongoViewRepository.AsMongoCollection()
+                .Aggregate()
                 .Match(x => x.UserId == request.UserId);
  
             query = SortQuery(query, request);
@@ -102,13 +90,11 @@ namespace Vogel.Application.Posts.Queries
 
         public async Task<Result<PostAggregateDto>> Handle(GetUserPostById request, CancellationToken cancellationToken)
         {
-            var mediaCollection = _mediaRepository.AsMongoCollection();
-
-            var userCollection = _userRepository.AsMongoCollection();
-
-            var result = await _postRepository.GetPostAggregateView()
-              .Match(x => x.Id == request.Id && x.UserId == request.UserId)
-              .SingleOrDefaultAsync();
+              var result = await _postMongoViewRepository.AsMongoCollection()
+                  .Aggregate()
+                  .Match(x => x.UserId == request.UserId)
+                  .Match(x => x.Id == request.Id && x.UserId == request.UserId)
+                  .SingleOrDefaultAsync();
 
             if (result == null)
             {
@@ -117,12 +103,12 @@ namespace Vogel.Application.Posts.Queries
 
             return await _postResponseFactory.PreparePostAggregateDto(result);
         }
-        private async Task<List<PostAggregateView>> Paginate(IAggregateFluent<PostAggregateView> query, ListPostQueryBase request)
+        private async Task<List<PostMongoView>> Paginate(IAggregateFluent<PostMongoView> query, ListPostQueryBase request)
         {
             if (request.Cursor != null)
             {
-                var filter = request.Asending ? Builders<PostAggregateView>.Filter.Gte(x => x.Id, request.Cursor)
-                    : Builders<PostAggregateView>.Filter.Lte(x => x.Id, request.Cursor);
+                var filter = request.Asending ? Builders<PostMongoView>.Filter.Gte(x => x.Id, request.Cursor)
+                    : Builders<PostMongoView>.Filter.Lte(x => x.Id, request.Cursor);
 
                 query = query.Match(filter);
             }
@@ -130,15 +116,15 @@ namespace Vogel.Application.Posts.Queries
             return await query.Limit(request.Limit).ToListAsync();
         }
 
-        private async Task<PagingInfo> PreparePagingInfo(IAggregateFluent<PostAggregateView> query, ListPostQueryBase request)
+        private async Task<PagingInfo> PreparePagingInfo(IAggregateFluent<PostMongoView> query, ListPostQueryBase request)
         {
             if (request.Cursor != null)
             {
-                var previosFilter = request.Asending ? Builders<PostAggregateView>.Filter.Lt(x => x.Id, request.Cursor)
-                : Builders<PostAggregateView>.Filter.Gt(x => x.Id, request.Cursor);
+                var previosFilter = request.Asending ? Builders<PostMongoView>.Filter.Lt(x => x.Id, request.Cursor)
+                : Builders<PostMongoView>.Filter.Gt(x => x.Id, request.Cursor);
 
-                var nextFilter = request.Asending ? Builders<PostAggregateView>.Filter.Gt(x => x.Id, request.Cursor)
-                    : Builders<PostAggregateView>.Filter.Lt(x => x.Id, request.Cursor);
+                var nextFilter = request.Asending ? Builders<PostMongoView>.Filter.Gt(x => x.Id, request.Cursor)
+                    : Builders<PostMongoView>.Filter.Lt(x => x.Id, request.Cursor);
 
                 var next = await query.Match(nextFilter).Skip(request.Limit - 1).FirstOrDefaultAsync();
 

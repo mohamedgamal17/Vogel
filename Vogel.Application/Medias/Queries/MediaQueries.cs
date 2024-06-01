@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Vogel.Application.Common.Interfaces;
 using Vogel.Application.Medias.Dtos;
+using Vogel.BuildingBlocks.Application.Requests;
 
 namespace Vogel.Application.Medias.Queries
 {

@@ -1,9 +1,8 @@
-﻿using Vogel.Application.Common.Dtos;
-using Vogel.Domain.Medias;
-
+﻿using Vogel.BuildingBlocks.Application.Dtos;
+using Vogel.MongoDb.Entities.Medias;
 namespace Vogel.Application.Medias.Dtos
 {
-    public class MediaAggregateDto : EntityDto
+    public class MediaAggregateDto : EntityDto<string>
     {
         public string Reference { get; set; }
         public MediaType MediaType { get; set; }

@@ -1,10 +1,10 @@
-﻿using Vogel.Application.Common.Dtos;
-using Vogel.Application.Medias.Dtos;
-using Vogel.Domain.Users;
+﻿using Vogel.Application.Medias.Dtos;
+using Vogel.BuildingBlocks.Application.Dtos;
+using Vogel.MongoDb.Entities.Users;
 
 namespace Vogel.Application.Users.Dtos
 {
-    public class UserAggregateDto : EntityDto
+    public class UserDto : EntityDto<string>
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

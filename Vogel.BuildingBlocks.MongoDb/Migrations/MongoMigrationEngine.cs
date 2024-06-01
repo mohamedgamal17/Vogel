@@ -67,6 +67,6 @@ namespace Vogel.BuildingBlocks.MongoDb.Migrations
 
     public interface IMongoMigrationEngine
     {
-        Task MigrateAsync(CancellationToken cancellationToken = default)
+        Task MigrateAsync(CancellationToken cancellationToken = default);
     }
 }

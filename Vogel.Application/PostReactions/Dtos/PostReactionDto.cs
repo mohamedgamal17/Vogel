@@ -1,9 +1,9 @@
-﻿using Vogel.Application.Common.Dtos;
+﻿using Vogel.BuildingBlocks.Application.Dtos;
 using Vogel.Domain.Posts;
 
 namespace Vogel.Application.PostReactions.Dtos
 {
-    public class PostReactionDto : EntityDto
+    public class PostReactionDto : EntityDto<string>
     {
         public string UserId { get; set; }
         public string PostId { get; set; }

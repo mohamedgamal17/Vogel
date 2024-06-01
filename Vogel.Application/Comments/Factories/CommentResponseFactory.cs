@@ -1,6 +1,7 @@
 ﻿using Vogel.Application.Comments.Dtos;
 using Vogel.Application.Users.Factories;
 using Vogel.Domain;
+using Vogel.MongoDb.Entities.Comments;
 namespace Vogel.Application.Comments.Factories
 {
     public class CommentResponseFactory : ICommentResponseFactory
@@ -12,7 +13,7 @@ namespace Vogel.Application.Comments.Factories
             _userFactoryResponse = userFactoryResponse;
         }
 
-        public async Task<List<CommentAggregateDto>> PreapreListCommentAggregateDto(List<CommentAggregateView> comments)
+        public async Task<List<CommentAggregateDto>> PreapreListCommentAggregateDto(List<CommentMongoView> comments)
         {
             var tasks = comments.Select(PrepareCommentAggregateDto);
 
@@ -20,7 +21,7 @@ namespace Vogel.Application.Comments.Factories
 
             return result.ToList();
         }
-        public async Task<CommentAggregateDto> PrepareCommentAggregateDto(CommentAggregateView comment)
+        public async Task<CommentAggregateDto> PrepareCommentAggregateDto(CommentMongoView comment)
         {
             var result = new CommentAggregateDto
             {

@@ -1,10 +1,11 @@
 ﻿using MediatR;
-using MongoDB.Driver;
-using Vogel.Application.Common.Exceptions;
-using Vogel.Application.Common.Interfaces;
 using Vogel.Application.PostReactions.Dtos;
+using Vogel.BuildingBlocks.Application.Requests;
+using Vogel.BuildingBlocks.Application.Security;
+using Vogel.BuildingBlocks.Domain.Exceptions;
+using Vogel.BuildingBlocks.Domain.Repositories;
+using Vogel.BuildingBlocks.Domain.Results;
 using Vogel.Domain.Posts;
-using Vogel.Domain.Utils;
 namespace Vogel.Application.PostReactions.Commands
 {
     public class PostReactionCommandHandler :
@@ -12,12 +13,13 @@ namespace Vogel.Application.PostReactions.Commands
         IApplicationRequestHandler<UpdatePostReactionCommand, PostReactionDto>,
         IApplicationRequestHandler<RemovePostReactionCommand , Unit>
     {
-        private readonly IMongoDbRepository<PostReaction> _postReactionRepository;
+        private readonly IRepository<PostReaction> _postReactionRepository;
 
-        private readonly IMongoDbRepository<Post> _postRepository;
+        private readonly IRepository<Post> _postRepository;
 
         private readonly ISecurityContext _securityContext;
-        public PostReactionCommandHandler(IMongoDbRepository<PostReaction> postReactionRepository, IMongoDbRepository<Post> postRepository, ISecurityContext securityContext)
+
+        public PostReactionCommandHandler(IRepository<PostReaction> postReactionRepository, IRepository<Post> postRepository, ISecurityContext securityContext)
         {
             _postReactionRepository = postReactionRepository;
             _postRepository = postRepository;
@@ -47,13 +49,7 @@ namespace Vogel.Application.PostReactions.Commands
 
         public async Task<Result<PostReactionDto>> Handle(UpdatePostReactionCommand request, CancellationToken cancellationToken)
         {
-            var filter = new FilterDefinitionBuilder<PostReaction>()
-                .And(
-                    new FilterDefinitionBuilder<PostReaction>().Eq(x => x.PostId, request.PostId),
-                    new FilterDefinitionBuilder<PostReaction>().Eq(x => x.Id, request.Id)
-                 );
-
-            var reaction = await _postReactionRepository.FindAsync(filter);
+            var reaction = await _postReactionRepository.SingleOrDefaultAsync(x => x.Id == request.Id && x.PostId == request.PostId);
 
             if(reaction == null)
             {
@@ -69,14 +65,7 @@ namespace Vogel.Application.PostReactions.Commands
 
         public async Task<Result<Unit>> Handle(RemovePostReactionCommand request, CancellationToken cancellationToken)
         {
-            var filter = new FilterDefinitionBuilder<PostReaction>()
-             .And(
-                 new FilterDefinitionBuilder<PostReaction>().Eq(x => x.PostId, request.PostId),
-                 new FilterDefinitionBuilder<PostReaction>().Eq(x => x.Id, request.Id)
-              );
-
-            var reaction = await _postReactionRepository.FindAsync(filter);
-
+            var reaction = await _postReactionRepository.SingleOrDefaultAsync(x => x.Id == request.Id && x.PostId == request.PostId);
 
             if (reaction == null)
             {

@@ -5,30 +5,24 @@ using Vogel.Application.Posts.Dtos;
 using Vogel.Application.Users.Factories;
 using Vogel.Domain.Medias;
 using Vogel.Domain.Posts;
+using Vogel.Domain.Users;
+using Vogel.MongoDb.Entities.Posts;
+using Vogel.MongoDb.Entities.Users;
 namespace Vogel.Application.Posts.Factories
 {
     public class PostResponseFactory : IPostResponseFactory
     {
-        private readonly IMongoDbRepository<Media> _mediaRepository;
-
-        private readonly IMongoDbRepository<Post> _postRepository;
-
-        private readonly IMongoDbRepository<User> _userRepository;
-
         private readonly IS3ObjectStorageService _s3ObjectStorageService;
 
         private readonly IUserResponseFactory _userResponseFactory;
 
-        public PostResponseFactory(IMongoDbRepository<Media> mediaRepository, IMongoDbRepository<Post> postRepository, IMongoDbRepository<User> userRepository, IS3ObjectStorageService s3ObjectStorageService, IUserResponseFactory userResponseFactory)
+        public PostResponseFactory(IS3ObjectStorageService s3ObjectStorageService, IUserResponseFactory userResponseFactory)
         {
-            _mediaRepository = mediaRepository;
-            _postRepository = postRepository;
-            _userRepository = userRepository;
             _s3ObjectStorageService = s3ObjectStorageService;
             _userResponseFactory = userResponseFactory;
         }
 
-        public async Task<List<PostAggregateDto>> PrepareListPostAggregateDto(List<PostAggregateView> posts)
+        public async Task<List<PostAggregateDto>> PrepareListPostAggregateDto(List<PostMongoView> posts)
         {
             var tasks = posts.Select(PreparePostAggregateDto);
 
@@ -37,15 +31,17 @@ namespace Vogel.Application.Posts.Factories
             return results.ToList();
         }
 
-        public async Task<PostAggregateDto> PreparePostAggregateDto(PostAggregateView post)
+        public async Task<PostAggregateDto> PreparePostAggregateDto(PostMongoView post)
         {
             var result = new PostAggregateDto
             {
                 Id = post.Id,
                 Caption = post.Caption,
+                MediaId = post.MediaId,
+                UserId = post.UserId
             };
 
-            if(post.Media != null)
+            if (post.Media != null)
             {
                 result.Media = new MediaAggregateDto
                 {
@@ -57,7 +53,7 @@ namespace Vogel.Application.Posts.Factories
                 };
             }
 
-            if(post.User != null)
+            if (post.User != null)
             {
                 result.User = await _userResponseFactory.PreparePublicUserDto(post.User);
             }
@@ -65,35 +61,30 @@ namespace Vogel.Application.Posts.Factories
             return result;
         }
 
-        public async Task<PostAggregateDto> PreparePostAggregateDto(Post post)
+        public async Task<PostAggregateDto> PreparePostAggregateDto(Post post, PublicUserMongoView user, Media? media = null)
         {
-            var userCollection = _userRepository.AsMongoCollection();
+            var result = new PostAggregateDto
+            {
+                Id = post.Id,
+                Caption = post.Caption,
+                MediaId = post.MediaId,
+                UserId = post.UserId,
+                User = await _userResponseFactory.PreparePublicUserDto(user)
+            };
 
-            var mediaCollection = _mediaRepository.AsMongoCollection();
+            if (media != null)
+            {
+                result.Media = new MediaAggregateDto
+                {
+                    Id = media.Id,
+                    MimeType = media.MimeType,
+                    MediaType = (MongoDb.Entities.Medias.MediaType)media.MediaType,
+                    UserId = media.UserId,
+                    Reference = await _s3ObjectStorageService.GeneratePresignedDownloadUrlAsync(media.File)
+                };
+            }
 
-            var result = await _postRepository.AsMongoCollection().Aggregate()
-                .Match(x => x.Id == post.Id)
-                .Lookup<Post, Media, PostAggregateView>(mediaCollection,
-                    x => x.MediaId,
-                    x => x.Id,
-                    x => x.Media
-                )
-                .Unwind<PostAggregateView, PostAggregateView> (x=> x.Media , 
-                    new AggregateUnwindOptions<PostAggregateView> { PreserveNullAndEmptyArrays = true })
-                .Lookup<PostAggregateView, User, PostAggregateView>(userCollection,
-                    x => x.UserId,
-                    x => x.Id,
-                    x => x.User
-                )
-                .Unwind<PostAggregateView, PostAggregateView>(x => x.User,
-                    new AggregateUnwindOptions<PostAggregateView> { PreserveNullAndEmptyArrays = true }
-                )
-                .SingleAsync();
-
-
-            return await PreparePostAggregateDto(result);
+            return result;
         }
-
-
     }
 }

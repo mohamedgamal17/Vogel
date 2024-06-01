@@ -1,8 +1,7 @@
 ﻿using MediatR;
-using Vogel.Application.Common.Interfaces;
 using Vogel.Application.PostReactions.Dtos;
+using Vogel.BuildingBlocks.Application.Requests;
 using Vogel.Domain.Posts;
-
 namespace Vogel.Application.PostReactions.Commands
 {
     public class PostReactionCommandBase

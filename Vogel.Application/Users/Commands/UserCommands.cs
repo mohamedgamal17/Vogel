@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Vogel.Application.Common.Interfaces;
 using Vogel.Application.Users.Dtos;
+using Vogel.BuildingBlocks.Application.Requests;
 using Vogel.Domain.Users;
-
 namespace Vogel.Application.Users.Commands
 {
     public abstract class UserCommandBase
@@ -15,10 +14,10 @@ namespace Vogel.Application.Users.Commands
     }
 
     [Authorize]
-    public class CreateUserCommand : UserCommandBase , ICommand<UserAggregateDto> { }
+    public class CreateUserCommand : UserCommandBase , ICommand<UserDto> { }
 
     [Authorize]
-    public class UpdateUserCommand : UserCommandBase , ICommand<UserAggregateDto> 
+    public class UpdateUserCommand : UserCommandBase , ICommand<UserDto> 
     {
     }
 }
