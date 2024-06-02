@@ -45,7 +45,7 @@ namespace Vogel.BuildingBlocks.MongoDb.Configuration
         public VogelMongoDbBuilder AssemblyRegisterRepositories(Assembly assembly)
         {
             var repositoriesTypes = assembly.GetTypes()
-                .Where(x => x.IsClass)
+                .Where(x => x.IsClass && (x.BaseType?.IsGenericType ?? false))
                 .Where(x => x.BaseType?.GetGenericTypeDefinition() == typeof(MongoRepository<,>))
                 .ToList();
 
@@ -65,9 +65,8 @@ namespace Vogel.BuildingBlocks.MongoDb.Configuration
 
         public VogelMongoDbBuilder AddMigration(Type type)
         {
-            bool hasMigrationInterface =  type.GetInterfaces().Any(x => x.GetType() == typeof(IMongoDbMigration));
-
-            if (!hasMigrationInterface)
+            bool isAssignable = typeof(IMongoDbMigration).IsAssignableFrom(type);
+            if (!isAssignable)
             {
                 throw new VogelMongoDbBuilderException($"Class : ({type.AssemblyQualifiedName}). Must implement " +
                     $"(${typeof(IMongoDbMigration).AssemblyQualifiedName}) to be able to register as mongo db migration");
