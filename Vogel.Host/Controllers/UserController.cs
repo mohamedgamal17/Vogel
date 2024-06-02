@@ -15,7 +15,7 @@ namespace Vogel.Host.Controllers
         }
         [Route("")]
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserAggregateDto))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDto))]
         public async Task<IActionResult> GetCurrentUser()
         {
             var query = new GetCurrentUserQuery();
@@ -28,7 +28,7 @@ namespace Vogel.Host.Controllers
 
         [Route("")]
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UserAggregateDto))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UserDto))]
         public async Task<IActionResult> CreateUser(UserModel model)
         {
             var command = model.ToCreateUserCommand();
@@ -40,7 +40,7 @@ namespace Vogel.Host.Controllers
 
         [Route("")]
         [HttpPut]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UserAggregateDto))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UserDto))]
         public async Task<IActionResult> UpdateUser(UserModel model)
         {
             var command = model.ToUpdateUserCommand();

@@ -1,10 +1,10 @@
 ﻿using Ardalis.GuardClauses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Vogel.Application.Common.Exceptions;
-using Vogel.Application.Common.Interfaces;
 using Vogel.Application.Common.Models;
-using Vogel.Domain.Utils;
+using Vogel.BuildingBlocks.Application.Requests;
+using Vogel.BuildingBlocks.Domain.Exceptions;
+using Vogel.BuildingBlocks.Domain.Results;
 using Vogel.Host.Models;
 
 namespace Vogel.Host.Controllers

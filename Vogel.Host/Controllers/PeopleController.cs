@@ -19,7 +19,7 @@ namespace Vogel.Host.Controllers
 
         [Route("")]
         [HttpGet]  
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Paging<UserAggregateDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Paging<UserDto>))]
         public async Task<IActionResult> ListAsync(string? cursor = null, bool asending = false, int limit = 10)
         {
             var query = new ListUserQuery
@@ -36,7 +36,7 @@ namespace Vogel.Host.Controllers
 
         [Route("{id}")]
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Paging<UserAggregateDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Paging<UserDto>))]
         public async Task<IActionResult> GetAsync(string id)
         {
             var query = new GetUserByIdQuery { Id = id };
@@ -48,7 +48,7 @@ namespace Vogel.Host.Controllers
 
         [Route("{userId}/posts")]
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Paging<UserAggregateDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Paging<UserDto>))]
         public async Task<IActionResult> GetUserPosts(string userId, string? cursor = null, bool asending = false, int limit = 10)
         {
             var query = new ListUserPostQuery
@@ -66,7 +66,7 @@ namespace Vogel.Host.Controllers
 
         [Route("{userId}/posts/{postId}")]
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Paging<UserAggregateDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Paging<UserDto>))]
         public async Task<IActionResult> GetUserPost(string userId , string postId)
         {
             var query = new GetUserPostById

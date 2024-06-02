@@ -1,11 +1,8 @@
-﻿using Amazon.Runtime.Internal.Transform;
-using Hellang.Middleware.ProblemDetails;
+﻿using Hellang.Middleware.ProblemDetails;
 using Hellang.Middleware.ProblemDetails.Mvc;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
 using Vogel.Application;
-using Vogel.Application.Common.Interfaces;
 using Vogel.Host.Infrastructure;
 using Vogel.Infrastructure;
 namespace Vogel.Host
@@ -52,7 +49,6 @@ namespace Vogel.Host
 
             services.AddAuthorization();
 
-            services.AddTransient<ISecurityContext, SecurityContext>();
         }
 
 
