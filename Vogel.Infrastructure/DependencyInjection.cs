@@ -5,6 +5,7 @@ using Minio;
 using MongoDB.Driver;
 using Vogel.Application.Common.Interfaces;
 using Vogel.BuildingBlocks.EntityFramework;
+using Vogel.BuildingBlocks.EntityFramework.Interceptors;
 using Vogel.Infrastructure.EntityFramework;
 namespace Vogel.Infrastructure
 {
@@ -22,15 +23,18 @@ namespace Vogel.Infrastructure
 
         private static void RegisterEntityFramework(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<ApplicationDbContext>(opt =>
+            services.AddDbContext<ApplicationDbContext>((sp,opt) =>
             {
                 opt.UseSqlServer(configuration.GetConnectionString("Default"), op =>
                 {
                     op.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
                 });
+
+                opt.AddInterceptors(sp.GetRequiredService<AuditableEntityInterceptors>());
+                opt.AddInterceptors(sp.GetRequiredService<DispatchDomainEventInterceptor>());
             });
 
-            services.AddVogelEfCore();
+            services.AddVogelEfCoreInterceptors();
         }
 
         private static void ConfigureS3StorageProvider(IServiceCollection services, IConfiguration configuration)

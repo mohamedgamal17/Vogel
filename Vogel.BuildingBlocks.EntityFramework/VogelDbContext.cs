@@ -10,16 +10,5 @@ namespace Vogel.BuildingBlocks.EntityFramework
         public VogelDbContext(DbContextOptions<TContext> options) : base(options)
         {
         }
-
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.AddInterceptors(
-                   this.GetService<AuditableEntityInterceptors>(),
-                   this.GetService<DispatchDomainEventInterceptor>()
-                );
-
-            base.OnConfiguring(optionsBuilder);
-        }
     }
 }

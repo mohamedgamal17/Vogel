@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 using Vogel.BuildingBlocks.EntityFramework;
 
 namespace Vogel.Infrastructure.EntityFramework
@@ -10,5 +11,11 @@ namespace Vogel.Infrastructure.EntityFramework
         {
 
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        }
+
     }
 }

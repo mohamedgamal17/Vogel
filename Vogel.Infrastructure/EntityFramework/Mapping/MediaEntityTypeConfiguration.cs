@@ -19,6 +19,8 @@ namespace Vogel.Infrastructure.EntityFramework.Mapping
 
             builder.Property(x => x.UserId).HasMaxLength(MediaTableConsts.UserIdLength);
 
+            builder.Property(x => x.File).HasMaxLength(MediaTableConsts.FileLength);
+
             builder.HasIndex(x => x.UserId);
 
             builder.AutoMapAuditing();
