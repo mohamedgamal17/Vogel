@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using System.Threading;
 using Vogel.BuildingBlocks.Domain;
 using Vogel.BuildingBlocks.Domain.Events;
 namespace Vogel.BuildingBlocks.EntityFramework.Interceptors
@@ -15,18 +16,18 @@ namespace Vogel.BuildingBlocks.EntityFramework.Interceptors
             _mediator = mediator;
         }
 
-        public override async ValueTask<int> SavedChangesAsync(SaveChangesCompletedEventData eventData, int result, CancellationToken cancellationToken = default)
-        {
-            await DispatchDomainEvents(eventData.Context);
-
-            return await base.SavedChangesAsync(eventData, result, cancellationToken);
-        }
-
-        public override int SavedChanges(SaveChangesCompletedEventData eventData, int result)
+        public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
         {
             DispatchDomainEvents(eventData.Context).GetAwaiter().GetResult();
 
-            return base.SavedChanges(eventData, result);
+            return  base.SavingChanges(eventData, result);
+        }
+
+        public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
+        {
+            await DispatchDomainEvents(eventData.Context);
+
+            return await base.SavingChangesAsync(eventData, result, cancellationToken);
         }
 
 
@@ -45,11 +46,16 @@ namespace Vogel.BuildingBlocks.EntityFramework.Interceptors
 
             foreach (var entry in aggregateRootEntries)
             {
-                var events = entry.Entity.Events;
+                if(entry.Entity.Events.Count > 0)
+                {
+                    foreach (var @event in entry.Entity.Events)
+                    {
+                        await _mediator.Publish(@event);
 
-                await _mediator.Publish(events);
+                        entry.Entity.ClearDomainEvents();
 
-                entry.Entity.ClearDomainEvents();
+                    }
+                }           
             }
         }
 

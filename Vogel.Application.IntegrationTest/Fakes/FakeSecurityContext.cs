@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using Vogel.Application.Common.Interfaces;
 using Vogel.Application.Common.Models;
+using Vogel.BuildingBlocks.Application.Security;
 
 namespace Vogel.Application.IntegrationTest.Fakes
 {

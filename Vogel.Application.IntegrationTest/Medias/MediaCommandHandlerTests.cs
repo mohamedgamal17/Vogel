@@ -1,20 +1,28 @@
 ﻿using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using System.Security.Claims;
-using Vogel.Application.Common.Exceptions;
 using Vogel.Application.IntegrationTest.Extensions;
 using Vogel.Application.IntegrationTest.Utilites;
 using Vogel.Application.Medias.Commands;
+using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.Domain.Medias;
+using Vogel.MongoDb.Entities.Medias;
 using static Vogel.Application.IntegrationTest.Testing;
 namespace Vogel.Application.IntegrationTest.Medias
 {
     public class MediaCommandHandlerTests : BaseTestFixture
     {
+        public MediaMongoRepository MediaMongoRepository { get; set; }
+        public MediaCommandHandlerTests()
+        {
+            MediaMongoRepository = Testing.ServiceProvider.GetRequiredService<MediaMongoRepository>();
+        }
+
         [Test]
         public async Task Should_create_media()
         {
-            await RunAsUserAsync();
+            await RunAsUserWithProfile();
 
             var command = await PrepareCreateMediaCommand();
 
@@ -24,7 +32,13 @@ namespace Vogel.Application.IntegrationTest.Medias
 
             var media = await FindByIdAsync<Media>(result.Value!.Id);
 
+            var mediaMongoEntity = await MediaMongoRepository.FindByIdAsync(media!.Id);
+
+            mediaMongoEntity.Should().NotBeNull();
+
             media!.AssertMedia(command);
+
+            media.AssertMediaMongoEntity(mediaMongoEntity!);
      
         }
 
@@ -57,6 +71,10 @@ namespace Vogel.Application.IntegrationTest.Medias
             var media = await FindByIdAsync<Media>(fakeMedia.Id);
 
             media.Should().BeNull();
+
+            var mediaMongoEntity = await MediaMongoRepository.FindByIdAsync(command.Id);
+
+            mediaMongoEntity.Should().BeNull();
 
         }
 
@@ -101,7 +119,7 @@ namespace Vogel.Application.IntegrationTest.Medias
             var command = new CreateMediaCommand
             {
                 Content = stream,
-                MediaType = MediaType.Image,
+                MediaType = Domain.Medias.MediaType.Image,
                 MimeType = "image/png",
                 Name = Guid.NewGuid().ToString()
             };
@@ -111,11 +129,11 @@ namespace Vogel.Application.IntegrationTest.Medias
 
         private async Task<Media> CreateMediaAsync()
         {
-            await RunAsUserAsync();
+            await RunAsUserWithProfile();
 
             var media = new Media()
             {
-                MediaType = MediaType.Image,
+                MediaType = Domain.Medias.MediaType.Image,
                 Size = 56666,
                 File = Guid.NewGuid().ToString(),
                 MimeType = "image/png",

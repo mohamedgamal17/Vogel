@@ -7,26 +7,25 @@ namespace Vogel.BuildingBlocks.EntityFramework.Interceptors
     public class AuditableEntityInterceptors : SaveChangesInterceptor
     {
         private readonly ISecurityContext _securityContext;
-        private readonly TimeProvider _timeProvider;
 
-        public AuditableEntityInterceptors(ISecurityContext securityContext, TimeProvider timeProvider)
+        public AuditableEntityInterceptors(ISecurityContext securityContext)
         {
             _securityContext = securityContext;
-            _timeProvider = timeProvider;
         }
 
-        public override int SavedChanges(SaveChangesCompletedEventData eventData, int result)
+
+        public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
         {
             UpdateEntites(eventData.Context);
 
-            return base.SavedChanges(eventData, result);
+            return base.SavingChanges(eventData, result);
         }
 
-        public override ValueTask<int> SavedChangesAsync(SaveChangesCompletedEventData eventData, int result, CancellationToken cancellationToken = default)
+        public override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
         {
-            UpdateEntites(eventData.Context);
+             UpdateEntites(eventData.Context);
 
-            return base.SavedChangesAsync(eventData, result);
+            return base.SavingChangesAsync(eventData, result);
         }
 
 
@@ -41,23 +40,21 @@ namespace Vogel.BuildingBlocks.EntityFramework.Interceptors
 
             foreach (var entry in entries)
             {
-                var utcNow = _timeProvider.GetUtcNow();
-
                 if (entry.State is EntityState.Added or EntityState.Modified )
                 {      
                     if (entry.State == EntityState.Added)
                     {
                         entry.Entity.CreatorId = _securityContext.User?.Id;
-                        entry.Entity.CreationTime = utcNow;
+                        entry.Entity.CreationTime = DateTime.UtcNow;
                     }
                     entry.Entity.ModifierId = _securityContext.User?.Id;
-                    entry.Entity.ModificationTime = utcNow;
+                    entry.Entity.ModificationTime = DateTime.UtcNow;
                 }
-                else
+                else if(entry.State == EntityState.Deleted)
                 {
 
                     entry.Entity.DeletorId = _securityContext.User?.Id;
-                    entry.Entity.DeletionTime = utcNow;   
+                    entry.Entity.DeletionTime = DateTime.UtcNow;   
                 }
             }
         }

@@ -1,17 +1,25 @@
 ﻿using Bogus;
 using FluentAssertions;
-using FluentAssertions.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 using System.Security.Claims;
-using Vogel.Application.Common.Exceptions;
 using Vogel.Application.IntegrationTest.Extensions;
 using Vogel.Application.Users.Commands;
+using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.Domain.Medias;
 using Vogel.Domain.Users;
+using Vogel.MongoDb.Entities.Users;
 using static Vogel.Application.IntegrationTest.Testing;
 namespace Vogel.Application.IntegrationTest.Users
 {
     public class UserCommandHandlerTests : BaseTestFixture
     {
+        public UserMongoRepository UserMongoRepository { get; set; }
+
+        public UserCommandHandlerTests()
+        {
+            UserMongoRepository = Testing.ServiceProvider.GetRequiredService<UserMongoRepository>();
+        }
+
         [Test]
         public async Task Should_create_user()
         {
@@ -25,11 +33,17 @@ namespace Vogel.Application.IntegrationTest.Users
 
             result.IsSuccess.Should().BeTrue();
 
-            var user = await FindByIdAsync<User>(result.Value!.Id);
+            var user = await FindByIdAsync<UserAggregate>(result.Value!.Id);
 
             user.Should().NotBeNull();
 
+            var userMongoEntity = await UserMongoRepository.FindByIdAsync(user!.Id);
+
+            userMongoEntity.Should().NotBeNull();
+
             user?.AssertUser(command);
+
+            user!.AssertUserMongoEntity(userMongoEntity!);
         }
 
         [Test]
@@ -53,9 +67,7 @@ namespace Vogel.Application.IntegrationTest.Users
         [Test]
         public async Task Should_failure_while_creating_user_when_user_profile_is_already_created()
         {
-            await RunAsUserAsync();
-
-            await CreateUserAsync();
+            await RunAsUserWithProfile();
 
             var media = await CreateMediaAsync();
 
@@ -99,11 +111,17 @@ namespace Vogel.Application.IntegrationTest.Users
 
             result.IsSuccess.Should().BeTrue();
 
-            var user = await FindByIdAsync<User>(result.Value!.Id);
+            var user = await FindByIdAsync<UserAggregate>(result.Value!.Id);
 
             user.Should().NotBeNull();
 
+            var userMongoEntity = await UserMongoRepository.FindByIdAsync(user!.Id);
+
+            userMongoEntity.Should().NotBeNull();
+
             user?.AssertUser(command);
+
+            user.AssertUserMongoEntity(userMongoEntity);
         }
 
 
@@ -129,6 +147,7 @@ namespace Vogel.Application.IntegrationTest.Users
             await RunAsUserAsync();
 
             var media = await CreateMediaAsync();
+
 
             await RunAsUserAsync();
 
@@ -167,7 +186,7 @@ namespace Vogel.Application.IntegrationTest.Users
                 FirstName = faker.Person.FirstName,
                 LastName = faker.Person.LastName,
                 BirthDate = faker.Person.DateOfBirth,
-                Gender = Gender.Male,
+                Gender = Domain.Users.Gender.Male,
                 AvatarId = media.Id
             };
             return command;
@@ -183,25 +202,25 @@ namespace Vogel.Application.IntegrationTest.Users
                 FirstName = faker.Person.FirstName,
                 LastName = faker.Person.LastName,
                 BirthDate = faker.Person.DateOfBirth,
-                Gender = Gender.Male,
+                Gender = Domain.Users.Gender.Male,
                 AvatarId = media.Id
             };
             return command;
         }
 
-        private async Task<User> CreateUserAsync()
+        private async Task<UserAggregate> CreateUserAsync()
         {
             var media = await CreateMediaAsync();
 
             Faker faker = new Faker();
 
-            var user = new User
+            var user = new UserAggregate
             {
                 Id = CurrentUser?.Claims.SingleOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value ?? Guid.NewGuid().ToString(),
                 FirstName = faker.Person.FirstName,
                 LastName = faker.Person.LastName,
                 BirthDate = DateTime.Now,
-                Gender = Gender.Male,
+                Gender = Domain.Users.Gender.Male,
                 AvatarId = media.Id,
             };
 

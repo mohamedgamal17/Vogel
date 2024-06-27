@@ -8,7 +8,7 @@ namespace Vogel.BuildingBlocks.EntityFramework
     {
 
         public VogelDbContext(DbContextOptions<TContext> options) : base(options)
-        {
+        { 
         }
     }
 }

@@ -22,10 +22,10 @@ namespace Vogel.Infrastructure.Migrations
                     Size = table.Column<long>(type: "bigint", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     CreatorId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    CreationTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    ModificationTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModificationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifierId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    DeletionTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeletorId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true)
                 },
                 constraints: table =>
@@ -42,10 +42,10 @@ namespace Vogel.Infrastructure.Migrations
                     MediaId = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     CreatorId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    CreationTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    ModificationTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModificationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifierId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    DeletionTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeletorId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true)
                 },
                 constraints: table =>
@@ -64,10 +64,10 @@ namespace Vogel.Infrastructure.Migrations
                     Gender = table.Column<int>(type: "int", nullable: false),
                     AvatarId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     CreatorId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    CreationTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    ModificationTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModificationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifierId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    DeletionTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeletorId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true)
                 },
                 constraints: table =>
@@ -89,10 +89,10 @@ namespace Vogel.Infrastructure.Migrations
                     PostId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     CreatorId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    CreationTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    ModificationTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModificationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifierId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    DeletionTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeletorId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true)
                 },
                 constraints: table =>
@@ -115,10 +115,10 @@ namespace Vogel.Infrastructure.Migrations
                     PostId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false),
                     CreatorId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    CreationTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    ModificationTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModificationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifierId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    DeletionTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeletorId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true)
                 },
                 constraints: table =>

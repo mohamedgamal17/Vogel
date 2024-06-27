@@ -20,6 +20,8 @@ namespace Vogel.BuildingBlocks.MongoDb.Extensions
 
             RegisterMongoDatabase(services);
 
+            services.AddSingleton<MongoMigrationEngine>();
+
             services.AddSingleton<IMongoMigrationEngine, MongoMigrationEngine>();
 
             return new VogelMongoDbBuilder(services);

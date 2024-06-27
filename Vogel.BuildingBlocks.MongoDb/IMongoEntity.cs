@@ -1,4 +1,6 @@
-﻿namespace Vogel.BuildingBlocks.MongoDb
+﻿using MongoDB.Bson.Serialization.Attributes;
+
+namespace Vogel.BuildingBlocks.MongoDb
 {
     public interface IMongoEntity
     {
@@ -11,6 +13,8 @@
     }
     public abstract class MongoEntity<TKey> : IMongoEntity<TKey>
     {
+        [BsonId]
+        [BsonElement("_id")]
         public TKey Id { get; set; }
     }
 

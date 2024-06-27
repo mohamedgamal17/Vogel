@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Vogel.Application.Extensions;
 using Vogel.Domain.Posts;
 using Vogel.MongoDb.Entities.Comments;
 
@@ -8,7 +9,9 @@ namespace Vogel.Application.Comments.Mappings
     {
         public CommentMongoEntityProfile()
         {
-            CreateMap<Comment, CommentMongoEntity>().ReverseMap();
+            CreateMap<Comment, CommentMongoEntity>()
+                .MapAuditingProperties()
+                .ReverseMap();
         }
     }
 }

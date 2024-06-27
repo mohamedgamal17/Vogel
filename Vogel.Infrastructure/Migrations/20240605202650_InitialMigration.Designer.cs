@@ -12,7 +12,7 @@ using Vogel.Infrastructure.EntityFramework;
 namespace Vogel.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240601230619_InitialMigration")]
+    [Migration("20240605202650_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -31,15 +31,15 @@ namespace Vogel.Infrastructure.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<DateTimeOffset>("CreationTime")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("CreatorId")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<DateTimeOffset?>("DeletionTime")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("DeletorId")
                         .HasMaxLength(256)
@@ -58,8 +58,8 @@ namespace Vogel.Infrastructure.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<DateTimeOffset?>("ModificationTime")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime>("ModificationTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ModifierId")
                         .HasMaxLength(256)
@@ -97,22 +97,22 @@ namespace Vogel.Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<DateTimeOffset>("CreationTime")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("CreatorId")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<DateTimeOffset?>("DeletionTime")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("DeletorId")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<DateTimeOffset?>("ModificationTime")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime>("ModificationTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ModifierId")
                         .HasMaxLength(256)
@@ -154,15 +154,15 @@ namespace Vogel.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<DateTimeOffset>("CreationTime")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("CreatorId")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<DateTimeOffset?>("DeletionTime")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("DeletorId")
                         .HasMaxLength(256)
@@ -172,8 +172,8 @@ namespace Vogel.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<DateTimeOffset?>("ModificationTime")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime>("ModificationTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ModifierId")
                         .HasMaxLength(256)
@@ -201,22 +201,22 @@ namespace Vogel.Infrastructure.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<DateTimeOffset>("CreationTime")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("CreatorId")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<DateTimeOffset?>("DeletionTime")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("DeletorId")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<DateTimeOffset?>("ModificationTime")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime>("ModificationTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ModifierId")
                         .HasMaxLength(256)
@@ -261,15 +261,15 @@ namespace Vogel.Infrastructure.Migrations
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("date");
 
-                    b.Property<DateTimeOffset>("CreationTime")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("CreatorId")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<DateTimeOffset?>("DeletionTime")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("DeletorId")
                         .HasMaxLength(256)
@@ -288,8 +288,8 @@ namespace Vogel.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<DateTimeOffset?>("ModificationTime")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime>("ModificationTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ModifierId")
                         .HasMaxLength(256)

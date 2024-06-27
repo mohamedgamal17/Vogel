@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Vogel.Application.Extensions;
 using Vogel.Domain.Posts;
 using Vogel.MongoDb.Entities.Posts;
 
@@ -8,7 +9,8 @@ namespace Vogel.Application.Posts.Mappings
     {
         public PostMongoEntityProfile()
         {
-            CreateMap<Post, PostMongoEntity>();
+            CreateMap<Post, PostMongoEntity>()
+                .MapAuditingProperties();
         }
     }
 }

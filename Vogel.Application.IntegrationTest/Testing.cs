@@ -9,13 +9,22 @@ using Vogel.Application.Common.Interfaces;
 using Vogel.Application.IntegrationTest.Extensions;
 using Vogel.Application.IntegrationTest.Fakes;
 using Vogel.Application.IntegrationTest.Utilites;
-using Vogel.Domain;
-using Vogel.Domain.Utils;
 using Vogel.Infrastructure;
-using Vogel.Infrastructure.Presistance;
 using Autofac.Extensions.DependencyInjection;
 using Autofac;
-
+using Vogel.BuildingBlocks.Application.Requests;
+using Vogel.BuildingBlocks.Domain.Results;
+using Microsoft.EntityFrameworkCore;
+using Vogel.BuildingBlocks.Domain;
+using Vogel.BuildingBlocks.Domain.Repositories;
+using Vogel.BuildingBlocks.Application.Uow;
+using System.Linq.Expressions;
+using Vogel.BuildingBlocks.MongoDb.Configuration;
+using Vogel.BuildingBlocks.Application.Security;
+using Vogel.BuildingBlocks.MongoDb.Migrations;
+using Vogel.Domain.Users;
+using Bogus.DataSets;
+using Vogel.Domain.Medias;
 namespace Vogel.Application.IntegrationTest
 {
     [SetUpFixture]
@@ -31,13 +40,13 @@ namespace Vogel.Application.IntegrationTest
         static object _lockObj = new object();
 
         [OneTimeSetUp]
-        public void RunBeforeAnyTest()
+        public async Task  RunBeforeAnyTest()
         {
             var services = new ServiceCollection();
 
             _configuration = BuildConfiguration();
 
-            services.AddAuthorization();
+            services.AddAuthorizationCore();
 
             services.AddSingleton(_configuration);
 
@@ -47,7 +56,7 @@ namespace Vogel.Application.IntegrationTest
 
             services.Replace<IS3ObjectStorageService, FakeS3ObjectService>();
 
-            services.AddTransient<ISecurityContext, FakeSecurityContext>();
+            services.Replace<ISecurityContext, FakeSecurityContext>();
 
             services.AddLogging();
 
@@ -56,14 +65,17 @@ namespace Vogel.Application.IntegrationTest
             services.AddSingleton<ILoggerFactory>(provider => new TestOutputLoggerFactory(true));
         
             _serviceProvider = BuildServiceProvider(services);
+
+            await ApplyEFCoreMigration(_serviceProvider);
+
+            await ApplyMongoDbMigration(_serviceProvider);
         }
 
         private IConfiguration BuildConfiguration()
         {
             var builder = new ConfigurationManager()
                  .SetBasePath(Directory.GetCurrentDirectory())
-                 .AddJsonFile("appsettings.json", true, true)
-                 .AddEnvironmentVariables();
+                 .AddJsonFile("appsettings.json", true, true);
 
             return builder.Build();
         }
@@ -77,13 +89,38 @@ namespace Vogel.Application.IntegrationTest
             return serviceProvider;
         }
 
+
+        private async Task ApplyEFCoreMigration(IServiceProvider serviceProvider)
+        {
+            var dbContext = serviceProvider.GetRequiredService<DbContext>();
+
+            await dbContext.Database.MigrateAsync();
+        }
+
+        private async Task ApplyMongoDbMigration(IServiceProvider serviceProvider)
+        {
+            using var scope = serviceProvider.CreateScope();
+
+            var migrationEngine = scope.ServiceProvider.GetRequiredService<IMongoMigrationEngine>();
+
+            await migrationEngine.MigrateAsync();
+        }
+
         [OneTimeTearDown]
         public async Task RunAfterAllTests()
         {
-            await EnsureDatebaseDeleted();
+        //    await DropSqlDb();
+         //   await DropMongoDb();
         }
 
-        private async Task EnsureDatebaseDeleted()
+        private async Task DropSqlDb()
+        {
+            var dbContext = _serviceProvider.GetRequiredService<DbContext>();
+
+            await dbContext.Database.EnsureDeletedAsync();
+        }
+
+        private async Task DropMongoDb()
         {
             var mongoConfiguration = _serviceProvider.GetRequiredService<MongoDbSettings>();
 
@@ -102,66 +139,86 @@ namespace Vogel.Application.IntegrationTest
         }
 
         public static async Task<TEntity> InsertAsync<TEntity>(TEntity entity)
-            where TEntity : Entity
+            where TEntity : class,IEntity
         {
-            using var scope = _serviceProvider.CreateScope();
-
-            var repository = scope.ServiceProvider.GetRequiredService<IMongoDbRepository<TEntity>>();
-
-            return await repository.InsertAsync(entity);
+            return await WithUnitOfWork(async (sp) =>
+            {
+                var repository = sp.GetRequiredService<IRepository<TEntity>>();
+                return await repository.InsertAsync(entity);
+            });
         }
 
         public static async Task<List<TEntity>> InsertManyAsync<TEntity>(List<TEntity> entity)
-            where TEntity : Entity
+            where TEntity : class, IEntity
         {
-            using var scope = _serviceProvider.CreateScope();
+            return await WithUnitOfWork(async (sp) =>
+            {
+                var repository = sp.GetRequiredService<IRepository<TEntity>>();
 
-            var repository = scope.ServiceProvider.GetRequiredService<IMongoDbRepository<TEntity>>();
-
-            return await repository.InsertManyAsync(entity);
+                return await repository.InsertManyAsync(entity);
+            });
         }
 
         public static async Task<TEntity> UpdateAsync<TEntity>(TEntity entity)
-            where TEntity : Entity
+            where TEntity : class ,IEntity
         {
-            using var scope = _serviceProvider.CreateScope();
-
-            var repository = scope.ServiceProvider.GetRequiredService<IMongoDbRepository<TEntity>>();
-
-            return await repository.UpdateAsync(entity);
+            return await WithUnitOfWork(async (sp) =>
+            {
+                var repository = sp.GetRequiredService<IRepository<TEntity>>();
+                return await repository.UpdateAsync(entity);
+            });
         }
 
         public static async Task DeleteAsync<TEntity>(TEntity entity)
-            where TEntity : Entity
+            where TEntity : class, IEntity
         {
-            using var scope = _serviceProvider.CreateScope();
+            await WithUnitOfWork(async (sp) =>
+            {
+                var repository = sp.GetRequiredService<IRepository<TEntity>>();
 
-            var repository = scope.ServiceProvider.GetRequiredService<IMongoDbRepository<TEntity>>();
+                await repository.DeleteAsync(entity);
 
-            await repository.DeleteAsync(entity);
+                return Unit.Value;
+
+            });
+
         }
 
-        public static async Task<TEntity> SingleAsync<TEntity>(FilterDefinition<TEntity> filter)
-            where TEntity : Entity
+        public static async Task<TEntity> SingleAsync<TEntity>(Expression<Func<TEntity, bool>> filter)
+            where TEntity : class, IEntity
         {
             using var scope = _serviceProvider.CreateScope();
 
-            var repository = scope.ServiceProvider.GetRequiredService<IMongoDbRepository<TEntity>>();
+            var repository = scope.ServiceProvider.GetRequiredService<IRepository<TEntity>>();
 
             return await repository.SingleAsync(filter);
         }
 
         public static async Task<TEntity?> FindByIdAsync<TEntity>(string id)
-           where TEntity : Entity
+           where TEntity : class , IEntity
         {
             using var scope = _serviceProvider.CreateScope();
 
-            var repository = scope.ServiceProvider.GetRequiredService<IMongoDbRepository<TEntity>>();
+            var repository = scope.ServiceProvider.GetRequiredService<IRepository<TEntity>>();
 
             return await repository.FindByIdAsync(id);
         }
 
 
+        public static async Task<TResult> WithUnitOfWork<TResult>(Func<IServiceProvider,Task<TResult>> func)
+        {
+            using var scope = _serviceProvider.CreateScope();
+
+            var unitOfWorkManager = scope.ServiceProvider.GetRequiredService<IUnitOfWorkManager>();
+
+            var uow = await unitOfWorkManager.BeginAsync();
+
+            var result = await func(scope.ServiceProvider);
+
+            await uow.CommitAsync();
+
+            return result;
+        }
         public static void RemoveCurrentUser()
         {
             lock (_lockObj)
@@ -179,6 +236,22 @@ namespace Vogel.Application.IntegrationTest
             string surName = fakePerson.LastName;
             DateTime birthDate = fakePerson.DateOfBirth;
             await RunAsUserAsync(id, userName, givenName, surName, birthDate);
+
+      
+        }
+
+        public static async Task RunAsUserWithProfile()
+        {
+            await RunAsUserAsync();
+
+            await InsertAsync(new UserAggregate
+            {
+                Id = CurrentUser?.Claims.SingleOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value ?? Guid.NewGuid().ToString(),
+                FirstName = Guid.NewGuid().ToString(),
+                LastName = Guid.NewGuid().ToString(),
+                BirthDate = DateTime.Now,
+                Gender = Domain.Users.Gender.Male,
+            });
         }
 
         public static async Task RunAsUserAsync(string id)
@@ -216,6 +289,5 @@ namespace Vogel.Application.IntegrationTest
             }
          
         }
-
     }
 }

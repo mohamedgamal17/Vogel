@@ -1,20 +1,26 @@
-﻿using Bogus;
-using FluentAssertions;
+﻿using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
 using System.Security.Claims;
 using Vogel.Application.Comments.Commands;
-using Vogel.Application.Common.Exceptions;
 using Vogel.Application.IntegrationTest.Extensions;
+using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.Domain.Posts;
+using Vogel.MongoDb.Entities.Comments;
 using static Vogel.Application.IntegrationTest.Testing;
 namespace Vogel.Application.IntegrationTest.Comments
 {
     public class CommentsCommandHandlerTests
     {
+        public CommentMongoRepository CommentMongoRepository { get; set; }
+        public CommentsCommandHandlerTests()
+        {
+            CommentMongoRepository = Testing.ServiceProvider.GetRequiredService<CommentMongoRepository>();
+        }
 
         [Test]
         public async Task Should_post_user_comment()
         {
-            await RunAsUserAsync();
+            await RunAsUserWithProfile();
 
             var fakePost = await CreatePostAsync();
 
@@ -32,7 +38,14 @@ namespace Vogel.Application.IntegrationTest.Comments
 
             comment.Should().NotBeNull();
 
+            var commentMongoEntity = await CommentMongoRepository.FindByIdAsync(comment!.Id);
+
+            commentMongoEntity.Should().NotBeNull();
+
             comment!.AssertComment(command);
+
+            comment.AssertCommentMongoEntity(commentMongoEntity!);
+
         }
 
         [Test]
@@ -76,7 +89,7 @@ namespace Vogel.Application.IntegrationTest.Comments
         [Test]
         public async Task Should_update_comment()
         {
-            await RunAsUserAsync();
+            await RunAsUserWithProfile();
 
             var fakePost = await CreatePostAsync();
 
@@ -97,7 +110,13 @@ namespace Vogel.Application.IntegrationTest.Comments
 
             comment.Should().NotBeNull();
 
+            var commentMongoEntity = await CommentMongoRepository.FindByIdAsync(comment!.Id);
+
+            commentMongoEntity.Should().NotBeNull();
+
             comment!.AssertComment(command);
+
+            comment.AssertCommentMongoEntity(commentMongoEntity!);
         }
 
 
@@ -215,7 +234,7 @@ namespace Vogel.Application.IntegrationTest.Comments
         {          
             var fakePost = await CreatePostAsync();
 
-            await RunAsUserAsync();
+            await RunAsUserWithProfile();
 
             var fakeComment = await CreateCommentAsync(fakePost);
 

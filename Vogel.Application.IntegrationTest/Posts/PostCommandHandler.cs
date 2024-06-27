@@ -1,22 +1,30 @@
 ﻿using FluentAssertions;
 using MediatR;
-using Minio.Exceptions;
+using Microsoft.Extensions.DependencyInjection;
 using System.Security.Claims;
-using Vogel.Application.Common.Exceptions;
 using Vogel.Application.IntegrationTest.Extensions;
 using Vogel.Application.Posts.Commands;
-using Vogel.Application.Posts.Dtos;
+using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.Domain.Medias;
 using Vogel.Domain.Posts;
+using Vogel.MongoDb.Entities.Posts;
 using static Vogel.Application.IntegrationTest.Testing;
 namespace Vogel.Application.IntegrationTest.Posts
 {
     public class PostCommandHandler
     {
+
+        public PostMongoRepository PostMongoRepository { get; set; }
+
+        public PostCommandHandler()
+        {
+            PostMongoRepository = Testing.ServiceProvider.GetRequiredService<PostMongoRepository>();
+        }
+
         [Test]
         public async Task Should_create_post()
         {
-            await RunAsUserAsync();
+            await RunAsUserWithProfile();
 
             var fakeMedia = await CreateMediaAsync();
 
@@ -34,7 +42,13 @@ namespace Vogel.Application.IntegrationTest.Posts
 
             post.Should().NotBeNull();
 
+            var postMongoEntity = await PostMongoRepository.FindByIdAsync(post!.Id);
+
+            postMongoEntity.Should().NotBeNull();
+
             post!.AssertPost(command);
+
+            post.AssertPostMongoEntity(postMongoEntity!);
         }
 
         public async Task Should_failure_while_creating_post_when_user_is_not_authorized()
@@ -59,7 +73,7 @@ namespace Vogel.Application.IntegrationTest.Posts
         [Test]
         public async Task Should_failure_while_create_post_when_user_dose_not_own_this_media()
         {
-            await RunAsUserAsync();
+            await RunAsUserWithProfile();
 
             var fakeMedia = await CreateMediaAsync();
 
@@ -81,7 +95,7 @@ namespace Vogel.Application.IntegrationTest.Posts
         [Test]
         public async Task Should_update_post()
         {
-            await RunAsUserAsync();
+            await RunAsUserWithProfile();
 
             var fakeMedia = await CreateMediaAsync();
 
@@ -104,7 +118,13 @@ namespace Vogel.Application.IntegrationTest.Posts
 
             post.Should().NotBeNull();
 
+            var postMongoEntity = await PostMongoRepository.FindByIdAsync(post!.Id);
+
+            postMongoEntity.Should().NotBeNull();
+
             post!.AssertPost(command);
+
+            post.AssertPostMongoEntity(postMongoEntity!);
         }
 
         [Test]
@@ -134,7 +154,7 @@ namespace Vogel.Application.IntegrationTest.Posts
         [Test]
         public async Task Should_failure_while_updating_post_when_user_dose_not_own_this_post()
         {
-            await RunAsUserAsync();
+            await RunAsUserWithProfile();
 
             var fakeMedia = await CreateMediaAsync();
 
@@ -189,7 +209,7 @@ namespace Vogel.Application.IntegrationTest.Posts
         [Test]
         public async Task Should_remove_post()
         {
-            await RunAsUserAsync();
+            await RunAsUserWithProfile();
 
             var fakeMedia = await CreateMediaAsync();
 
@@ -207,6 +227,10 @@ namespace Vogel.Application.IntegrationTest.Posts
             var post = await FindByIdAsync<Post>(fakePost.Id);
 
             post.Should().BeNull();
+
+            var postMongoEntity = await PostMongoRepository.FindByIdAsync(command.Id);
+
+            postMongoEntity.Should().BeNull();
         }
 
         [Test]

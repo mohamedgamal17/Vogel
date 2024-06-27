@@ -15,6 +15,8 @@ namespace Vogel.BuildingBlocks.EntityFramework
 
             services.AddTransient(typeof(IRepository<>), typeof(EFCoreRepository<>));
 
+            services.AddTransient<TimeProvider>(_=> TimeProvider.System);
+
             return services;
         }
     }

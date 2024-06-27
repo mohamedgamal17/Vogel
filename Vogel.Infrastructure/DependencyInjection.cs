@@ -23,16 +23,16 @@ namespace Vogel.Infrastructure
 
         private static void RegisterEntityFramework(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<ApplicationDbContext>((sp,opt) =>
+            services.AddDbContext<DbContext,ApplicationDbContext>((sp,opt) =>
             {
                 opt.UseSqlServer(configuration.GetConnectionString("Default"), op =>
                 {
                     op.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
                 });
-
                 opt.AddInterceptors(sp.GetRequiredService<AuditableEntityInterceptors>());
                 opt.AddInterceptors(sp.GetRequiredService<DispatchDomainEventInterceptor>());
             });
+
 
             services.AddVogelEfCoreInterceptors();
         }

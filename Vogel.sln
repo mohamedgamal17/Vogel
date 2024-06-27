@@ -25,9 +25,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.BuildingBlocks.Domain
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.BuildingBlocks.Application", "Vogel.BuildingBlocks.Application\Vogel.BuildingBlocks.Application.csproj", "{A4B2F42A-558B-4AD8-A889-49C66BF97D81}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vogel.BuildingBlocks.MongoDb", "Vogel.BuildingBlocks.MongoDb\Vogel.BuildingBlocks.MongoDb.csproj", "{5C882639-710A-4C9E-8AA4-4D80861FC8ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.BuildingBlocks.MongoDb", "Vogel.BuildingBlocks.MongoDb\Vogel.BuildingBlocks.MongoDb.csproj", "{5C882639-710A-4C9E-8AA4-4D80861FC8ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vogel.MongoDb.Entities", "Vogel.MongoDb.Entities\Vogel.MongoDb.Entities.csproj", "{D2BD80B3-0EBD-4EE4-BD4F-3FD1FF39066C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.MongoDb.Entities", "Vogel.MongoDb.Entities\Vogel.MongoDb.Entities.csproj", "{D2BD80B3-0EBD-4EE4-BD4F-3FD1FF39066C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

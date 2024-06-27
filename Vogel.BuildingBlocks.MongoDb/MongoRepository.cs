@@ -61,6 +61,7 @@ namespace Vogel.BuildingBlocks.MongoDb
 
         public async Task<TEntity?> FindByIdAsync(TKey id)
         {
+            var filter = Filter.Eq(x => x.Id, id);
             var cursor = await MongoDbCollection.FindAsync(Filter.Eq(x=> x.Id, id));
 
             return await cursor.FirstOrDefaultAsync();
