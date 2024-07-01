@@ -82,7 +82,7 @@ namespace Vogel.BuildingBlocks.EntityFramework.Interceptors
 
                     await _mediator.Publish(@event);
                 }
-                else
+                else if(entry.State == EntityState.Deleted)
                 {
                     var eventType = typeof(EntityDeletedEvent<>).MakeGenericType(entityType);
 
