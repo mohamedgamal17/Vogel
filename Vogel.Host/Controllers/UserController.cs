@@ -29,7 +29,7 @@ namespace Vogel.Host.Controllers
         [Route("")]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UserDto))]
-        public async Task<IActionResult> CreateUser(UserModel model)
+        public async Task<IActionResult> CreateUser([FromBody]UserModel model)
         {
             var command = model.ToCreateUserCommand();
 
@@ -41,7 +41,7 @@ namespace Vogel.Host.Controllers
         [Route("")]
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UserDto))]
-        public async Task<IActionResult> UpdateUser(UserModel model)
+        public async Task<IActionResult> UpdateUser([FromBody] UserModel model)
         {
             var command = model.ToUpdateUserCommand();
 
