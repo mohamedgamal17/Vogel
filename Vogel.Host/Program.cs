@@ -1,5 +1,8 @@
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using Vogel.BuildingBlocks.MongoDb.Migrations;
 using Vogel.Host;
+using Vogel.Infrastructure.EntityFramework;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +12,11 @@ builder.Services.AddVogelWeb(builder.Configuration);
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
 var app = builder.Build();
+
+
+await MigrateSqlDatabase(app.Services);
+
+await MigrateMongoDatabase(app.Services);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -41,3 +49,18 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+
+async Task MigrateSqlDatabase(IServiceProvider serviceProvider)
+{
+    var dbcontext = serviceProvider.GetRequiredService<ApplicationDbContext>();
+
+    await dbcontext.Database.MigrateAsync();
+}
+
+async Task MigrateMongoDatabase(IServiceProvider serviceProvider)
+{
+    var mongoEngine = serviceProvider.GetRequiredService<IMongoMigrationEngine>();
+
+    await mongoEngine.MigrateAsync();
+}
