@@ -1,5 +1,4 @@
-﻿using Ardalis.GuardClauses;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Vogel.Application.Common.Models;
 using Vogel.BuildingBlocks.Application.Requests;
@@ -122,7 +121,7 @@ namespace Vogel.Host.Controllers
                     Detail = businessLogicException.Message
                 };
 
-                return StatusCode(StatusCodes.Status404NotFound, problemDetails);
+                return StatusCode(StatusCodes.Status400BadRequest, problemDetails);
             }
             else 
             {
