@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Vogel.BuildingBlocks.EntityFramework.Extensions;
+using Vogel.Domain.Friendship;
 using Vogel.Domain.Users;
 namespace Vogel.Infrastructure.EntityFramework.Mapping
 {

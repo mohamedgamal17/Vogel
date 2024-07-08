@@ -31,11 +31,17 @@ namespace Vogel.Application.IntegrationTest
     public class Testing
     {
         private static IServiceProvider _serviceProvider;
+
         private static IConfiguration _configuration;
-        private static ClaimsPrincipal _currentUser = new ClaimsPrincipal();
+
+        private static ClaimsPrincipal? _currentUser = null;
+
+        private static UserAggregate? _currentUserProfile = null;
         public static IServiceProvider ServiceProvider => _serviceProvider;
         public static IConfiguration Configuration => _configuration;
         public static ClaimsPrincipal? CurrentUser => _currentUser;
+
+        public static UserAggregate? CurrentUserProfile => _currentUserProfile;
 
         static object _lockObj = new object();
 
@@ -224,7 +230,22 @@ namespace Vogel.Application.IntegrationTest
             lock (_lockObj)
             {
                 _currentUser = null;
+                _currentUserProfile = null;
             }
+        }
+
+        public static async Task RunAsUserAsync(UserAggregate userAggregate)
+        {
+            Faker faker = new Faker();
+            Person fakePerson = faker.Person;
+            string id = userAggregate.ToString();
+            string userName = fakePerson.UserName;
+            string givenName = userAggregate.FirstName;
+            string surName = userAggregate.LastName;
+            DateTime birthDate = userAggregate.BirthDate;
+
+            var princibal = PrepareUserClaimsPrincipal(id, userName, givenName, surName, birthDate);
+
         }
         public static async Task RunAsUserAsync()
         {
@@ -244,7 +265,7 @@ namespace Vogel.Application.IntegrationTest
         {
             await RunAsUserAsync();
 
-            await InsertAsync(new UserAggregate
+            _currentUserProfile =await InsertAsync(new UserAggregate
             {
                 Id = CurrentUser?.Claims.SingleOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value ?? Guid.NewGuid().ToString(),
                 FirstName = Guid.NewGuid().ToString(),
@@ -252,6 +273,24 @@ namespace Vogel.Application.IntegrationTest
                 BirthDate = DateTime.Now,
                 Gender = Domain.Users.Gender.Male,
             });
+        }
+
+        private static ClaimsPrincipal PrepareUserClaimsPrincipal(string id, string userName, string givenName, string surname,
+            DateTime birthDate)
+        {
+            var principal = new ClaimsPrincipal();
+
+            var identity = new ClaimsIdentity();
+
+            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, id));
+            identity.AddClaim(new Claim(ClaimTypes.Name, userName));
+            identity.AddClaim(new Claim(ClaimTypes.GivenName, givenName));
+            identity.AddClaim(new Claim(ClaimTypes.Surname, surname));
+            identity.AddClaim(new Claim(ClaimTypes.DateOfBirth, birthDate.ToString()));
+
+            principal.AddIdentity(identity);
+
+            return principal;
         }
 
         public static async Task RunAsUserAsync(string id)

@@ -12,5 +12,7 @@ namespace Vogel.BuildingBlocks.Domain.Repositories
         Task<TEntity?> FindByIdAsync(object id);
         Task<TEntity?> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> expression);
         Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> expression);
+
+        Task<bool> AnyAsync(Expression<Func<TEntity, bool>> expression);
     }
 }

@@ -19,5 +19,6 @@ namespace Vogel.Application.IntegrationTest.Extensions
             }
             
         }
+
     }
 }

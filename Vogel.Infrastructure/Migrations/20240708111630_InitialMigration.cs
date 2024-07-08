@@ -132,6 +132,69 @@ namespace Vogel.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "FriendRequests",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    SenderId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    ReciverId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    State = table.Column<int>(type: "int", nullable: false),
+                    CreatorId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModificationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifierId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletorId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FriendRequests", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FriendRequests_Users_ReciverId",
+                        column: x => x.ReciverId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_FriendRequests_Users_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Friends",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    SourceId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    TargetId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    CreatorId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModificationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifierId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletorId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Friends", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Friends_Users_SourceId",
+                        column: x => x.SourceId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Friends_Users_TargetId",
+                        column: x => x.TargetId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_CreatorId",
                 table: "Comments",
@@ -156,6 +219,56 @@ namespace Vogel.Infrastructure.Migrations
                 name: "IX_Comments_UserId",
                 table: "Comments",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FriendRequests_CreatorId",
+                table: "FriendRequests",
+                column: "CreatorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FriendRequests_DeletorId",
+                table: "FriendRequests",
+                column: "DeletorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FriendRequests_ModifierId",
+                table: "FriendRequests",
+                column: "ModifierId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FriendRequests_ReciverId",
+                table: "FriendRequests",
+                column: "ReciverId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FriendRequests_SenderId",
+                table: "FriendRequests",
+                column: "SenderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Friends_CreatorId",
+                table: "Friends",
+                column: "CreatorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Friends_DeletorId",
+                table: "Friends",
+                column: "DeletorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Friends_ModifierId",
+                table: "Friends",
+                column: "ModifierId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Friends_SourceId",
+                table: "Friends",
+                column: "SourceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Friends_TargetId",
+                table: "Friends",
+                column: "TargetId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Medias_CreatorId",
@@ -240,6 +353,12 @@ namespace Vogel.Infrastructure.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Comments");
+
+            migrationBuilder.DropTable(
+                name: "FriendRequests");
+
+            migrationBuilder.DropTable(
+                name: "Friends");
 
             migrationBuilder.DropTable(
                 name: "PostReactions");

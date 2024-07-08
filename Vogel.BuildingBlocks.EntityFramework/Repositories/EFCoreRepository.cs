@@ -65,5 +65,12 @@ namespace Vogel.BuildingBlocks.EntityFramework.Repositories
 
             return entity;
         }
+
+
+        public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> expression)
+        {
+            return await _dbContext.Set<TEntity>().AnyAsync(expression);
+        }
+
     }
 }

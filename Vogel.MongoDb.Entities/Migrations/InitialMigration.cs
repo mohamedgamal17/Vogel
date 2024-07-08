@@ -39,7 +39,7 @@ namespace Vogel.MongoDb.Entities.Migrations
                 .Lookup<PostMongoEntity, PostMongoEntity, UserMongoView, PostMongoView>(mongoDb.GetCollection<UserMongoView>("users_view"), "userId", "_id", "user")
                 .Unwind("user", new AggregateUnwindOptions<PostMongoView> { PreserveNullAndEmptyArrays = true })
                 .Lookup<PostMongoEntity, PostMongoView, MediaMongoEntity, PostMongoView>(mongoDb.GetCollection<MediaMongoEntity>("medias"),
-                    "mediaId", "media", "_id")
+                    "mediaId", "_id", "media")
                 .Unwind("media", new AggregateUnwindOptions<PostMongoView> { PreserveNullAndEmptyArrays = true });
 
             await mongoDb.CreateViewAsync("posts_view", "posts", postViewPipline);
