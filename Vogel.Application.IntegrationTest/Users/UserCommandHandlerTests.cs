@@ -31,7 +31,7 @@ namespace Vogel.Application.IntegrationTest.Users
 
             var result = await SendAsync(command);
 
-            result.IsSuccess.Should().BeTrue();
+            result.ShouldBeSuccess();
 
             var user = await FindByIdAsync<UserAggregate>(result.Value!.Id);
 
@@ -44,6 +44,8 @@ namespace Vogel.Application.IntegrationTest.Users
             user?.AssertUser(command);
 
             user!.AssertUserMongoEntity(userMongoEntity!);
+
+            result.Value.AssertUserDto(user!, media);
         }
 
         [Test]
@@ -59,9 +61,7 @@ namespace Vogel.Application.IntegrationTest.Users
 
             var result = await SendAsync(command);
 
-            result.IsFailure.Should().BeTrue();
-
-            result.Exception.Should().BeOfType<ForbiddenAccessException>();
+            result.ShoulBeFailure(typeof(ForbiddenAccessException));
         }
 
         [Test]
@@ -75,9 +75,7 @@ namespace Vogel.Application.IntegrationTest.Users
 
             var result = await SendAsync(command);
 
-            result.IsFailure.Should().BeTrue();
-
-            result.Exception.Should().BeOfType<BusinessLogicException>();
+            result.ShoulBeFailure(typeof(BusinessLogicException));
         }
 
         [Test]
@@ -91,9 +89,7 @@ namespace Vogel.Application.IntegrationTest.Users
 
             var result = await SendAsync(command);
 
-            result.IsFailure.Should().BeTrue();
-
-            result.Exception.Should().BeOfType<UnauthorizedAccessException>();
+            result.ShoulBeFailure(typeof(UnauthorizedAccessException));
         }
 
         [Test]
@@ -109,7 +105,7 @@ namespace Vogel.Application.IntegrationTest.Users
 
             var result = await SendAsync(command);
 
-            result.IsSuccess.Should().BeTrue();
+            result.ShouldBeSuccess();
 
             var user = await FindByIdAsync<UserAggregate>(result.Value!.Id);
 
@@ -121,7 +117,9 @@ namespace Vogel.Application.IntegrationTest.Users
 
             user?.AssertUser(command);
 
-            user.AssertUserMongoEntity(userMongoEntity);
+            user!.AssertUserMongoEntity(userMongoEntity!);
+
+            result.Value.AssertUserDto(user!, media);
         }
 
 
@@ -136,9 +134,7 @@ namespace Vogel.Application.IntegrationTest.Users
 
             var result = await SendAsync(command);
 
-            result.IsFailure.Should().BeTrue();
-
-            result.Exception.Should().BeOfType<UnauthorizedAccessException>();
+            result.ShoulBeFailure(typeof(UnauthorizedAccessException));
         }
 
         [Test]
@@ -156,9 +152,7 @@ namespace Vogel.Application.IntegrationTest.Users
 
             var result = await SendAsync(command);
 
-            result.IsFailure.Should().BeTrue();
-
-            result.Exception.Should().BeOfType<ForbiddenAccessException>();
+            result.ShoulBeFailure(typeof(ForbiddenAccessException));
         }
 
         [Test]
@@ -172,9 +166,7 @@ namespace Vogel.Application.IntegrationTest.Users
 
             var result = await SendAsync(command);
 
-            result.IsFailure.Should().BeTrue();
-
-            result.Exception.Should().BeOfType<EntityNotFoundException>();
+            result.ShoulBeFailure(typeof(EntityNotFoundException));
         }
         private async Task<CreateUserCommand> PrepareUserCreateCommand(Media media)
         {
