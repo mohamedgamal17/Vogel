@@ -115,8 +115,8 @@ namespace Vogel.Application.IntegrationTest
         [OneTimeTearDown]
         public async Task RunAfterAllTests()
         {
-        //    await DropSqlDb();
-         //   await DropMongoDb();
+            await DropSqlDb();
+            await DropMongoDb();
         }
 
         private async Task DropSqlDb()
@@ -219,11 +219,24 @@ namespace Vogel.Application.IntegrationTest
 
             var uow = await unitOfWorkManager.BeginAsync();
 
-            var result = await func(scope.ServiceProvider);
+            try
+            {
+ 
+                var result = await func(scope.ServiceProvider);
 
-            await uow.CommitAsync();
+                await uow.CommitAsync();
 
-            return result;
+                return result;
+            }
+            catch(Exception exception)
+            {
+                await uow.RollbackAsync(CancellationToken.None);
+
+                throw;
+            }
+     
+
+            
         }
         public static void RemoveCurrentUser()
         {
@@ -234,45 +247,46 @@ namespace Vogel.Application.IntegrationTest
             }
         }
 
-        public static async Task RunAsUserAsync(UserAggregate userAggregate)
-        {
-            Faker faker = new Faker();
-            Person fakePerson = faker.Person;
-            string id = userAggregate.ToString();
-            string userName = fakePerson.UserName;
-            string givenName = userAggregate.FirstName;
-            string surName = userAggregate.LastName;
-            DateTime birthDate = userAggregate.BirthDate;
-
-            var princibal = PrepareUserClaimsPrincipal(id, userName, givenName, surName, birthDate);
-
-        }
         public static async Task RunAsUserAsync()
         {
-            Faker faker = new Faker();
-            Person fakePerson = faker.Person;
-            string id = Guid.NewGuid().ToString();
-            string userName = fakePerson.UserName;
-            string givenName = fakePerson.FirstName;
-            string surName = fakePerson.LastName;
-            DateTime birthDate = fakePerson.DateOfBirth;
-            await RunAsUserAsync(id, userName, givenName, surName, birthDate);
-
-      
+            await RunAsUserAsync(Guid.NewGuid().ToString());
         }
 
-        public static async Task RunAsUserWithProfile()
+        public static async Task RunAsUserAsync(string id)
         {
-            await RunAsUserAsync();
-
-            _currentUserProfile =await InsertAsync(new UserAggregate
+            var user = await InsertAsync(new UserAggregate
             {
-                Id = CurrentUser?.Claims.SingleOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value ?? Guid.NewGuid().ToString(),
+                Id = id,
                 FirstName = Guid.NewGuid().ToString(),
                 LastName = Guid.NewGuid().ToString(),
                 BirthDate = DateTime.Now,
                 Gender = Domain.Users.Gender.Male,
             });
+
+            var principal = PrepareUserClaimsPrincipal(user.Id, Guid.NewGuid().ToString(), user.FirstName, user.LastName, user.BirthDate);
+
+
+            lock (_lockObj)
+            {
+                _currentUser = principal;
+                _currentUserProfile = user;
+            }
+        }
+
+        public static async Task RunAsUserWithoutProfileAsync()
+        {
+            await RunAsUserWithoutProfileAsync(Guid.NewGuid().ToString());
+        }
+        public static Task RunAsUserWithoutProfileAsync(string id)
+        {
+            var principal = PrepareUserClaimsPrincipal(id, Guid.NewGuid().ToString(), Guid.NewGuid().ToString(),Guid.NewGuid().ToString(), DateTime.Now.AddYears(-18));
+
+            lock (_lockObj)
+            {
+                _currentUser = principal;
+            }
+
+            return Task.CompletedTask;
         }
 
         private static ClaimsPrincipal PrepareUserClaimsPrincipal(string id, string userName, string givenName, string surname,
@@ -293,40 +307,6 @@ namespace Vogel.Application.IntegrationTest
             return principal;
         }
 
-        public static async Task RunAsUserAsync(string id)
-        {
-            Faker faker = new Faker();
-            Person fakePerson = faker.Person;
-            string userId  = id;
-            string userName = fakePerson.UserName;
-            string givenName = fakePerson.FirstName;
-            string surName = fakePerson.LastName;
-            DateTime birthDate = fakePerson.DateOfBirth;
-            await RunAsUserAsync(id, userName, givenName, surName, birthDate);
-        }
-        public static Task RunAsUserAsync(string id ,string userName , string givenName , string surname, 
-            DateTime birthDate)
 
-        {
-            lock (_lockObj)
-            {
-                var principal = new ClaimsPrincipal();
-
-                var identity = new ClaimsIdentity();
-
-                identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, id));
-                identity.AddClaim(new Claim(ClaimTypes.Name, userName));
-                identity.AddClaim(new Claim(ClaimTypes.GivenName, givenName));
-                identity.AddClaim(new Claim(ClaimTypes.Surname, surname));
-                identity.AddClaim(new Claim(ClaimTypes.DateOfBirth, birthDate.ToString()));
-
-                principal.AddIdentity(identity);
-
-                _currentUser = principal;
-
-                return Task.CompletedTask;
-            }
-         
-        }
     }
 }

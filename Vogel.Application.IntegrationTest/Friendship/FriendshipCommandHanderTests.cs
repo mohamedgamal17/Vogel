@@ -26,7 +26,7 @@ namespace Vogel.Application.IntegrationTest.Friendship
         [Test]
         public async Task Should_create_friend_request()
         {
-            await RunAsUserWithProfile();
+            await RunAsUserAsync();
 
             var fakeUser = await CreateFakeUser();
 
@@ -74,7 +74,7 @@ namespace Vogel.Application.IntegrationTest.Friendship
         [Test]
         public async Task Should_failure_when_sending_friend_request_while_there_is_already_pending_request()
         {
-            await RunAsUserWithProfile();
+            await RunAsUserAsync();
             var fakeSender = CurrentUserProfile!;
             var fakeReciver = await CreateFakeUser();
 
@@ -95,7 +95,7 @@ namespace Vogel.Application.IntegrationTest.Friendship
         {
             RemoveCurrentUser();
 
-            await RunAsUserWithProfile();
+            await RunAsUserAsync();
             var sender = await CreateFakeUser();
             var reciver = CurrentUserProfile!;
 
@@ -155,7 +155,7 @@ namespace Vogel.Application.IntegrationTest.Friendship
         [Test]
         public async Task Should_failure_when_accepting_friend_request_while_user_is_not_the_reciver_of_request()
         {
-            await RunAsUserWithProfile();
+            await RunAsUserAsync();
 
             var sender = CurrentUserProfile!;
             var reciver = await CreateFakeUser();
@@ -175,7 +175,7 @@ namespace Vogel.Application.IntegrationTest.Friendship
         [Test]
         public async Task Should_sender_cancel_friend_request()
         {
-            await RunAsUserWithProfile();
+            await RunAsUserAsync();
             var sender = CurrentUserProfile!;
             var reciver = await CreateFakeUser();
 
@@ -223,7 +223,7 @@ namespace Vogel.Application.IntegrationTest.Friendship
         [Test]
         public async Task Should_failure_when_cancelling_friend_request_when_user_is_not_the_real_sender()
         {
-            await RunAsUserWithProfile();
+            await RunAsUserAsync();
 
             var sender = await CreateFakeUser();
 
@@ -244,7 +244,7 @@ namespace Vogel.Application.IntegrationTest.Friendship
         [Test]
         public async Task Should_reciver_reject_friend_request()
         {
-            await RunAsUserWithProfile();
+            await RunAsUserAsync();
 
             var sender = await CreateFakeUser()!;
 
@@ -294,7 +294,7 @@ namespace Vogel.Application.IntegrationTest.Friendship
         [Test]
         public async Task Should_failure_when_rejecting_friend_request_while_user_is_not_the_real_reciver()
         {
-            await RunAsUserWithProfile();
+            await RunAsUserAsync();
 
             var sender = CurrentUserProfile!;
             var reciver = await CreateFakeUser();
@@ -311,7 +311,7 @@ namespace Vogel.Application.IntegrationTest.Friendship
         [Test]
         public async Task Should_remove_friend()
         {
-            await RunAsUserWithProfile();
+            await RunAsUserAsync();
 
             var soruce = CurrentUserProfile!;
 

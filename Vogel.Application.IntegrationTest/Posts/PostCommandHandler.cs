@@ -24,7 +24,7 @@ namespace Vogel.Application.IntegrationTest.Posts
         [Test]
         public async Task Should_create_post()
         {
-            await RunAsUserWithProfile();
+            await RunAsUserAsync();
 
             var fakeMedia = await CreateMediaAsync();
 
@@ -73,7 +73,7 @@ namespace Vogel.Application.IntegrationTest.Posts
         [Test]
         public async Task Should_failure_while_create_post_when_user_dose_not_own_this_media()
         {
-            await RunAsUserWithProfile();
+            await RunAsUserAsync();
 
             var fakeMedia = await CreateMediaAsync();
 
@@ -95,7 +95,7 @@ namespace Vogel.Application.IntegrationTest.Posts
         [Test]
         public async Task Should_update_post()
         {
-            await RunAsUserWithProfile();
+            await RunAsUserAsync();
 
             var fakeMedia = await CreateMediaAsync();
 
@@ -154,7 +154,7 @@ namespace Vogel.Application.IntegrationTest.Posts
         [Test]
         public async Task Should_failure_while_updating_post_when_user_dose_not_own_this_post()
         {
-            await RunAsUserWithProfile();
+            await RunAsUserAsync();
 
             var fakeMedia = await CreateMediaAsync();
 
@@ -209,7 +209,7 @@ namespace Vogel.Application.IntegrationTest.Posts
         [Test]
         public async Task Should_remove_post()
         {
-            await RunAsUserWithProfile();
+            await RunAsUserAsync();
 
             var fakeMedia = await CreateMediaAsync();
 

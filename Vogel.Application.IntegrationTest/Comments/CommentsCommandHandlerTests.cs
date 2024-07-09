@@ -20,7 +20,7 @@ namespace Vogel.Application.IntegrationTest.Comments
         [Test]
         public async Task Should_post_user_comment()
         {
-            await RunAsUserWithProfile();
+            await RunAsUserAsync();
 
             var fakePost = await CreatePostAsync();
 
@@ -89,7 +89,7 @@ namespace Vogel.Application.IntegrationTest.Comments
         [Test]
         public async Task Should_update_comment()
         {
-            await RunAsUserWithProfile();
+            await RunAsUserAsync();
 
             var fakePost = await CreatePostAsync();
 
@@ -231,10 +231,12 @@ namespace Vogel.Application.IntegrationTest.Comments
 
         [Test]
         public async Task Should_remove_comment_when_user_is_own_post()
-        {          
+        {
+            RemoveCurrentUser();
+
             var fakePost = await CreatePostAsync();
 
-            await RunAsUserWithProfile();
+            await RunAsUserAsync();
 
             var fakeComment = await CreateCommentAsync(fakePost);
 

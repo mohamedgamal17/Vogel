@@ -22,7 +22,7 @@ namespace Vogel.Application.IntegrationTest.Medias
         [Test]
         public async Task Should_create_media()
         {
-            await RunAsUserWithProfile();
+            await RunAsUserAsync();
 
             var command = await PrepareCreateMediaCommand();
 
@@ -129,7 +129,7 @@ namespace Vogel.Application.IntegrationTest.Medias
 
         private async Task<Media> CreateMediaAsync()
         {
-            await RunAsUserWithProfile();
+            await RunAsUserAsync();
 
             var media = new Media()
             {

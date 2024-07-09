@@ -23,7 +23,7 @@ namespace Vogel.Application.IntegrationTest.Users
         [Test]
         public async Task Should_create_user()
         {
-            await RunAsUserAsync();
+            await RunAsUserWithoutProfileAsync();
 
             var media = await CreateMediaAsync();
 
@@ -49,11 +49,11 @@ namespace Vogel.Application.IntegrationTest.Users
         [Test]
         public async Task Should_failure_while_creating_user_when_user_dose_not_own_media()
         {
-            await RunAsUserAsync();
+            await RunAsUserWithoutProfileAsync();
 
             var media = await CreateMediaAsync();
 
-            await RunAsUserAsync();
+            await RunAsUserWithoutProfileAsync();
 
             var command = await PrepareUserCreateCommand(media);
 
@@ -67,7 +67,7 @@ namespace Vogel.Application.IntegrationTest.Users
         [Test]
         public async Task Should_failure_while_creating_user_when_user_profile_is_already_created()
         {
-            await RunAsUserWithProfile();
+            await RunAsUserAsync();
 
             var media = await CreateMediaAsync();
 
@@ -99,7 +99,7 @@ namespace Vogel.Application.IntegrationTest.Users
         [Test]
         public async Task Should_update_user()
         {
-            await RunAsUserAsync();
+            await RunAsUserWithoutProfileAsync();
 
             var fakeUser = await CreateUserAsync();
 
@@ -144,12 +144,11 @@ namespace Vogel.Application.IntegrationTest.Users
         [Test]
         public async Task Should_failure_while_updating_user_when_user_is_dose_not_own_media()
         {
-            await RunAsUserAsync();
+            await RunAsUserWithoutProfileAsync();
 
             var media = await CreateMediaAsync();
 
-
-            await RunAsUserAsync();
+            await RunAsUserWithoutProfileAsync();
 
             var fakeUser = await CreateUserAsync();
 
@@ -165,7 +164,7 @@ namespace Vogel.Application.IntegrationTest.Users
         [Test]
         public async Task Should_failure_while_updaing_user_when_user_is_not_exist()
         {
-            await RunAsUserAsync();
+            await RunAsUserWithoutProfileAsync();
 
             var media = await CreateMediaAsync();
 
