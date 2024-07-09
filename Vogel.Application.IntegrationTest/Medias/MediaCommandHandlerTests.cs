@@ -28,7 +28,7 @@ namespace Vogel.Application.IntegrationTest.Medias
 
             var result = await SendAsync(command);
 
-            result.IsSuccess.Should().BeTrue();
+            result.ShouldBeSuccess();
 
             var media = await FindByIdAsync<Media>(result.Value!.Id);
 
@@ -39,6 +39,8 @@ namespace Vogel.Application.IntegrationTest.Medias
             media!.AssertMedia(command);
 
             media.AssertMediaMongoEntity(mediaMongoEntity!);
+
+            result.Value.AssertMediaDto(media);
      
         }
 
@@ -51,9 +53,7 @@ namespace Vogel.Application.IntegrationTest.Medias
 
             var result = await SendAsync(command);
 
-            result.IsSuccess.Should().BeFalse();
-
-            result.Exception.Should().BeOfType<UnauthorizedAccessException>();
+            result.ShoulBeFailure(typeof(UnauthorizedAccessException));
         }
 
 
@@ -66,7 +66,7 @@ namespace Vogel.Application.IntegrationTest.Medias
 
             var result = await SendAsync(command);
 
-            result.IsSuccess.Should().BeTrue();
+            result.ShouldBeSuccess();
 
             var media = await FindByIdAsync<Media>(fakeMedia.Id);
 
@@ -89,10 +89,7 @@ namespace Vogel.Application.IntegrationTest.Medias
 
             var result = await SendAsync(command);
 
-            result.IsSuccess.Should().BeFalse();
-
-            result.Exception.Should().BeOfType<UnauthorizedAccessException>();
-
+            result.ShoulBeFailure(typeof(UnauthorizedAccessException));
         }
 
         [Test]
@@ -106,9 +103,7 @@ namespace Vogel.Application.IntegrationTest.Medias
 
             var result = await SendAsync(command);
 
-            result.IsSuccess.Should().BeFalse();
-
-            result.Exception.Should().BeOfType<ForbiddenAccessException>();
+            result.ShoulBeFailure(typeof(ForbiddenAccessException));
 
         }
 

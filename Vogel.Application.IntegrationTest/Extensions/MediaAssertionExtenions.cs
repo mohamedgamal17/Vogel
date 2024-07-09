@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using System.Security.Claims;
 using Vogel.Application.Medias.Commands;
+using Vogel.Application.Medias.Dtos;
 using Vogel.Domain.Medias;
 using Vogel.MongoDb.Entities.Medias;
 using static Vogel.Application.IntegrationTest.Testing;
@@ -25,6 +26,14 @@ namespace Vogel.Application.IntegrationTest.Extensions
             media.MimeType.Should().Be(mongoEntity.MimeType);
             media.File.Should().Be(mongoEntity.File);
             media.AssertAuditingProperties(mongoEntity);
+        }
+
+        public static void AssertMediaDto(this MediaAggregateDto dto , Media media)
+        {
+            dto.Id.Should().Be(media.Id);
+            dto.UserId.Should().Be(media.UserId);
+            dto.MimeType.Should().Be(media.MimeType);
+            dto.MediaType.Should().Be((MongoDb.Entities.Medias.MediaType)media.MediaType);
         }
     }
 }

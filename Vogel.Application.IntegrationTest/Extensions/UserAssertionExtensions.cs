@@ -37,10 +37,7 @@ namespace Vogel.Application.IntegrationTest.Extensions
            if(media != null)
             {
                 userDto.Avatar.Should().NotBeNull();
-                userDto.Avatar!.Id.Should().Be(media.Id);
-                userDto.Avatar!.MediaType.Should().Be((MongoDb.Entities.Medias.MediaType)media.MediaType);
-                userDto.Avatar!.MimeType.Should().Be(media.MimeType);
-
+                userDto.Avatar!.AssertMediaDto(media);
             }
         }
 
@@ -55,10 +52,7 @@ namespace Vogel.Application.IntegrationTest.Extensions
             if (media != null )
             {
                 userDto.Avatar.Should().NotBeNull();
-                userDto.Avatar!.Id.Should().Be(media.Id);
-                userDto.Avatar!.MediaType.Should().Be((MongoDb.Entities.Medias.MediaType)media.MediaType);
-                userDto.Avatar!.MimeType.Should().Be(media.MimeType);
-
+                userDto.Avatar!.AssertMediaDto(media);
             }
         }
     }
