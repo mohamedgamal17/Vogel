@@ -36,7 +36,7 @@ namespace Vogel.Application.IntegrationTest.Posts
 
             var result = await SendAsync(command);
 
-            result.IsSuccess.Should().BeTrue();
+            result.ShouldBeSuccess();
 
             var post = await FindByIdAsync<Post>(result.Value!.Id);
 
@@ -49,6 +49,8 @@ namespace Vogel.Application.IntegrationTest.Posts
             post!.AssertPost(command);
 
             post.AssertPostMongoEntity(postMongoEntity!);
+
+            result.Value.AssertPostDto(post, CurrentUserProfile, fakeMedia);
         }
 
         public async Task Should_failure_while_creating_post_when_user_is_not_authorized()
@@ -65,9 +67,7 @@ namespace Vogel.Application.IntegrationTest.Posts
 
             var result = await SendAsync(command);
 
-            result.IsFailure.Should().BeTrue();
-
-            result.Exception.Should().BeOfType<UnauthorizedAccessException>();
+            result.ShoulBeFailure(typeof(UnauthorizedAccessException));
         }
 
         [Test]
@@ -87,9 +87,7 @@ namespace Vogel.Application.IntegrationTest.Posts
 
             var result = await SendAsync(command);
 
-            result.IsSuccess.Should().BeFalse();
-
-            result.Exception.Should().BeOfType<ForbiddenAccessException>();
+            result.ShoulBeFailure(typeof(ForbiddenAccessException));
         }
 
         [Test]
@@ -112,7 +110,7 @@ namespace Vogel.Application.IntegrationTest.Posts
 
             var result = await SendAsync(command);
 
-            result.IsSuccess.Should().BeTrue();
+            result.ShouldBeSuccess();
 
             var post = await FindByIdAsync<Post>(result.Value!.Id);
 
@@ -125,6 +123,10 @@ namespace Vogel.Application.IntegrationTest.Posts
             post!.AssertPost(command);
 
             post.AssertPostMongoEntity(postMongoEntity!);
+
+            result.Value.AssertPostDto(post, CurrentUserProfile, fakeMedia1);
+
+            result.Value.AssertPostDto(post, CurrentUserProfile!, fakeMedia1);
         }
 
         [Test]
@@ -146,9 +148,7 @@ namespace Vogel.Application.IntegrationTest.Posts
 
             var result = await SendAsync(command);
 
-            result.IsFailure.Should().BeTrue();
-
-            result.Exception.Should().BeOfType<UnauthorizedAccessException>();
+            result.ShoulBeFailure(typeof(UnauthorizedAccessException));
         }
 
         [Test]
@@ -173,9 +173,7 @@ namespace Vogel.Application.IntegrationTest.Posts
 
             var result = await SendAsync(command);
 
-            result.IsSuccess.Should().BeFalse();
-
-            result.Exception.Should().BeOfType<ForbiddenAccessException>();
+            result.ShoulBeFailure(typeof(ForbiddenAccessException));
         }
 
         [Test]
@@ -201,9 +199,7 @@ namespace Vogel.Application.IntegrationTest.Posts
 
             var result = await SendAsync(command);
 
-            result.IsSuccess.Should().BeFalse();
-
-            result.Exception.Should().BeOfType<ForbiddenAccessException>();
+            result.ShoulBeFailure(typeof(ForbiddenAccessException));
         }
 
         [Test]
@@ -222,7 +218,7 @@ namespace Vogel.Application.IntegrationTest.Posts
 
             var result = await SendAsync(command);
 
-            result.IsSuccess.Should().BeTrue();
+            result.ShouldBeSuccess();
 
             var post = await FindByIdAsync<Post>(fakePost.Id);
 
@@ -249,9 +245,7 @@ namespace Vogel.Application.IntegrationTest.Posts
 
             var result = await SendAsync(command);
 
-            result.IsFailure.Should().BeTrue();
-
-            result.Exception.Should().BeOfType<UnauthorizedAccessException>();
+            result.ShoulBeFailure(typeof(UnauthorizedAccessException));
         }
 
         [Test]
@@ -272,9 +266,7 @@ namespace Vogel.Application.IntegrationTest.Posts
 
             var result = await SendAsync(command);
 
-            result.IsSuccess.Should().BeFalse();
-
-            result.Exception.Should().BeOfType<ForbiddenAccessException>();
+            result.ShoulBeFailure(typeof(ForbiddenAccessException));
         }
 
         private async Task<Post> CreatePostAsync(Media media)
