@@ -32,7 +32,7 @@ namespace Vogel.Application.IntegrationTest.Comments
 
             var result = await SendAsync(command);
 
-            result.IsSuccess.Should().BeTrue();
+            result.ShouldBeSuccess();
 
             var comment = await FindByIdAsync<Comment>(result.Value!.Id);
 
@@ -45,6 +45,8 @@ namespace Vogel.Application.IntegrationTest.Comments
             comment!.AssertComment(command);
 
             comment.AssertCommentMongoEntity(commentMongoEntity!);
+
+            result.Value.AssertCommentDto(comment, CurrentUserProfile!);
 
         }
 
@@ -61,9 +63,8 @@ namespace Vogel.Application.IntegrationTest.Comments
 
             var result = await SendAsync(command);
 
-            result.IsFailure.Should().BeTrue();
+            result.ShoulBeFailure(typeof(EntityNotFoundException));
 
-            result.Exception.Should().BeOfType<EntityNotFoundException>();
         }
 
         [Test]
@@ -81,9 +82,7 @@ namespace Vogel.Application.IntegrationTest.Comments
 
             var result = await SendAsync(command);
 
-            result.IsFailure.Should().BeTrue();
-
-            result.Exception.Should().BeOfType<UnauthorizedAccessException>();
+            result.ShoulBeFailure(typeof(UnauthorizedAccessException));
         }
 
         [Test]
@@ -104,7 +103,7 @@ namespace Vogel.Application.IntegrationTest.Comments
 
             var result = await SendAsync(command);
 
-            result.IsSuccess.Should().BeTrue();
+            result.ShouldBeSuccess();
 
             var comment = await FindByIdAsync<Comment>(result.Value!.Id);
 
@@ -117,6 +116,8 @@ namespace Vogel.Application.IntegrationTest.Comments
             comment!.AssertComment(command);
 
             comment.AssertCommentMongoEntity(commentMongoEntity!);
+
+            result.Value.AssertCommentDto(comment, CurrentUserProfile!);
         }
 
 
@@ -139,9 +140,7 @@ namespace Vogel.Application.IntegrationTest.Comments
 
             var result = await SendAsync(command);
 
-            result.IsFailure.Should().BeTrue();
-
-            result.Exception.Should().BeOfType<UnauthorizedAccessException>();
+            result.ShoulBeFailure(typeof(UnauthorizedAccessException));
         }
 
         [Test]
@@ -158,9 +157,7 @@ namespace Vogel.Application.IntegrationTest.Comments
 
             var result = await SendAsync(command);
 
-            result.IsFailure.Should().BeTrue();
-
-            result.Exception.Should().BeOfType<EntityNotFoundException>();
+            result.ShoulBeFailure(typeof(EntityNotFoundException)); 
         }
 
         [Test]
@@ -177,9 +174,7 @@ namespace Vogel.Application.IntegrationTest.Comments
 
             var result = await SendAsync(command);
 
-            result.IsFailure.Should().BeTrue();
-
-            result.Exception.Should().BeOfType<EntityNotFoundException>();
+            result.ShoulBeFailure(typeof(EntityNotFoundException));
         }
 
         [Test]
@@ -200,9 +195,7 @@ namespace Vogel.Application.IntegrationTest.Comments
 
             var result = await SendAsync(command);
 
-            result.IsFailure.Should().BeTrue();
-
-            result.Exception.Should().BeOfType<ForbiddenAccessException>();
+            result.ShoulBeFailure(typeof(ForbiddenAccessException));
         }
 
         [Test]
@@ -222,7 +215,7 @@ namespace Vogel.Application.IntegrationTest.Comments
 
             var result = await SendAsync(command);
 
-            result.IsSuccess.Should().BeTrue();
+            result.ShouldBeSuccess();
 
             var comment = await FindByIdAsync<Comment>(fakeComment.Id);
 
@@ -250,7 +243,7 @@ namespace Vogel.Application.IntegrationTest.Comments
 
             var result = await SendAsync(command);
 
-            result.IsSuccess.Should().BeTrue();
+            result.ShouldBeSuccess();
 
             var comment = await FindByIdAsync<Comment>(fakeComment.Id);
 
@@ -274,9 +267,7 @@ namespace Vogel.Application.IntegrationTest.Comments
 
             var result = await SendAsync(command);
 
-            result.IsFailure.Should().BeTrue();
-
-            result.Exception.Should().BeOfType<UnauthorizedAccessException>();
+            result.ShoulBeFailure(typeof(UnauthorizedAccessException));
         }
 
 
@@ -293,9 +284,7 @@ namespace Vogel.Application.IntegrationTest.Comments
 
             var result = await SendAsync(command);
 
-            result.IsFailure.Should().BeTrue();
-
-            result.Exception.Should().BeOfType<EntityNotFoundException>();
+            result.ShoulBeFailure(typeof(EntityNotFoundException));
         }
 
         [Test]
@@ -311,9 +300,7 @@ namespace Vogel.Application.IntegrationTest.Comments
 
             var result = await SendAsync(command);
 
-            result.IsFailure.Should().BeTrue();
-
-            result.Exception.Should().BeOfType<EntityNotFoundException>();
+            result.ShoulBeFailure(typeof(EntityNotFoundException));
         }
 
         [Test]
@@ -333,9 +320,7 @@ namespace Vogel.Application.IntegrationTest.Comments
 
             var result = await SendAsync(command);
 
-            result.IsFailure.Should().BeTrue();
-
-            result.Exception.Should().BeOfType<ForbiddenAccessException>();
+            result.ShoulBeFailure(typeof(ForbiddenAccessException));
         }
 
 

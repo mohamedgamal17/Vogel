@@ -1,6 +1,8 @@
 ﻿using FluentAssertions;
 using Vogel.Application.Comments.Commands;
+using Vogel.Application.Comments.Dtos;
 using Vogel.Domain.Posts;
+using Vogel.Domain.Users;
 using Vogel.MongoDb.Entities.Comments;
 
 namespace Vogel.Application.IntegrationTest.Extensions
@@ -18,6 +20,19 @@ namespace Vogel.Application.IntegrationTest.Extensions
             comment.Content.Should().Be(mongoEntity.Content);
             comment.PostId.Should().Be(mongoEntity.PostId);
             comment.AssertAuditingProperties(mongoEntity);
+        }
+
+        public static void AssertCommentDto(this CommentAggregateDto dto , Comment comment , UserAggregate? user = null)
+        {
+            dto.Id.Should().Be(comment.Id);
+            dto.Content.Should().Be(comment.Content);
+            dto.PostId.Should().Be(comment.PostId);
+            dto.UserId.Should().Be(comment.UserId);
+           
+            if(user != null)
+            {
+                dto.User.AssertPublicUserDto(user);
+            }
         }
     }
 }
