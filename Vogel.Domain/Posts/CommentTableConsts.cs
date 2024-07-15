@@ -12,5 +12,7 @@
 
         public static int UserIdLength = 256;
 
+        public static int CommentIdLength = 256;
+
     }
 }

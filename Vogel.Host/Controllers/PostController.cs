@@ -124,13 +124,9 @@ namespace Vogel.Host.Controllers
         [Route("{postId}/comments")]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CommentAggregateDto))]
-        public async Task<IActionResult> CreatePostComment(string postId , CommentModel model)
+        public async Task<IActionResult> CreatePostComment(string postId ,[FromBody] CreateCommentCommand command)
         {
-            var command = new CreateCommentCommand
-            {
-                Content = model.Content,
-                PostId = postId
-            };
+            command.SetPostId(postId);
 
             var result = await Mediator.Send(command);
 
@@ -140,14 +136,11 @@ namespace Vogel.Host.Controllers
         [Route("{postId}/comments/{commentId}")]
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CommentAggregateDto))]
-        public async Task<IActionResult> UpdatePostComment(string postId , string commentId , CommentModel model)
+        public async Task<IActionResult> UpdatePostComment(string postId , string commentId , [FromBody]UpdateCommentCommand command)
         {
-            var command = new UpdateCommentCommand
-            {
-                Id = commentId,
-                PostId = postId,
-                Content = model.Content
-            };
+            command.SetPostId(postId);
+
+            command.SetId(commentId);
 
             var result = await Mediator.Send(command);
 

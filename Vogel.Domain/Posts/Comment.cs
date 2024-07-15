@@ -1,6 +1,4 @@
-﻿using Vogel.BuildingBlocks.Domain;
-using Vogel.BuildingBlocks.Domain.Auditing;
-
+﻿using Vogel.BuildingBlocks.Domain.Auditing;
 namespace Vogel.Domain.Posts
 {
     public class Comment : AuditedAggregateRoot<string>
@@ -12,5 +10,6 @@ namespace Vogel.Domain.Posts
         public string Content { get; set; }
         public string PostId { get; set; }
         public string UserId { get; set; }
+        public string? CommentId { get; set; }
     }
 }

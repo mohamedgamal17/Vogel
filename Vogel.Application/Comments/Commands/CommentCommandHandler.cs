@@ -47,7 +47,8 @@ namespace Vogel.Application.Comments.Commands
             {
                 Content = request.Content,
                 PostId = post.Id,
-                UserId = _securityContext.User!.Id
+                UserId = _securityContext.User!.Id,
+                CommentId = request.CommentId
             };
 
             await _commentRepository.InsertAsync(comment);

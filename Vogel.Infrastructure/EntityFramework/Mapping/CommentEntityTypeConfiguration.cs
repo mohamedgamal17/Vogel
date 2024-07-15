@@ -19,7 +19,11 @@ namespace Vogel.Infrastructure.EntityFramework.Mapping
 
             builder.Property(x=> x.UserId).HasMaxLength(CommentTableConsts.UserIdLength);
 
+            builder.Property(x => x.CommentId).HasMaxLength(CommentTableConsts.CommentIdLength).IsRequired(false);
+
             builder.HasOne<Post>().WithMany().HasForeignKey(x => x.PostId);
+
+            builder.HasOne<Comment>().WithMany().HasForeignKey(x => x.CommentId).OnDelete(DeleteBehavior.Restrict);
 
             builder.HasIndex(x => x.UserId);
 

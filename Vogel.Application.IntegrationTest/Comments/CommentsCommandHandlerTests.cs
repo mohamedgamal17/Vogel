@@ -51,6 +51,43 @@ namespace Vogel.Application.IntegrationTest.Comments
         }
 
         [Test]
+        public async Task Should_create_sub_comment()
+        {
+            await RunAsUserAsync();
+
+            var fakePost = await CreatePostAsync();
+
+            var fakeComment = await CreateCommentAsync(fakePost);
+
+            await RunAsUserAsync();
+
+            var command = new CreateCommentCommand
+            {
+                PostId = fakePost.Id,
+                CommentId = fakeComment.Id,
+                Content = Guid.NewGuid().ToString()
+            };
+
+            var result = await SendAsync(command);
+
+            result.ShouldBeSuccess();
+
+            var comment = await FindByIdAsync<Comment>(result.Value!.Id);
+
+            comment.Should().NotBeNull();
+
+            var commentMongoEntity =  await CommentMongoRepository.FindByIdAsync(comment!.Id);
+
+            commentMongoEntity.Should().NotBeNull();
+
+            comment!.AssertComment(command);
+
+            comment.AssertCommentMongoEntity(commentMongoEntity!);
+
+            result.Value.AssertCommentDto(comment, CurrentUserProfile!);
+        }
+
+        [Test]
         public async Task Should_return_failure_result_while_creating_comment_when_post_is_not_exist()
         {
             await RunAsUserAsync();
