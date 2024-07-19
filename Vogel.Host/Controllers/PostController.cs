@@ -7,7 +7,6 @@ using Vogel.Application.Posts.Commands;
 using Vogel.Application.Posts.Dtos;
 using Vogel.Application.Posts.Queries;
 using Vogel.Host.Models;
-
 namespace Vogel.Host.Controllers
 {
     [Route("api/posts")]
@@ -111,6 +110,22 @@ namespace Vogel.Host.Controllers
         public async Task<IActionResult> GetComment(string postId, string commentId)
         {
             var query = new GetCommentQuery
+            {
+                PostId = postId,
+                CommentId = commentId
+            };
+
+            var result = await Mediator.Send(query);
+
+            return Ok(result);
+        }
+
+        [Route("{postId}/comments/{commentId}/subcomments")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<CommentAggregateDto>))]
+        public async Task<IActionResult> GetSubComments(string postId , string commentId , string? cursor = null, int limit = 10)
+        {
+            var query = new GetSubCommentsQuery
             {
                 PostId = postId,
                 CommentId = commentId

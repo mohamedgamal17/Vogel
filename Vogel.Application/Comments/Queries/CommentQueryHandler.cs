@@ -12,7 +12,8 @@ namespace Vogel.Application.Comments.Queries
 {
     public class CommentQueryHandler : 
         IApplicationRequestHandler<ListCommentsQuery, Paging<CommentAggregateDto>>,
-        IApplicationRequestHandler<GetCommentQuery, CommentAggregateDto>
+        IApplicationRequestHandler<GetCommentQuery, CommentAggregateDto>,
+        IApplicationRequestHandler<GetSubCommentsQuery, Paging<CommentAggregateDto>>
     {
         private readonly CommentMongoViewRepository _commentMongoViewRepository;
 
@@ -66,12 +67,35 @@ namespace Vogel.Application.Comments.Queries
         }
 
 
-        private IAggregateFluent<CommentMongoView> SortQuery(IAggregateFluent<CommentMongoView> query, ListCommentsQuery request)
+        public async Task<Result<Paging<CommentAggregateDto>>> Handle(GetSubCommentsQuery request, CancellationToken cancellationToken)
+        {
+            var query = _commentMongoViewRepository.AsMongoCollection()
+                .Aggregate()
+                .Match(x => x.PostId == request.PostId && x.CommentId == request.CommentId);
+
+            var sortedQuery = SortQuery(query, request);
+
+            var data = await Paginate(sortedQuery, request);
+
+            var paginInfo = await PreparePagingInfo(query, request);
+
+            var response = await _commentResponseFactory.PreapreListCommentAggregateDto(data);
+
+            var paged = new Paging<CommentAggregateDto>()
+            {
+                Data = response,
+                Info = paginInfo
+            };
+
+            return paged;
+        }
+
+        private IAggregateFluent<CommentMongoView> SortQuery(IAggregateFluent<CommentMongoView> query, PagingParams request)
         {
             return request.Asending ? query.SortBy(x => x.Id) : query.SortByDescending(x => x.Id);
         }
 
-        private async Task<List<CommentMongoView>> Paginate(IAggregateFluent<CommentMongoView> query, ListCommentsQuery request)
+        private async Task<List<CommentMongoView>> Paginate(IAggregateFluent<CommentMongoView> query, PagingParams request)
         {
             if (request.Cursor != null)
             {
@@ -84,7 +108,7 @@ namespace Vogel.Application.Comments.Queries
             return await query.Limit(request.Limit).ToListAsync();
         }
 
-        private async Task<PagingInfo> PreparePagingInfo(IAggregateFluent<CommentMongoView> query, ListCommentsQuery request)
+        private async Task<PagingInfo> PreparePagingInfo(IAggregateFluent<CommentMongoView> query, PagingParams request)
         {
             if (request.Cursor != null)
             {
@@ -108,5 +132,6 @@ namespace Vogel.Application.Comments.Queries
             }
         }
 
+     
     }
 }

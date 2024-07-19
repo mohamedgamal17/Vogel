@@ -15,4 +15,10 @@ namespace Vogel.Application.Comments.Queries
         public string PostId { get; set; }
         public string CommentId { get; set; }
     }
+
+    public class GetSubCommentsQuery : PagingParams, IQuery<Paging<CommentAggregateDto>>
+    {
+        public string PostId { get; set; }
+        public string CommentId { get; set; }
+    }
 }
