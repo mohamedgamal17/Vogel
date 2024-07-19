@@ -9,7 +9,7 @@ namespace Vogel.Application.Comments.Commands
         public string Content { get; set; }
         public string PostId { get; protected set; }
 
-        public void SetPostId(string postId) => PostId = PostId;
+        public void SetPostId(string postId) => PostId = postId;
     }
 
     [Authorize]
@@ -23,7 +23,7 @@ namespace Vogel.Application.Comments.Commands
     {
         public string  Id { get;protected  set ; }
 
-        public void SetId(string id) => Id = Id;
+        public void SetId(string id) => Id = id;
      
     }
 

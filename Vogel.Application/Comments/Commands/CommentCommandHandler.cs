@@ -8,6 +8,7 @@ using Vogel.BuildingBlocks.Application.Security;
 using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.BuildingBlocks.Domain.Repositories;
 using Vogel.BuildingBlocks.Domain.Results;
+using Vogel.Domain.Comments;
 using Vogel.Domain.Posts;
 using Vogel.MongoDb.Entities.Comments;
 namespace Vogel.Application.Comments.Commands

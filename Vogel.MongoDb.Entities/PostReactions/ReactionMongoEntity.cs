@@ -1,6 +1,6 @@
 ﻿using Vogel.BuildingBlocks.MongoDb;
 
-namespace Vogel.MongoDb.Entities.Reactions
+namespace Vogel.MongoDb.Entities.PostReactions
 {
     public class ReactionMongoEntity : FullAuditedMongoEntity<string>
     {

@@ -4,6 +4,7 @@ using System.Security.Claims;
 using Vogel.Application.Comments.Commands;
 using Vogel.Application.IntegrationTest.Extensions;
 using Vogel.BuildingBlocks.Domain.Exceptions;
+using Vogel.Domain.Comments;
 using Vogel.Domain.Posts;
 using Vogel.MongoDb.Entities.Comments;
 using static Vogel.Application.IntegrationTest.Testing;
@@ -26,9 +27,10 @@ namespace Vogel.Application.IntegrationTest.Comments
 
             var command = new CreateCommentCommand
             {
-                PostId = fakePost.Id,
                 Content = Guid.NewGuid().ToString()
             };
+
+            command.SetPostId(fakePost.Id);
 
             var result = await SendAsync(command);
 
@@ -63,10 +65,11 @@ namespace Vogel.Application.IntegrationTest.Comments
 
             var command = new CreateCommentCommand
             {
-                PostId = fakePost.Id,
                 CommentId = fakeComment.Id,
                 Content = Guid.NewGuid().ToString()
             };
+
+            command.SetPostId(fakePost.Id);
 
             var result = await SendAsync(command);
 
@@ -94,9 +97,10 @@ namespace Vogel.Application.IntegrationTest.Comments
 
             var command = new CreateCommentCommand
             {
-                PostId = Guid.NewGuid().ToString(),
                 Content = Guid.NewGuid().ToString()
             };
+
+            command.SetPostId(Guid.NewGuid().ToString());
 
             var result = await SendAsync(command);
 
@@ -111,9 +115,10 @@ namespace Vogel.Application.IntegrationTest.Comments
 
             var command = new CreateCommentCommand
             {
-                PostId = fakePost.Id,
                 Content = Guid.NewGuid().ToString()
             };
+
+            command.SetPostId(fakePost.Id);
 
             RemoveCurrentUser();
 
@@ -133,10 +138,11 @@ namespace Vogel.Application.IntegrationTest.Comments
 
             var command = new UpdateCommentCommand
             {
-                Id = fakeComment.Id,
-                PostId = fakePost.Id,
                 Content = Guid.NewGuid().ToString()
             };
+
+            command.SetId(fakeComment.Id);
+            command.SetPostId(fakePost.Id);
 
             var result = await SendAsync(command);
 
@@ -170,10 +176,11 @@ namespace Vogel.Application.IntegrationTest.Comments
 
             var command = new UpdateCommentCommand
             {
-                Id = fakeComment.Id,
-                PostId = fakePost.Id,
                 Content = Guid.NewGuid().ToString()
             };
+
+            command.SetId(fakeComment.Id);
+            command.SetPostId(fakePost.Id);
 
             var result = await SendAsync(command);
 
@@ -187,10 +194,11 @@ namespace Vogel.Application.IntegrationTest.Comments
 
             var command = new UpdateCommentCommand
             {
-                Id = Guid.NewGuid().ToString(),
-                PostId = Guid.NewGuid().ToString(),
                 Content = Guid.NewGuid().ToString()
             };
+
+            command.SetId(Guid.NewGuid().ToString());
+            command.SetPostId(Guid.NewGuid().ToString());
 
             var result = await SendAsync(command);
 
@@ -204,10 +212,13 @@ namespace Vogel.Application.IntegrationTest.Comments
             var fakePost = await CreatePostAsync();
             var command = new UpdateCommentCommand
             {
-                Id = Guid.NewGuid().ToString(),
-                PostId = fakePost.Id,
                 Content = Guid.NewGuid().ToString()
             };
+
+            command.SetId(fakePost.Id);
+            command.SetPostId(Guid.NewGuid().ToString());
+
+
 
             var result = await SendAsync(command);
 
@@ -225,10 +236,11 @@ namespace Vogel.Application.IntegrationTest.Comments
 
             var command = new UpdateCommentCommand
             {
-                Id = fakeComment.Id,
-                PostId = fakePost.Id,
                 Content = Guid.NewGuid().ToString()
             };
+
+            command.SetId(fakeComment.Id);
+            command.SetPostId(fakePost.Id);
 
             var result = await SendAsync(command);
 

@@ -6,7 +6,7 @@ using Vogel.BuildingBlocks.Application.Requests;
 using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.BuildingBlocks.Domain.Results;
 using Vogel.Domain;
-using Vogel.Domain.Posts;
+using Vogel.Domain.Comments;
 using Vogel.MongoDb.Entities.Comments;
 namespace Vogel.Application.Comments.Queries
 {

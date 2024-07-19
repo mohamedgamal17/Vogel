@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using System.Security.Claims;
 using Vogel.Application.Common.Interfaces;
-using Vogel.Domain.Posts;
+using Vogel.Domain.Comments;
 using Vogel.MongoDb.Entities.Posts;
 
 namespace Vogel.Application.Comments.Polices

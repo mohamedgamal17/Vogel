@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Vogel.BuildingBlocks.EntityFramework.Extensions;
+using Vogel.Domain.Comments;
 using Vogel.Domain.Posts;
 
 namespace Vogel.Infrastructure.EntityFramework.Mapping

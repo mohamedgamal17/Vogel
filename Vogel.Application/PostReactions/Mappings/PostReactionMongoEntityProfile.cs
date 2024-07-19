@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Vogel.Domain.Posts;
-using Vogel.MongoDb.Entities.Reactions;
+using Vogel.MongoDb.Entities.PostReactions;
 
 namespace Vogel.Application.PostReactions.Mappings
 {

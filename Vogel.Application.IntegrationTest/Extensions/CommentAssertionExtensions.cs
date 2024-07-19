@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Vogel.Application.Comments.Commands;
 using Vogel.Application.Comments.Dtos;
-using Vogel.Domain.Posts;
+using Vogel.Domain.Comments;
 using Vogel.Domain.Users;
 using Vogel.MongoDb.Entities.Comments;
 

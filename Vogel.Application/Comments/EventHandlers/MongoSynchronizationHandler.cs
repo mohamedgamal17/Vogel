@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Vogel.BuildingBlocks.Domain.Events;
-using Vogel.Domain.Posts;
+using Vogel.Domain.Comments;
 using Vogel.MongoDb.Entities.Comments;
 namespace Vogel.Application.Comments.EventHandlers
 {

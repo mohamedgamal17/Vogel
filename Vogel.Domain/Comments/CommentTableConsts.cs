@@ -1,4 +1,4 @@
-﻿namespace Vogel.Domain.Posts
+﻿namespace Vogel.Domain.Comments
 {
     public static class CommentTableConsts
     {

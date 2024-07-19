@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Vogel.Application.CommentReactions.Commands;
+using Vogel.Application.CommentReactions.Dtos;
+using Vogel.Application.CommentReactions.Queries;
 using Vogel.Application.Comments.Commands;
 using Vogel.Application.Comments.Dtos;
 using Vogel.Application.Comments.Queries;
+using Vogel.Application.Common.Models;
 using Vogel.Application.Posts.Commands;
 using Vogel.Application.Posts.Dtos;
 using Vogel.Application.Posts.Queries;
@@ -172,6 +176,89 @@ namespace Vogel.Host.Controllers
             {
                 Id = commentId,
                 PostId = postId,
+            };
+
+            var result = await Mediator.Send(command);
+
+            return NoContent(result);
+        }
+
+        [Route("{postId}/comments/{commentId}/reactions")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Paging<CommentReactionDto>))]
+        public async Task<IActionResult> ListCommentReaction(string postId , string commentId, string? cursor = null, int limit = 10)
+        {
+            var query = new ListCommentReactionQuery
+            {
+                PostId = postId,
+                CommentId = commentId,
+                Cursor = cursor,
+                Limit = limit
+            };
+
+            var result = await Mediator.Send(query);
+
+            return Ok(result);
+        }
+
+        [Route("{postId}/comments/{commentId}/reactions/{id}")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CommentReactionDto))]
+        public async Task<IActionResult> GetCommmentReaction(string postId , string commentId , string id )
+        {
+            var query = new GetCommentReactionQuery
+            {
+                PostId = postId,
+                CommentId = commentId,
+                Id = id
+            };
+
+            var result = await Mediator.Send(query);
+
+            return Ok(result);
+        }
+
+
+
+        [Route("{postId}/comments/{commentId}/reactions")]
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CommentReactionDto))]
+        public async Task<IActionResult> CreateCommentReaction(string postId , string commentId , [FromBody] CreateCommentReactionCommand command)
+        {
+            command.SetCommentId(commentId);
+            command.SetPostId(postId);
+
+            var result = await Mediator.Send(command);
+
+            return CreatedAtAction(result, nameof(CommentReactionDto), new { postId = postId, commentId = commentId, id = result.Value?.Id });
+        }
+
+
+        [Route("{postId}/comments/{commentId}/reactions/{id}")]
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CommentReactionDto))]
+        public async Task<IActionResult> UpdateCommentReaction(string postId , string commentId, string id, [FromBody] UpdateCommentReactionCommand command)
+        {
+            command.SetPostId(postId);
+            command.SetCommentId(commentId);
+            command.SetId(id);
+
+            var result = await Mediator.Send(command);
+
+            return Ok(result);
+        }
+
+        [Route("{postId}/comments/{commentId}/reactions/{id}")]
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> RemoveCommentReaction(string postId , string commentId , string id)
+        {
+            var command = new RemoveCommentReactionCommand
+            {
+                PostId = postId,
+                CommentId = commentId,
+                Id = id
+
             };
 
             var result = await Mediator.Send(command);

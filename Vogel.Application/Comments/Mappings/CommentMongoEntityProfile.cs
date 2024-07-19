@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Vogel.Application.Extensions;
-using Vogel.Domain.Posts;
+using Vogel.Domain.Comments;
 using Vogel.MongoDb.Entities.Comments;
 
 namespace Vogel.Application.Comments.Mappings

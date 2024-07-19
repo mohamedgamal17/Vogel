@@ -4,8 +4,8 @@ using MongoDB.Driver.Core.Operations;
 using Vogel.BuildingBlocks.MongoDb.Migrations;
 using Vogel.MongoDb.Entities.Comments;
 using Vogel.MongoDb.Entities.Medias;
+using Vogel.MongoDb.Entities.PostReactions;
 using Vogel.MongoDb.Entities.Posts;
-using Vogel.MongoDb.Entities.Reactions;
 using Vogel.MongoDb.Entities.Users;
 
 namespace Vogel.MongoDb.Entities.Migrations
@@ -53,7 +53,7 @@ namespace Vogel.MongoDb.Entities.Migrations
             await mongoDb.CreateViewAsync("comments_view", "comments", commentViewPipline);
 
             var reactionViewPipline = new EmptyPipelineDefinition<ReactionMongoEntity>()
-                .Lookup<ReactionMongoEntity, ReactionMongoEntity, PublicUserMongoView, ReactionMongoView>(mongoDb.GetCollection<PublicUserMongoView>("uses_view"),"userId" , "_id", "user")
+                .Lookup<ReactionMongoEntity, ReactionMongoEntity, PublicUserMongoView, ReactionMongoView>(mongoDb.GetCollection<PublicUserMongoView>("users_view"),"userId" , "_id", "user")
                 .Unwind("user", new AggregateUnwindOptions<CommentMongoView> { PreserveNullAndEmptyArrays = true });
 
             await mongoDb.CreateViewAsync("reactions_view", "reactions", reactionViewPipline);

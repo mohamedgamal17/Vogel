@@ -1,5 +1,5 @@
 ﻿using Vogel.BuildingBlocks.Domain.Auditing;
-namespace Vogel.Domain.Posts
+namespace Vogel.Domain.Comments
 {
     public class Comment : AuditedAggregateRoot<string>
     {
