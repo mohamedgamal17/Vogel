@@ -13,9 +13,9 @@ namespace Vogel.Application.PostReactions.EventHandlers
     {
 
         private readonly IMapper _mapper;
-        private readonly ReactionMongoRepository _reactionMongoRepository;
+        private readonly PostReactionMongoRepository _reactionMongoRepository;
 
-        public MongoSynchronizationHandler(IMapper mapper, ReactionMongoRepository reactionMongoRepository)
+        public MongoSynchronizationHandler(IMapper mapper, PostReactionMongoRepository reactionMongoRepository)
         {
             _mapper = mapper;
             _reactionMongoRepository = reactionMongoRepository;
@@ -23,7 +23,7 @@ namespace Vogel.Application.PostReactions.EventHandlers
 
         public async Task Handle(EntityCreatedEvent<PostReaction> notification, CancellationToken cancellationToken)
         {
-            var mongoEntity = _mapper.Map<PostReaction, ReactionMongoEntity>(notification.Entity);
+            var mongoEntity = _mapper.Map<PostReaction, PostReactionMongoEntity>(notification.Entity);
 
             await _reactionMongoRepository.InsertAsync(mongoEntity);
 
@@ -31,7 +31,7 @@ namespace Vogel.Application.PostReactions.EventHandlers
 
         public async Task Handle(EntityUpdatedEvent<PostReaction> notification, CancellationToken cancellationToken)
         {
-            var mongoEntity = _mapper.Map<PostReaction, ReactionMongoEntity>(notification.Entity);
+            var mongoEntity = _mapper.Map<PostReaction, PostReactionMongoEntity>(notification.Entity);
 
             await _reactionMongoRepository.UpdateAsync(mongoEntity);
         }

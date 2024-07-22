@@ -1,11 +1,14 @@
 ﻿using MediatR;
 using Vogel.Application.PostReactions.Dtos;
+using Vogel.Application.PostReactions.Factories;
+using Vogel.Application.PostReactions.Policies;
 using Vogel.BuildingBlocks.Application.Requests;
 using Vogel.BuildingBlocks.Application.Security;
 using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.BuildingBlocks.Domain.Repositories;
 using Vogel.BuildingBlocks.Domain.Results;
 using Vogel.Domain.Posts;
+using Vogel.MongoDb.Entities.PostReactions;
 namespace Vogel.Application.PostReactions.Commands
 {
     public class PostReactionCommandHandler :
@@ -14,16 +17,20 @@ namespace Vogel.Application.PostReactions.Commands
         IApplicationRequestHandler<RemovePostReactionCommand , Unit>
     {
         private readonly IRepository<PostReaction> _postReactionRepository;
-
         private readonly IRepository<Post> _postRepository;
-
+        private readonly PostReactionMongoViewRepository _postReactionMongoViewRepository;
+        private readonly IPostReactionResponseFactory _postReactionResponseFactory;
         private readonly ISecurityContext _securityContext;
+        private readonly IApplicationAuthorizationService _applicationAuthorizationService;
 
-        public PostReactionCommandHandler(IRepository<PostReaction> postReactionRepository, IRepository<Post> postRepository, ISecurityContext securityContext)
+        public PostReactionCommandHandler(IRepository<PostReaction> postReactionRepository, IRepository<Post> postRepository, PostReactionMongoViewRepository postReactionMongoViewRepository, IPostReactionResponseFactory postReactionResponseFactory, ISecurityContext securityContext, IApplicationAuthorizationService applicationAuthorizationService)
         {
             _postReactionRepository = postReactionRepository;
             _postRepository = postRepository;
+            _postReactionMongoViewRepository = postReactionMongoViewRepository;
+            _postReactionResponseFactory = postReactionResponseFactory;
             _securityContext = securityContext;
+            _applicationAuthorizationService = applicationAuthorizationService;
         }
 
         public async Task<Result<PostReactionDto>> Handle(CreatePostReactionCommand request, CancellationToken cancellationToken)
@@ -44,23 +51,34 @@ namespace Vogel.Application.PostReactions.Commands
 
             await _postReactionRepository.InsertAsync(reaction);
 
-            return PreparePostReactionDto(reaction);
+            var mongoView = await _postReactionMongoViewRepository.FindByIdAsync(reaction.Id);
+
+            return await _postReactionResponseFactory.PreparePostReactionDto(mongoView!);
         }
 
         public async Task<Result<PostReactionDto>> Handle(UpdatePostReactionCommand request, CancellationToken cancellationToken)
         {
             var reaction = await _postReactionRepository.SingleOrDefaultAsync(x => x.Id == request.Id && x.PostId == request.PostId);
 
-            if(reaction == null)
+            if (reaction == null)
             {
                 return new Result<PostReactionDto>(new EntityNotFoundException(typeof(PostReaction), request.Id));
+            }
+
+            var authorizationResult = await _applicationAuthorizationService.AuthorizeAsync(reaction, PostReactionOperationAuthorizationRequirment.IsOwner);
+
+            if (authorizationResult.IsFailure)
+            {
+                return new Result<PostReactionDto>(authorizationResult.Exception!);
             }
 
             reaction.Type = request.Type;
 
             await _postReactionRepository.UpdateAsync(reaction);
 
-            return PreparePostReactionDto(reaction);
+            var mongoView = await _postReactionMongoViewRepository.FindByIdAsync(reaction.Id);
+
+            return await _postReactionResponseFactory.PreparePostReactionDto(mongoView!);
         }
 
         public async Task<Result<Unit>> Handle(RemovePostReactionCommand request, CancellationToken cancellationToken)
@@ -72,22 +90,17 @@ namespace Vogel.Application.PostReactions.Commands
                 return new Result<Unit>(new EntityNotFoundException(typeof(PostReaction), request.Id));
             }
 
+            var authorizationResult = await _applicationAuthorizationService.AuthorizeAsync(reaction, PostReactionOperationAuthorizationRequirment.IsOwner);
+
+            if (authorizationResult.IsFailure)
+            {
+                return new Result<Unit>(authorizationResult.Exception!);
+            }
+
             await _postReactionRepository.DeleteAsync(reaction);
 
             return Unit.Value;
         }
 
-        private PostReactionDto PreparePostReactionDto(PostReaction postReaction)
-        {
-            var dto = new PostReactionDto
-            {
-                Id = postReaction.Id,
-                PostId = postReaction.PostId,
-                UserId = postReaction.UserId,
-                Type = postReaction.Type
-            };
-
-            return dto;
-        }
     }
 }

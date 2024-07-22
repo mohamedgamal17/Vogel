@@ -22,7 +22,7 @@ namespace Vogel.MongoDb.Entities.Migrations
 
             await mongoDb.CreateCollectionAsync("medias");
 
-            await mongoDb.CreateCollectionAsync("reactions");
+            await mongoDb.CreateCollectionAsync("post_reactions");
 
             await mongoDb.CreateCollectionAsync("comments");
 
@@ -52,11 +52,11 @@ namespace Vogel.MongoDb.Entities.Migrations
 
             await mongoDb.CreateViewAsync("comments_view", "comments", commentViewPipline);
 
-            var reactionViewPipline = new EmptyPipelineDefinition<ReactionMongoEntity>()
-                .Lookup<ReactionMongoEntity, ReactionMongoEntity, PublicUserMongoView, ReactionMongoView>(mongoDb.GetCollection<PublicUserMongoView>("users_view"),"userId" , "_id", "user")
+            var reactionViewPipline = new EmptyPipelineDefinition<PostReactionMongoEntity>()
+                .Lookup<PostReactionMongoEntity, PostReactionMongoEntity, PublicUserMongoView, PostReactionMongoView>(mongoDb.GetCollection<PublicUserMongoView>("users_view"),"userId" , "_id", "user")
                 .Unwind("user", new AggregateUnwindOptions<CommentMongoView> { PreserveNullAndEmptyArrays = true });
 
-            await mongoDb.CreateViewAsync("reactions_view", "reactions", reactionViewPipline);
+            await mongoDb.CreateViewAsync("post_reactions_view", "post_reactions", reactionViewPipline);
 
         }
     }

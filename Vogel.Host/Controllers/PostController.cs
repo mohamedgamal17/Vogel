@@ -7,6 +7,9 @@ using Vogel.Application.Comments.Commands;
 using Vogel.Application.Comments.Dtos;
 using Vogel.Application.Comments.Queries;
 using Vogel.Application.Common.Models;
+using Vogel.Application.PostReactions.Commands;
+using Vogel.Application.PostReactions.Dtos;
+using Vogel.Application.PostReactions.Queries;
 using Vogel.Application.Posts.Commands;
 using Vogel.Application.Posts.Dtos;
 using Vogel.Application.Posts.Queries;
@@ -90,6 +93,77 @@ namespace Vogel.Host.Controllers
 
             return NoContent(result);
         }
+
+        [Route("{postId}/reactions")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK , Type = typeof(Paging<PostReactionDto>))]
+        public async Task<IActionResult> ListPostReactions(string postId , string? cursor = null, int limit = 10)
+        {
+            var query = new ListPostReactionQuery
+            {
+                PostId = postId,
+                Cursor = cursor,
+                Limit = limit
+            };
+
+            var result = await Mediator.Send(query);
+
+            return Ok(result);
+        }
+
+        [Route("{postId}/reactions/{reactionId}")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PostReactionDto))]
+        public async Task<IActionResult> GetPostReaction(string postId , string reactionId)
+        {
+            var query = new GetPostReactionQuery
+            {
+                PostId = postId,
+                Id = reactionId
+            };
+
+            var result = await Mediator.Send(query);
+
+            return Ok(result);
+        }
+
+
+        [Route("{postId}/reactions")]
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(PostReactionDto))]
+        public async Task<IActionResult> CreatePostReaction(string postId , [FromBody] CreatePostReactionCommand command)
+        {
+            var result = await Mediator.Send(command);
+
+            return CreatedAtAction(nameof(GetPostReactionQuery), new { postId = postId, reactionId = result.Value?.Id });
+        }
+
+        [Route("{postId}/reactions/{reactionId}")]
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(PostReactionDto))]
+        public async Task<IActionResult> UpdatePostReaction(string postId , string reactionId, [FromBody] UpdateCommentReactionCommand command)
+        {
+            var result = await Mediator.Send(command);
+
+            return Ok(result);
+        }
+
+        [Route("{postId}/reaction/{reactionId}")]
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> RemovePostReaction(string postId , string reactionId)
+        {
+            var command = new RemovePostReactionCommand
+            {
+                PostId = postId,
+                Id = reactionId
+            };
+
+            var result = await Mediator.Send(command);
+
+            return NoContent(result);
+        }
+
 
         [Route("{postId}/comments")]
         [HttpGet]

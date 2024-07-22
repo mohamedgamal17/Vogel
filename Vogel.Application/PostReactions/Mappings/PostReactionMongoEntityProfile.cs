@@ -8,7 +8,7 @@ namespace Vogel.Application.PostReactions.Mappings
     {
         public PostReactionMongoEntityProfile()
         {
-            CreateMap<PostReaction, ReactionMongoEntity>();
+            CreateMap<PostReaction, PostReactionMongoEntity>();
         }
     }
 }
