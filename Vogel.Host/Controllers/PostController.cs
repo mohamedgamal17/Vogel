@@ -148,7 +148,7 @@ namespace Vogel.Host.Controllers
             return Ok(result);
         }
 
-        [Route("{postId}/reaction/{reactionId}")]
+        [Route("{postId}/reactions/{reactionId}")]
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> RemovePostReaction(string postId , string reactionId)
