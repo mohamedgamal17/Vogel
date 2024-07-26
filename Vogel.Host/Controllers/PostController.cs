@@ -133,16 +133,21 @@ namespace Vogel.Host.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(PostReactionDto))]
         public async Task<IActionResult> CreatePostReaction(string postId , [FromBody] CreatePostReactionCommand command)
         {
+            command.SetPostId(postId);
+
             var result = await Mediator.Send(command);
 
-            return CreatedAtAction(nameof(GetPostReactionQuery), new { postId = postId, reactionId = result.Value?.Id });
+
+            return CreatedAtAction(result,nameof(GetPostReaction), new { postId = postId, reactionId = result.Value?.Id });
         }
 
         [Route("{postId}/reactions/{reactionId}")]
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(PostReactionDto))]
-        public async Task<IActionResult> UpdatePostReaction(string postId , string reactionId, [FromBody] UpdateCommentReactionCommand command)
+        public async Task<IActionResult> UpdatePostReaction(string postId , string reactionId, [FromBody] UpdatePostReactionCommand command)
         {
+            command.SetPostId(postId);
+            command.SetId(reactionId);
             var result = await Mediator.Send(command);
 
             return Ok(result);

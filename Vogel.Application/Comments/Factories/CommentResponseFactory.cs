@@ -1,6 +1,6 @@
-﻿using Vogel.Application.Comments.Dtos;
+﻿using Vogel.Application.CommentReactions.Dtos;
+using Vogel.Application.Comments.Dtos;
 using Vogel.Application.Users.Factories;
-using Vogel.Domain;
 using Vogel.MongoDb.Entities.Comments;
 namespace Vogel.Application.Comments.Factories
 {
@@ -33,12 +33,20 @@ namespace Vogel.Application.Comments.Factories
 
             if(comment.User != null)
             {
-
+                result.User = await _userFactoryResponse.PreparePublicUserDto(comment.User);
             }
 
-            if(comment.User != null)
+            if (comment.ReactionSummary != null)
             {
-                result.User = await _userFactoryResponse.PreparePublicUserDto(comment.User);
+                result.ReactionSummary = new CommentReactionSummaryDto
+                {
+                    Id = comment.Id,
+                    TotalLike = comment.ReactionSummary.TotalLike,
+                    TotalLove = comment.ReactionSummary.TotalLove,
+                    TotalAngry = comment.ReactionSummary.TotalAngry,
+                    TotalLaugh = comment.ReactionSummary.TotalLaugh,
+                    TotalSad = comment.ReactionSummary.TotalSad
+                };
             }
 
             return result;

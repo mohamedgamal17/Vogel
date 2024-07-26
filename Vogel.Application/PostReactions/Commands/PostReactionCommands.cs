@@ -7,7 +7,7 @@ namespace Vogel.Application.PostReactions.Commands
 {
     public class PostReactionCommandBase
     {
-        public string PostId { get; private set; }
+        public string? PostId { get; private set; }
         public ReactionType Type { get; set; }
 
         public void SetPostId(string postId)

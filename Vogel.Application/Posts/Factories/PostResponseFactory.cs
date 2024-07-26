@@ -1,11 +1,11 @@
 ﻿using MongoDB.Driver;
 using Vogel.Application.Common.Interfaces;
 using Vogel.Application.Medias.Dtos;
+using Vogel.Application.PostReactions.Dtos;
 using Vogel.Application.Posts.Dtos;
 using Vogel.Application.Users.Factories;
 using Vogel.Domain.Medias;
 using Vogel.Domain.Posts;
-using Vogel.Domain.Users;
 using Vogel.MongoDb.Entities.Posts;
 using Vogel.MongoDb.Entities.Users;
 namespace Vogel.Application.Posts.Factories
@@ -56,6 +56,19 @@ namespace Vogel.Application.Posts.Factories
             if (post.User != null)
             {
                 result.User = await _userResponseFactory.PreparePublicUserDto(post.User);
+            }
+
+            if(post.ReactionSummary != null)
+            {
+                result.ReactionSummary = new PostReactionSummaryDto
+                {
+                    Id = post.Id,
+                    TotalLike = post.ReactionSummary.TotalLike,
+                    TotalLove = post.ReactionSummary.TotalLove,
+                    TotalAngry = post.ReactionSummary.TotalAngry,
+                    TotalLaugh = post.ReactionSummary.TotalLaugh,
+                    TotalSad = post.ReactionSummary.TotalSad
+                };
             }
 
             return result;

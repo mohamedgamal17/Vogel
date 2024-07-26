@@ -1,4 +1,5 @@
 ﻿using Vogel.Application.Medias.Dtos;
+using Vogel.Application.PostReactions.Dtos;
 using Vogel.Application.Users.Dtos;
 using Vogel.BuildingBlocks.Application.Dtos;
 namespace Vogel.Application.Posts.Dtos
@@ -10,6 +11,8 @@ namespace Vogel.Application.Posts.Dtos
         public string? MediaId { get; set; }
         public PublicUserDto User { get; set; }
         public MediaAggregateDto Media { get; set; }
+
+        public PostReactionSummaryDto ReactionSummary { get; set; }
     }
 
 }

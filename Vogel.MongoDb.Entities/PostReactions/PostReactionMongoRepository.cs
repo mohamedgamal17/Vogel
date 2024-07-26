@@ -9,6 +9,10 @@ namespace Vogel.MongoDb.Entities.PostReactions
         protected override string CollectionName => "post_reactions";
         public PostReactionMongoRepository(IMongoDatabase mongoDatabase) : base(mongoDatabase)
         {
+
         }
+
+
+   
     }
 }

@@ -9,5 +9,6 @@ namespace Vogel.MongoDb.Entities.PostReactions
         public PostReactionMongoViewRepository(IMongoDatabase mongoDatabase) : base(mongoDatabase)
         {
         }
+
     }
 }

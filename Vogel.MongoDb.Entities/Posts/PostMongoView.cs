@@ -1,5 +1,6 @@
 ﻿using Vogel.BuildingBlocks.MongoDb;
 using Vogel.MongoDb.Entities.Medias;
+using Vogel.MongoDb.Entities.PostReactions;
 using Vogel.MongoDb.Entities.Users;
 
 namespace Vogel.MongoDb.Entities.Posts
@@ -11,5 +12,7 @@ namespace Vogel.MongoDb.Entities.Posts
         public string UserId { get; set; }
         public PublicUserMongoView User { get; set; }
         public MediaMongoEntity? Media { get; set; }
+
+        public PostReactionSummaryMonogView ReactionSummary { get; set; }
     }
 }

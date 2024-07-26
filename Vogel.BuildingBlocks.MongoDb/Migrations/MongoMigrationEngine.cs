@@ -31,7 +31,7 @@ namespace Vogel.BuildingBlocks.MongoDb.Migrations
 
             int lastVersion = await GetLastMigrationVersion();
 
-            foreach (var migration in migrations.Where(x=> x.Version > lastVersion))
+            foreach (var migration in migrations.OrderBy(x=> x.Version).Where(x=> x.Version > lastVersion))
             {
                 await migration.Up(db);
 

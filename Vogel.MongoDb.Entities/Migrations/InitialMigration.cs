@@ -10,7 +10,7 @@ using Vogel.MongoDb.Entities.Users;
 
 namespace Vogel.MongoDb.Entities.Migrations
 {
-    internal class InitialMigration : IMongoDbMigration
+    public class InitialMigration : IMongoDbMigration
     {
         public int Version => 1716936383;
 
