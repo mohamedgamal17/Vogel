@@ -2,7 +2,7 @@
 using Vogel.Application.Users.Commands;
 using Vogel.Domain.Users;
 
-namespace Vogel.Host.Models
+namespace Vogel.Host.Models.Users
 {
     public class UserModel
     {
@@ -19,7 +19,7 @@ namespace Vogel.Host.Models
                 FirstName = FirstName,
                 LastName = LastName,
                 AvatarId = AvatarId,
-                Gender= Gender,
+                Gender = Gender,
                 BirthDate = BirthDate
             };
 

@@ -35,11 +35,10 @@ namespace Vogel.Application.IntegrationTest.CommentReactions
 
             var command = new CreateCommentReactionCommand
             {
-                Type = new Faker().PickRandom<ReactionType>()
+                Type = new Faker().PickRandom<ReactionType>(),
+                PostId = fakePost.Id,
+                CommentId = fakeComment.Id
             };
-
-            command.SetPostId(fakePost.Id);
-            command.SetCommentId(fakeComment.Id);
 
             var result = await SendAsync(command);
 
@@ -73,11 +72,10 @@ namespace Vogel.Application.IntegrationTest.CommentReactions
 
             var command = new CreateCommentReactionCommand
             {
-                Type = new Faker().PickRandom<ReactionType>()
+                Type = new Faker().PickRandom<ReactionType>(),
+                PostId = fakePost.Id,
+                CommentId = fakeComment.Id
             };
-
-            command.SetPostId(fakePost.Id);
-            command.SetCommentId(fakeComment.Id);
 
             var result = await SendAsync(command);
 
@@ -102,12 +100,11 @@ namespace Vogel.Application.IntegrationTest.CommentReactions
 
             var command = new UpdateCommentReactionCommand
             {
-                Type = new Faker().PickRandom<ReactionType>()
+                Type = new Faker().PickRandom<ReactionType>(),
+                PostId = fakePost.Id,
+                CommentId = fakeComment.Id,
+                ReactionId = fakeCommentReaction.Id
             };
-
-            command.SetId(fakeCommentReaction.Id);
-            command.SetPostId(fakePost.Id);
-            command.SetCommentId(fakeComment.Id);
 
             var result = await SendAsync(command);
 
@@ -147,12 +144,11 @@ namespace Vogel.Application.IntegrationTest.CommentReactions
 
             var command = new UpdateCommentReactionCommand
             {
-                Type = new Faker().PickRandom<ReactionType>()
+                Type = new Faker().PickRandom<ReactionType>(),
+                PostId = fakePost.Id,
+                CommentId  =fakeComment.Id,
+                ReactionId = fakeCommentReaction.Id
             };
-
-            command.SetId(fakeCommentReaction.Id);
-            command.SetPostId(fakePost.Id);
-            command.SetCommentId(fakeComment.Id);
 
             var result = await SendAsync(command);
 
@@ -180,12 +176,11 @@ namespace Vogel.Application.IntegrationTest.CommentReactions
 
             var command = new UpdateCommentReactionCommand
             {
-                Type = new Faker().PickRandom<ReactionType>()
+                Type = new Faker().PickRandom<ReactionType>(),
+                PostId = fakePost.Id,
+                CommentId = fakeComment.Id,
+                ReactionId = fakeCommentReaction.Id
             };
-
-            command.SetId(fakeCommentReaction.Id);
-            command.SetPostId(fakePost.Id);
-            command.SetCommentId(fakeComment.Id);
 
             var result = await SendAsync(command);
 

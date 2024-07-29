@@ -2,7 +2,7 @@
 using Vogel.Application.Medias.Commands;
 using Vogel.Domain.Medias;
 
-namespace Vogel.Host.Models
+namespace Vogel.Host.Models.Medias
 {
     public class MediaModel
     {

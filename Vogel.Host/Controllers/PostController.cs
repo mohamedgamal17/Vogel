@@ -14,6 +14,8 @@ using Vogel.Application.Posts.Commands;
 using Vogel.Application.Posts.Dtos;
 using Vogel.Application.Posts.Queries;
 using Vogel.Host.Models;
+using Vogel.Host.Models.Comments;
+using Vogel.Host.Models.Posts;
 namespace Vogel.Host.Controllers
 {
     [Route("api/posts")]
@@ -131,12 +133,11 @@ namespace Vogel.Host.Controllers
         [Route("{postId}/reactions")]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(PostReactionDto))]
-        public async Task<IActionResult> CreatePostReaction(string postId , [FromBody] CreatePostReactionCommand command)
+        public async Task<IActionResult> CreatePostReaction(string postId , [FromBody] PostReactionModel model)
         {
-            command.SetPostId(postId);
+            CreatePostReactionCommand command = model.ToCreatePostReactionCommand(postId)!;
 
             var result = await Mediator.Send(command);
-
 
             return CreatedAtAction(result,nameof(GetPostReaction), new { postId = postId, reactionId = result.Value?.Id });
         }
@@ -144,10 +145,10 @@ namespace Vogel.Host.Controllers
         [Route("{postId}/reactions/{reactionId}")]
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(PostReactionDto))]
-        public async Task<IActionResult> UpdatePostReaction(string postId , string reactionId, [FromBody] UpdatePostReactionCommand command)
+        public async Task<IActionResult> UpdatePostReaction(string postId , string reactionId, [FromBody] PostReactionModel model)
         {
-            command.SetPostId(postId);
-            command.SetId(reactionId);
+            var command = model.ToUpdatePostReactionCommand(postId, reactionId);
+
             var result = await Mediator.Send(command);
 
             return Ok(result);
@@ -161,7 +162,7 @@ namespace Vogel.Host.Controllers
             var command = new RemovePostReactionCommand
             {
                 PostId = postId,
-                Id = reactionId
+                ReactionId = reactionId
             };
 
             var result = await Mediator.Send(command);
@@ -222,9 +223,9 @@ namespace Vogel.Host.Controllers
         [Route("{postId}/comments")]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CommentAggregateDto))]
-        public async Task<IActionResult> CreatePostComment(string postId ,[FromBody] CreateCommentCommand command)
+        public async Task<IActionResult> CreatePostComment(string postId ,[FromBody] CreateCommentModel model)
         {
-            command.SetPostId(postId);
+            var command = model.ToCreateCommentCommand(postId);
 
             var result = await Mediator.Send(command);
 
@@ -234,11 +235,9 @@ namespace Vogel.Host.Controllers
         [Route("{postId}/comments/{commentId}")]
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CommentAggregateDto))]
-        public async Task<IActionResult> UpdatePostComment(string postId , string commentId , [FromBody]UpdateCommentCommand command)
+        public async Task<IActionResult> UpdatePostComment(string postId , string commentId , [FromBody]UpdateCommentModel model)
         {
-            command.SetPostId(postId);
-
-            command.SetId(commentId);
+            var command = model.ToUpdateCommentCommand(postId, commentId);
 
             var result = await Mediator.Send(command);
 
@@ -302,10 +301,9 @@ namespace Vogel.Host.Controllers
         [Route("{postId}/comments/{commentId}/reactions")]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CommentReactionDto))]
-        public async Task<IActionResult> CreateCommentReaction(string postId , string commentId , [FromBody] CreateCommentReactionCommand command)
+        public async Task<IActionResult> CreateCommentReaction(string postId , string commentId , [FromBody] CommentReactionModel model)
         {
-            command.SetCommentId(commentId);
-            command.SetPostId(postId);
+            var command = model.ToCreateCommentReactionCommand(postId, commentId);
 
             var result = await Mediator.Send(command);
 
@@ -313,14 +311,12 @@ namespace Vogel.Host.Controllers
         }
 
 
-        [Route("{postId}/comments/{commentId}/reactions/{id}")]
+        [Route("{postId}/comments/{commentId}/reactions/{reactionId}")]
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CommentReactionDto))]
-        public async Task<IActionResult> UpdateCommentReaction(string postId , string commentId, string id, [FromBody] UpdateCommentReactionCommand command)
+        public async Task<IActionResult> UpdateCommentReaction(string postId , string commentId, string reactionId, [FromBody] CommentReactionModel model)
         {
-            command.SetPostId(postId);
-            command.SetCommentId(commentId);
-            command.SetId(id);
+            var command = model.ToUpdateCommentReactionCommand(postId, commentId, reactionId);
 
             var result = await Mediator.Send(command);
 

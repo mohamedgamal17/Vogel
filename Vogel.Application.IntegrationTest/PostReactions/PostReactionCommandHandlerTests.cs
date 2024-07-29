@@ -31,10 +31,9 @@ namespace Vogel.Application.IntegrationTest.PostReactions
 
             var command = new CreatePostReactionCommand
             {
-                Type = new Faker().PickRandom<Domain.Posts.ReactionType>()
+                Type = new Faker().PickRandom<Domain.Posts.ReactionType>(),
+                PostId = fakePost.Id
             };
-
-            command.SetPostId(fakePost.Id);
 
             var result = await SendAsync(command);
 
@@ -67,10 +66,9 @@ namespace Vogel.Application.IntegrationTest.PostReactions
 
             var command = new CreatePostReactionCommand
             {
-                Type = new Faker().PickRandom<Domain.Posts.ReactionType>()
+                Type = new Faker().PickRandom<Domain.Posts.ReactionType>(),
+                PostId = fakePost.Id
             };
-
-            command.SetPostId(fakePost.Id);
 
             var result = await SendAsync(command);
 
@@ -90,12 +88,10 @@ namespace Vogel.Application.IntegrationTest.PostReactions
 
             var command = new UpdatePostReactionCommand
             {
-                Type = new Faker().PickRandom<Domain.Posts.ReactionType>()
+                Type = new Faker().PickRandom<Domain.Posts.ReactionType>(),
+                PostId = fakePost.Id,
+                ReactionId = fakePostReaction.Id
             };
-
-            command.SetPostId(fakePost.Id);
-            command.SetId(fakePostReaction.Id);
-
 
             var result = await SendAsync(command);
 
@@ -130,11 +126,10 @@ namespace Vogel.Application.IntegrationTest.PostReactions
 
             var command = new UpdatePostReactionCommand
             {
-                Type = new Faker().PickRandom<Domain.Posts.ReactionType>()
+                Type = new Faker().PickRandom<Domain.Posts.ReactionType>(),
+                PostId = fakePost.Id,
+                ReactionId = fakePostReaction.Id
             };
-
-            command.SetPostId(fakePost.Id);
-            command.SetId(fakePostReaction.Id);
 
             var result = await SendAsync(command);
 
@@ -155,12 +150,11 @@ namespace Vogel.Application.IntegrationTest.PostReactions
 
             var command = new UpdatePostReactionCommand
             {
-                Type = new Faker().PickRandom<Domain.Posts.ReactionType>()
+                Type = new Faker().PickRandom<Domain.Posts.ReactionType>(),
+                PostId= fakePost.Id,
+                ReactionId = fakePostReaction.Id
 
             };
-
-            command.SetPostId(fakePost.Id);
-            command.SetId(fakePostReaction.Id);
 
             var result = await SendAsync(command);
 
@@ -178,7 +172,7 @@ namespace Vogel.Application.IntegrationTest.PostReactions
 
             var command = new RemovePostReactionCommand
             {
-                Id = fakePostReaction.Id,
+                ReactionId = fakePostReaction.Id,
                 PostId = fakePost.Id
             };
 
@@ -209,7 +203,7 @@ namespace Vogel.Application.IntegrationTest.PostReactions
 
             var command = new RemovePostReactionCommand
             {
-                Id = fakePostReaction.Id,
+                ReactionId = fakePostReaction.Id,
                 PostId = fakePost.Id
             };
 
@@ -233,7 +227,7 @@ namespace Vogel.Application.IntegrationTest.PostReactions
 
             var command = new RemovePostReactionCommand
             {
-                Id = fakePostReaction.Id,
+                ReactionId = fakePostReaction.Id,
                 PostId = fakePost.Id
             };
 

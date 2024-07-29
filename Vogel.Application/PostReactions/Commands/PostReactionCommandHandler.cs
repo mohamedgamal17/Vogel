@@ -58,11 +58,11 @@ namespace Vogel.Application.PostReactions.Commands
 
         public async Task<Result<PostReactionDto>> Handle(UpdatePostReactionCommand request, CancellationToken cancellationToken)
         {
-            var reaction = await _postReactionRepository.SingleOrDefaultAsync(x => x.Id == request.Id && x.PostId == request.PostId);
+            var reaction = await _postReactionRepository.SingleOrDefaultAsync(x => x.Id == request.ReactionId && x.PostId == request.PostId);
 
             if (reaction == null)
             {
-                return new Result<PostReactionDto>(new EntityNotFoundException(typeof(PostReaction), request.Id));
+                return new Result<PostReactionDto>(new EntityNotFoundException(typeof(PostReaction), request.ReactionId));
             }
 
             var authorizationResult = await _applicationAuthorizationService.AuthorizeAsync(reaction, PostReactionOperationAuthorizationRequirment.IsOwner);
@@ -83,11 +83,11 @@ namespace Vogel.Application.PostReactions.Commands
 
         public async Task<Result<Unit>> Handle(RemovePostReactionCommand request, CancellationToken cancellationToken)
         {
-            var reaction = await _postReactionRepository.SingleOrDefaultAsync(x => x.Id == request.Id && x.PostId == request.PostId);
+            var reaction = await _postReactionRepository.SingleOrDefaultAsync(x => x.Id == request.ReactionId && x.PostId == request.PostId);
 
             if (reaction == null)
             {
-                return new Result<Unit>(new EntityNotFoundException(typeof(PostReaction), request.Id));
+                return new Result<Unit>(new EntityNotFoundException(typeof(PostReaction), request.ReactionId));
             }
 
             var authorizationResult = await _applicationAuthorizationService.AuthorizeAsync(reaction, PostReactionOperationAuthorizationRequirment.IsOwner);

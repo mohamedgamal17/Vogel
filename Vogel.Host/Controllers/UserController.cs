@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Vogel.Application.Users.Dtos;
 using Vogel.Application.Users.Queries;
-using Vogel.Host.Models;
+using Vogel.Host.Models.Users;
 namespace Vogel.Host.Controllers
 {
     [Authorize]

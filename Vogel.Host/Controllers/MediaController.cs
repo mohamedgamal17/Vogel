@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Vogel.Application.Medias.Commands;
 using Vogel.Application.Medias.Dtos;
 using Vogel.Application.Medias.Queries;
-using Vogel.Host.Models;
+using Vogel.Host.Models.Medias;
 namespace Vogel.Host.Controllers
 {
     [Route("api/medias")]

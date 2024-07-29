@@ -5,6 +5,7 @@ using Vogel.Application.Friendship.Commands;
 using Vogel.Application.Friendship.Dtos;
 using Vogel.Application.Friendship.Queries;
 using Vogel.Host.Models;
+using Vogel.Host.Models.Friendship;
 namespace Vogel.Host.Controllers
 {
 
@@ -56,8 +57,10 @@ namespace Vogel.Host.Controllers
         [HttpPost]
         [Route("")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ApiResponse<FriendRequestDto>))]
-        public async Task<IActionResult> SendFriendRequest([FromBody] SendFriendRequestCommand command)
+        public async Task<IActionResult> SendFriendRequest([FromBody] SendFriendRequestModel model)
         {
+            var command = model.ToSendFriendRequestCommand();
+
             var result = await SendAsync(command);
 
             return CreatedAtAction(result, nameof(GetFriendRequest), new { id = result.Value?.Id });

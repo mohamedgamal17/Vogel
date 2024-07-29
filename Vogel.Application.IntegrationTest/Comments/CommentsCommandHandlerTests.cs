@@ -27,10 +27,10 @@ namespace Vogel.Application.IntegrationTest.Comments
 
             var command = new CreateCommentCommand
             {
-                Content = Guid.NewGuid().ToString()
+                Content = Guid.NewGuid().ToString(),
+                PostId = fakePost.Id
             };
 
-            command.SetPostId(fakePost.Id);
 
             var result = await SendAsync(command);
 
@@ -66,11 +66,11 @@ namespace Vogel.Application.IntegrationTest.Comments
             var command = new CreateCommentCommand
             {
                 CommentId = fakeComment.Id,
-                Content = Guid.NewGuid().ToString()
+                Content = Guid.NewGuid().ToString(),
+                PostId = fakePost.Id
             };
 
-            command.SetPostId(fakePost.Id);
-
+    
             var result = await SendAsync(command);
 
             result.ShouldBeSuccess();
@@ -97,10 +97,9 @@ namespace Vogel.Application.IntegrationTest.Comments
 
             var command = new CreateCommentCommand
             {
-                Content = Guid.NewGuid().ToString()
+                Content = Guid.NewGuid().ToString(),
+                PostId = Guid.NewGuid().ToString()
             };
-
-            command.SetPostId(Guid.NewGuid().ToString());
 
             var result = await SendAsync(command);
 
@@ -115,10 +114,9 @@ namespace Vogel.Application.IntegrationTest.Comments
 
             var command = new CreateCommentCommand
             {
-                Content = Guid.NewGuid().ToString()
+                Content = Guid.NewGuid().ToString(),
+                PostId =fakePost.Id
             };
-
-            command.SetPostId(fakePost.Id);
 
             RemoveCurrentUser();
 
@@ -138,11 +136,10 @@ namespace Vogel.Application.IntegrationTest.Comments
 
             var command = new UpdateCommentCommand
             {
-                Content = Guid.NewGuid().ToString()
+                Content = Guid.NewGuid().ToString(),
+                PostId = fakePost.Id,
+                CommentId = fakeComment.Id
             };
-
-            command.SetId(fakeComment.Id);
-            command.SetPostId(fakePost.Id);
 
             var result = await SendAsync(command);
 
@@ -176,11 +173,10 @@ namespace Vogel.Application.IntegrationTest.Comments
 
             var command = new UpdateCommentCommand
             {
-                Content = Guid.NewGuid().ToString()
+                Content = Guid.NewGuid().ToString(),
+                PostId = fakePost.Id,
+                CommentId = fakeComment.Id
             };
-
-            command.SetId(fakeComment.Id);
-            command.SetPostId(fakePost.Id);
 
             var result = await SendAsync(command);
 
@@ -194,11 +190,10 @@ namespace Vogel.Application.IntegrationTest.Comments
 
             var command = new UpdateCommentCommand
             {
-                Content = Guid.NewGuid().ToString()
+                Content = Guid.NewGuid().ToString(),
+                PostId = Guid.NewGuid().ToString(),
+                CommentId = Guid.NewGuid().ToString(),
             };
-
-            command.SetId(Guid.NewGuid().ToString());
-            command.SetPostId(Guid.NewGuid().ToString());
 
             var result = await SendAsync(command);
 
@@ -212,13 +207,10 @@ namespace Vogel.Application.IntegrationTest.Comments
             var fakePost = await CreatePostAsync();
             var command = new UpdateCommentCommand
             {
-                Content = Guid.NewGuid().ToString()
+                Content = Guid.NewGuid().ToString(),
+                PostId =fakePost.Id,
+                CommentId = Guid.NewGuid().ToString()
             };
-
-            command.SetId(fakePost.Id);
-            command.SetPostId(Guid.NewGuid().ToString());
-
-
 
             var result = await SendAsync(command);
 
@@ -236,11 +228,10 @@ namespace Vogel.Application.IntegrationTest.Comments
 
             var command = new UpdateCommentCommand
             {
-                Content = Guid.NewGuid().ToString()
+                Content = Guid.NewGuid().ToString(),
+                PostId = fakePost.Id,
+                CommentId = fakeComment.Id
             };
-
-            command.SetId(fakeComment.Id);
-            command.SetPostId(fakePost.Id);
 
             var result = await SendAsync(command);
 

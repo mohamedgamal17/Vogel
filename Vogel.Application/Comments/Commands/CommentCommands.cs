@@ -7,9 +7,7 @@ namespace Vogel.Application.Comments.Commands
     public abstract class CommentCommandBase
     {
         public string Content { get; set; }
-        public string PostId { get; protected set; }
-
-        public void SetPostId(string postId) => PostId = postId;
+        public string PostId { get;  set; }
     }
 
     [Authorize]
@@ -21,10 +19,8 @@ namespace Vogel.Application.Comments.Commands
     [Authorize]
     public class UpdateCommentCommand : CommentCommandBase, ICommand<CommentAggregateDto>
     {
-        public string  Id { get;protected  set ; }
+        public string  CommentId { get;  set ; }
 
-        public void SetId(string id) => Id = id;
-     
     }
 
     [Authorize]

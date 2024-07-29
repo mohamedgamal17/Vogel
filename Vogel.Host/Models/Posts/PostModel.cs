@@ -1,7 +1,7 @@
 ﻿using Vogel.Application.Comments.Commands;
 using Vogel.Application.Posts.Commands;
 
-namespace Vogel.Host.Models
+namespace Vogel.Host.Models.Posts
 {
     public class PostModel
     {
@@ -20,7 +20,7 @@ namespace Vogel.Host.Models
 
         public UpdatePostCommand ToUpdatePostCommand(string postId)
         {
-            var command = new UpdatePostCommand() {  Id = postId};
+            var command = new UpdatePostCommand() { Id = postId };
 
             PreparePostCommand(command);
 

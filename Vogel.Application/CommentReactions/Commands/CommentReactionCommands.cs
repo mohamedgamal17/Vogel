@@ -8,19 +8,10 @@ namespace Vogel.Application.CommentReactions.Commands
     
     public abstract class CommentReactionCommandBase
     {
-        public string PostId { get; private set; }
-        public string CommentId { get; private set; }
+        public string PostId { get;  set; }
+        public string CommentId { get;  set; }
         public ReactionType Type { get; set; }
 
-        public void SetPostId(string postId)
-        {
-            PostId = postId;
-        }
-
-        public void SetCommentId(string commentId)
-        {
-            CommentId = commentId;
-        }
     }
 
     [Authorize]
@@ -32,12 +23,8 @@ namespace Vogel.Application.CommentReactions.Commands
     [Authorize]
     public class UpdateCommentReactionCommand : CommentReactionCommandBase , ICommand<CommentReactionDto>
     {
-        public string Id { get; set; }
+        public string ReactionId { get; set; }
 
-        public void SetId(string id)
-        {
-            Id = id;
-        }
     }
 
     [Authorize]

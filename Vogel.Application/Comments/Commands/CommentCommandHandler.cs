@@ -64,14 +64,14 @@ namespace Vogel.Application.Comments.Commands
             var filter = new FilterDefinitionBuilder<Comment>()
                 .And(
                     new FilterDefinitionBuilder<Comment>().Eq(x => x.PostId, request.PostId),
-                    new FilterDefinitionBuilder<Comment>().Eq(x => x.Id, request.Id)
+                    new FilterDefinitionBuilder<Comment>().Eq(x => x.Id, request.CommentId)
                 );
 
-            var comment = await _commentRepository.SingleOrDefaultAsync(x=> x.Id == request.Id && x.PostId == request.PostId);
+            var comment = await _commentRepository.SingleOrDefaultAsync(x=> x.Id == request.CommentId && x.PostId == request.PostId);
             
             if(comment == null)
             {
-                return new Result<CommentAggregateDto>(new EntityNotFoundException(typeof(Comment), request.Id));
+                return new Result<CommentAggregateDto>(new EntityNotFoundException(typeof(Comment), request.CommentId));
             }
 
             var authorizationResult = await _applicationAuthorizationService

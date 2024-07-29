@@ -66,11 +66,11 @@ namespace Vogel.Application.CommentReactions.Commands
                 return new Result<CommentReactionDto>(new EntityNotFoundException(typeof(Comment), request.CommentId));
             }
 
-            var reaction = await _commentReactionRepository.SingleOrDefaultAsync(x => x.Id == request.Id && x.CommentId == request.CommentId);
+            var reaction = await _commentReactionRepository.SingleOrDefaultAsync(x => x.Id == request.ReactionId && x.CommentId == request.CommentId);
 
             if(reaction == null)
             {
-                return new Result<CommentReactionDto>(new EntityNotFoundException(typeof(CommentReaction), request.Id));
+                return new Result<CommentReactionDto>(new EntityNotFoundException(typeof(CommentReaction), request.ReactionId));
             }
 
 
