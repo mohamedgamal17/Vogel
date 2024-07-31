@@ -3,6 +3,7 @@ using Vogel.MongoDb.Entities.Medias;
 
 namespace Vogel.MongoDb.Entities.Users
 {
+    [MongoCollection("users_view")]
     public class PublicUserMongoView : FullAuditedMongoEntity<string>
     {
         public string FirstName { get; set; }

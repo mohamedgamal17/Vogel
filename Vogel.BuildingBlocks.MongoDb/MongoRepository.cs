@@ -1,29 +1,29 @@
 ﻿using MongoDB.Driver;
 using System.Globalization;
+using Vogel.BuildingBlocks.MongoDb.Extensions;
 
 namespace Vogel.BuildingBlocks.MongoDb
 {
-    public abstract class MongoRepository<TEntity,TKey> : MongoRepositoryBase<TEntity>
+    public abstract class MongoRepository<TEntity, TKey> : IMongoRepository<TEntity, TKey>
         where TEntity : IMongoEntity<TKey> 
     {
+        protected FilterDefinitionBuilder<TEntity> Filter = Builders<TEntity>.Filter;
         protected IMongoCollection<TEntity> MongoDbCollection { get; }
 
         protected readonly IMongoDatabase MongoDatabase;
-
-        protected virtual string CollectionName => string.Format(CultureInfo.InvariantCulture, "{0}", typeof(TEntity).Name);
 
         protected MongoRepository(IMongoDatabase mongoDatabase)
         {
             MongoDatabase = mongoDatabase;
 
-            MongoDbCollection = MongoDatabase.GetCollection<TEntity>(CollectionName);
+            MongoDbCollection = MongoDatabase.GetCollection<TEntity>(MongoCollectionHelper.ResolveCollectionName(typeof(TEntity)));
         }
 
 
         public async Task<TEntity> InsertAsync(TEntity entity)
         {
             await MongoDbCollection.InsertOneAsync(entity);
-
+           
             return entity;
         }
 

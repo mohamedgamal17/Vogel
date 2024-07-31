@@ -5,6 +5,7 @@ using Vogel.MongoDb.Entities.Users;
 
 namespace Vogel.MongoDb.Entities.Posts
 {
+    [MongoCollection("posts_view")]
     public class PostMongoView : FullAuditedMongoEntity<string>
     {
         public string Caption { get; set; }

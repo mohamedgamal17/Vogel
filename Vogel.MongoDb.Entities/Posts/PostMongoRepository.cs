@@ -7,7 +7,5 @@ namespace Vogel.MongoDb.Entities.Posts
         public PostMongoRepository(IMongoDatabase mongoDatabase) : base(mongoDatabase)
         {
         }
-
-        protected override string CollectionName => "posts";
     }
 }

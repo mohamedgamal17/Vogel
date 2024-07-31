@@ -2,6 +2,7 @@
 
 namespace Vogel.MongoDb.Entities.PostReactions
 {
+    [MongoCollection("post_reactions_summary_view")]
     public class PostReactionSummaryMonogView : MongoEntity<string>
     {
         public long TotalLike { get; set; }

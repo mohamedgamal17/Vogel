@@ -2,6 +2,7 @@
 
 namespace Vogel.MongoDb.Entities.Medias
 {
+    [MongoCollection("medias")]
     public class MediaMongoEntity : FullAuditedMongoEntity<string>
     {
         public string File { get; set; }

@@ -3,9 +3,9 @@ using Vogel.BuildingBlocks.MongoDb;
 
 namespace Vogel.MongoDb.Entities.Comments
 {
+    [MongoCollection("comments_view")]
     public class CommentMongoViewRepository : MongoRepository<CommentMongoView, string>
     {
-        protected override string CollectionName => "comments_view";
         public CommentMongoViewRepository(IMongoDatabase mongoDatabase) : base(mongoDatabase)
         {
         }

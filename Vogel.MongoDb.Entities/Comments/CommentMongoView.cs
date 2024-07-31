@@ -4,6 +4,7 @@ using Vogel.MongoDb.Entities.Users;
 
 namespace Vogel.MongoDb.Entities.Comments
 {
+    [MongoCollection("comments_view")]
     public class CommentMongoView : FullAuditedMongoEntity<string>
     {
         public string Content { get; set; }

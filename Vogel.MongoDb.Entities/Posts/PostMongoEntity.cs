@@ -2,6 +2,7 @@
 
 namespace Vogel.MongoDb.Entities.Posts
 {
+    [MongoCollection("posts")]
     public class PostMongoEntity : FullAuditedMongoEntity<string>
     {
         public string Caption { get; set; }
