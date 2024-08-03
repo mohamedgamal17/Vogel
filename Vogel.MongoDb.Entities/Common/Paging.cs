@@ -1,4 +1,4 @@
-﻿namespace Vogel.Application.Common.Models
+﻿namespace Vogel.MongoDb.Entities.Common
 {
     public class Paging<T>
     {

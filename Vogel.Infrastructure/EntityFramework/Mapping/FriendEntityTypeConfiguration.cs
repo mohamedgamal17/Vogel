@@ -19,9 +19,9 @@ namespace Vogel.Infrastructure.EntityFramework.Mapping
 
             builder.Property(x => x.TargetId).HasMaxLength(FriendTableConsts.TargetIdLenght);
 
-            builder.HasOne<UserAggregate>().WithMany().HasForeignKey(x => x.SourceId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne<User>().WithMany().HasForeignKey(x => x.SourceId).OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne<UserAggregate>().WithMany().HasForeignKey(x => x.TargetId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne<User>().WithMany().HasForeignKey(x => x.TargetId).OnDelete(DeleteBehavior.Restrict);
 
             builder.AutoMapAuditing();
         }

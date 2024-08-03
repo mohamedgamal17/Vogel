@@ -20,18 +20,18 @@ namespace Vogel.Application.Friendship.Commands
     {
         private readonly IRepository<FriendRequest> _friendRequestRepository;
         private readonly IRepository<Friend> _friendRepository;
-        private readonly FriendRequestMongoViewRepository _friendRequestMongoViewRepository;
-        private readonly FriendMongoViewRepository _friendMongoViewRepository;
+        private readonly FriendRequestMongoRepository _friendRequestMongoRepository;
+        private readonly FriendMongoRepository _friendMongoRepository;
         private readonly IApplicationAuthorizationService _applicationAuthorizationService;
         private readonly ISecurityContext _securityContext;
         private readonly IFriendshipResponseFactory _friendshipResponseFactory;
 
-        public FriendshipCommandHandler(IRepository<FriendRequest> friendRequestRepository, IRepository<Friend> friendRepository, FriendRequestMongoViewRepository friendRequestMongoViewRepository, FriendMongoViewRepository friendMongoViewRepository, IApplicationAuthorizationService applicationAuthorizationService, ISecurityContext securityContext, IFriendshipResponseFactory friendshipResponseFactory)
+        public FriendshipCommandHandler(IRepository<FriendRequest> friendRequestRepository, IRepository<Friend> friendRepository, FriendRequestMongoRepository friendRequestMongoRepository, FriendMongoRepository friendMongoRepository, IApplicationAuthorizationService applicationAuthorizationService, ISecurityContext securityContext, IFriendshipResponseFactory friendshipResponseFactory)
         {
             _friendRequestRepository = friendRequestRepository;
             _friendRepository = friendRepository;
-            _friendRequestMongoViewRepository = friendRequestMongoViewRepository;
-            _friendMongoViewRepository = friendMongoViewRepository;
+            _friendRequestMongoRepository = friendRequestMongoRepository;
+            _friendMongoRepository = friendMongoRepository;
             _applicationAuthorizationService = applicationAuthorizationService;
             _securityContext = securityContext;
             _friendshipResponseFactory = friendshipResponseFactory;
@@ -58,7 +58,8 @@ namespace Vogel.Application.Friendship.Commands
 
             await _friendRequestRepository.InsertAsync(friendRequest);
 
-            var friendRequestView = await _friendRequestMongoViewRepository.FindByIdAsync(friendRequest.Id);
+            var friendRequestView = await _friendRequestMongoRepository
+                .GetFriendRequestViewbyId(friendRequest.Id);
 
             return await _friendshipResponseFactory.PrepareFriendRequestDto(friendRequestView!);
 
@@ -99,7 +100,7 @@ namespace Vogel.Application.Friendship.Commands
 
             await _friendRepository.InsertAsync(friend);
 
-            var friendRequestView = await _friendMongoViewRepository.FindByIdAsync(friend.Id);
+            var friendRequestView = await _friendMongoRepository.GetFriendViewbyId(friend.Id);
 
             return await _friendshipResponseFactory.PrepareFriendDto(friendRequestView!);
 
@@ -131,7 +132,7 @@ namespace Vogel.Application.Friendship.Commands
 
             await _friendRequestRepository.UpdateAsync(friendRequest);
 
-            var friendRequestView = await _friendRequestMongoViewRepository.FindByIdAsync(friendRequest.Id);
+            var friendRequestView = await _friendRequestMongoRepository.GetFriendRequestViewbyId(friendRequest.Id);
 
             return await _friendshipResponseFactory.PrepareFriendRequestDto(friendRequestView!);
 
@@ -163,7 +164,8 @@ namespace Vogel.Application.Friendship.Commands
 
             await _friendRequestRepository.UpdateAsync(friendRequest);
 
-            var friendRequestView = await _friendRequestMongoViewRepository.FindByIdAsync(friendRequest.Id);
+            var friendRequestView = await _friendRequestMongoRepository
+                .GetFriendRequestViewbyId(friendRequest.Id);
 
             return await _friendshipResponseFactory.PrepareFriendRequestDto(friendRequestView!);
 

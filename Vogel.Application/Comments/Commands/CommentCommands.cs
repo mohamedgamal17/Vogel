@@ -11,13 +11,13 @@ namespace Vogel.Application.Comments.Commands
     }
 
     [Authorize]
-    public class CreateCommentCommand : CommentCommandBase , ICommand<CommentAggregateDto>
+    public class CreateCommentCommand : CommentCommandBase , ICommand<CommentDto>
     {
         public string? CommentId { get; set; }
     }
 
     [Authorize]
-    public class UpdateCommentCommand : CommentCommandBase, ICommand<CommentAggregateDto>
+    public class UpdateCommentCommand : CommentCommandBase, ICommand<CommentDto>
     {
         public string  CommentId { get;  set ; }
 

@@ -19,16 +19,16 @@ namespace Vogel.Application.CommentReactions.Commands
     {
         private readonly IRepository<CommentReaction> _commentReactionRepository;
         private readonly IRepository<Comment> _commentRepository;
-        private readonly CommentReactionMongoViewRepository _commentReactionMongoViewReposiotry;
+        private readonly CommentReactionMongoRepository _commentReactionMongoRepository;
         private readonly ICommentReactionResponseFactory _commentReactionResponseFactory;
         private readonly ISecurityContext _securityContext;
         private readonly IApplicationAuthorizationService _applicationAuthorizationService;
 
-        public CommentReactionCommandHandler(IRepository<CommentReaction> commentReactionRepository, IRepository<Comment> commentRepository, CommentReactionMongoViewRepository commentReactionMongoViewReposiotry, ICommentReactionResponseFactory commentReactionResponseFactory, ISecurityContext securityContext, IApplicationAuthorizationService applicationAuthorizationService)
+        public CommentReactionCommandHandler(IRepository<CommentReaction> commentReactionRepository, IRepository<Comment> commentRepository, CommentReactionMongoRepository commentReactionMongoRepository, ICommentReactionResponseFactory commentReactionResponseFactory, ISecurityContext securityContext, IApplicationAuthorizationService applicationAuthorizationService)
         {
             _commentReactionRepository = commentReactionRepository;
             _commentRepository = commentRepository;
-            _commentReactionMongoViewReposiotry = commentReactionMongoViewReposiotry;
+            _commentReactionMongoRepository = commentReactionMongoRepository;
             _commentReactionResponseFactory = commentReactionResponseFactory;
             _securityContext = securityContext;
             _applicationAuthorizationService = applicationAuthorizationService;
@@ -52,9 +52,10 @@ namespace Vogel.Application.CommentReactions.Commands
 
             await _commentReactionRepository.InsertAsync(reaction);
 
-            var mongoEntity = await _commentReactionMongoViewReposiotry.FindByIdAsync(reaction.Id);
+            var reactionView = await _commentReactionMongoRepository
+                .GetReactionViewById(reaction.CommentId ,reaction.Id);
 
-            return await _commentReactionResponseFactory.PrepareCommentReactionDto(mongoEntity!);
+            return await _commentReactionResponseFactory.PrepareCommentReactionDto(reactionView!);
         }
 
         public async Task<Result<CommentReactionDto>> Handle(UpdateCommentReactionCommand request, CancellationToken cancellationToken)
@@ -85,9 +86,9 @@ namespace Vogel.Application.CommentReactions.Commands
 
             await _commentReactionRepository.UpdateAsync(reaction);
 
-            var mongoEntity = await _commentReactionMongoViewReposiotry.FindByIdAsync(reaction.Id);
+            var reactionView = await _commentReactionMongoRepository.GetReactionViewById(reaction.CommentId,reaction.Id);
 
-            return await _commentReactionResponseFactory.PrepareCommentReactionDto(mongoEntity!);
+            return await _commentReactionResponseFactory.PrepareCommentReactionDto(reactionView!);
 
         }
 

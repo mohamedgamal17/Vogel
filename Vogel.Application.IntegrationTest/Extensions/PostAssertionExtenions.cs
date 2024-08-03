@@ -27,7 +27,7 @@ namespace Vogel.Application.IntegrationTest.Extensions
             post.AssertAuditingProperties(mongoEntity);
         }
 
-        public static void AssertPostDto(this PostAggregateDto dto, Post post, UserAggregate? user = null , Media? media = null)
+        public static void AssertPostDto(this PostDto dto, Post post, User? user = null , Media? media = null)
         {
             dto.Id.Should().Be(post.Id);
             dto.Caption.Should().Be(post.Caption);
@@ -37,7 +37,7 @@ namespace Vogel.Application.IntegrationTest.Extensions
             if(user != null)
             {
                 dto.User.Should().NotBeNull();
-                dto.User.AssertPublicUserDto(user);
+                dto.User.AssertUserDto(user);
             }
 
             if(media != null)

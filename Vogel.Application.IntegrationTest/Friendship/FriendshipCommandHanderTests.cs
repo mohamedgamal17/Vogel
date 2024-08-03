@@ -369,11 +369,11 @@ namespace Vogel.Application.IntegrationTest.Friendship
         }
 
 
-        private async Task<UserAggregate> CreateFakeUser()
+        private async Task<User> CreateFakeUser()
         {
             Faker faker = new Faker();
 
-            var user = new UserAggregate
+            var user = new User
             {
                 FirstName = faker.Person.FirstName,
                 LastName = faker.Person.LastName,
@@ -386,7 +386,7 @@ namespace Vogel.Application.IntegrationTest.Friendship
         }
 
 
-        private async Task<FriendRequest> CreateFakeFriendRequest(UserAggregate sender , UserAggregate reciver)
+        private async Task<FriendRequest> CreateFakeFriendRequest(User sender , User reciver)
         {
 
             var reqeust = new FriendRequest
@@ -399,7 +399,7 @@ namespace Vogel.Application.IntegrationTest.Friendship
         }
 
 
-        private async Task<Friend> CreateFakeFriend(UserAggregate source , UserAggregate target)
+        private async Task<Friend> CreateFakeFriend(User source , User target)
         {
             var friend = new Friend
             {

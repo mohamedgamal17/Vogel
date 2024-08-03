@@ -1,10 +1,11 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Vogel.Application.Common.Models;
 using Vogel.BuildingBlocks.Application.Requests;
+using Vogel.BuildingBlocks.Application.Security;
 using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.BuildingBlocks.Domain.Results;
 using Vogel.Host.Models;
+using Vogel.MongoDb.Entities.Common;
 
 namespace Vogel.Host.Controllers
 {
@@ -12,10 +13,13 @@ namespace Vogel.Host.Controllers
     {
         public IServiceProvider ServiceProvider { get;  }
         public IMediator Mediator { get;  }
+
+        public ISecurityContext SecurityContext { get;  }
         public VogelController(IServiceProvider serviceProvider)
         {
             ServiceProvider = serviceProvider;
             Mediator = ServiceProvider.GetRequiredService<IMediator>();
+            SecurityContext = serviceProvider.GetRequiredService<ISecurityContext>();
         }
         protected async Task<Result<T>> SendAsync<T>(IApplicationReuest<T> request)
         {

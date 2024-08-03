@@ -9,6 +9,6 @@ namespace Vogel.Application.CommentReactions.Dtos
         public string UserId { get; set; }
         public string CommentId { get; set; }
         public ReactionType Type { get; set; }
-        public PublicUserDto User { get; set; }
+        public UserDto User { get; set; }
     }
 }

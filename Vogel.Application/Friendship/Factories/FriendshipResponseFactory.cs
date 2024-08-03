@@ -34,12 +34,12 @@ namespace Vogel.Application.Friendship.Factories
 
             if(friendRequest.Sender != null)
             {
-                dto.Sender = await _userResponseFactory.PreparePublicUserDto(friendRequest.Sender);
+                dto.Sender = await _userResponseFactory.PrepareUserDto(friendRequest.Sender);
             }
 
             if(friendRequest.Reciver != null)
             {
-                dto.Reciver = await _userResponseFactory.PreparePublicUserDto(friendRequest.Reciver);
+                dto.Reciver = await _userResponseFactory.PrepareUserDto(friendRequest.Reciver);
             }
 
             return dto;
@@ -62,12 +62,12 @@ namespace Vogel.Application.Friendship.Factories
 
             if(friend.Source != null)
             {
-                dto.Source = await _userResponseFactory.PreparePublicUserDto(friend.Source);
+                dto.Source = await _userResponseFactory.PrepareUserDto(friend.Source);
             }
 
             if(friend.Target != null)
             {
-                dto.Target = await _userResponseFactory.PreparePublicUserDto(friend.Target);
+                dto.Target = await _userResponseFactory.PrepareUserDto(friend.Target);
             }
 
             return dto;

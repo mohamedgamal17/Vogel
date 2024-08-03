@@ -11,7 +11,7 @@ namespace Vogel.Application.Users.Mappings
         {
             CreateMap<Domain.Users.Gender, MongoDb.Entities.Users.Gender>().ConvertUsingEnumMapping();
 
-            CreateMap<UserAggregate, UserMongoEntity>()
+            CreateMap<User, UserMongoEntity>()
                 .ForMember(x => x.Gender, opt => opt.MapFrom(c => c.Gender))
                 .MapAuditingProperties();
                 

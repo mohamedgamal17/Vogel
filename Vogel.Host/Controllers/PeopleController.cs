@@ -1,9 +1,9 @@
-﻿    using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Vogel.Application.Common.Models;
 using Vogel.Application.Posts.Queries;
 using Vogel.Application.Users.Dtos;
 using Vogel.Application.Users.Queries;
+using Vogel.MongoDb.Entities.Common;
 namespace Vogel.Host.Controllers
 {
     [Authorize]

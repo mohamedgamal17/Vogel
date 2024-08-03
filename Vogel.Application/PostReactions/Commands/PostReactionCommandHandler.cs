@@ -18,16 +18,16 @@ namespace Vogel.Application.PostReactions.Commands
     {
         private readonly IRepository<PostReaction> _postReactionRepository;
         private readonly IRepository<Post> _postRepository;
-        private readonly PostReactionMongoViewRepository _postReactionMongoViewRepository;
+        private readonly PostReactionMongoRepository postReactionMongoRepository;
         private readonly IPostReactionResponseFactory _postReactionResponseFactory;
         private readonly ISecurityContext _securityContext;
         private readonly IApplicationAuthorizationService _applicationAuthorizationService;
 
-        public PostReactionCommandHandler(IRepository<PostReaction> postReactionRepository, IRepository<Post> postRepository, PostReactionMongoViewRepository postReactionMongoViewRepository, IPostReactionResponseFactory postReactionResponseFactory, ISecurityContext securityContext, IApplicationAuthorizationService applicationAuthorizationService)
+        public PostReactionCommandHandler(IRepository<PostReaction> postReactionRepository, IRepository<Post> postRepository, PostReactionMongoRepository postReactionMongoRepository, IPostReactionResponseFactory postReactionResponseFactory, ISecurityContext securityContext, IApplicationAuthorizationService applicationAuthorizationService)
         {
             _postReactionRepository = postReactionRepository;
             _postRepository = postRepository;
-            _postReactionMongoViewRepository = postReactionMongoViewRepository;
+            this.postReactionMongoRepository = postReactionMongoRepository;
             _postReactionResponseFactory = postReactionResponseFactory;
             _securityContext = securityContext;
             _applicationAuthorizationService = applicationAuthorizationService;
@@ -51,7 +51,8 @@ namespace Vogel.Application.PostReactions.Commands
 
             await _postReactionRepository.InsertAsync(reaction);
 
-            var mongoView = await _postReactionMongoViewRepository.FindByIdAsync(reaction.Id);
+            var mongoView = await postReactionMongoRepository
+                .GetReactionViewById( reaction.PostId,reaction.Id);
 
             return await _postReactionResponseFactory.PreparePostReactionDto(mongoView!);
         }
@@ -76,7 +77,8 @@ namespace Vogel.Application.PostReactions.Commands
 
             await _postReactionRepository.UpdateAsync(reaction);
 
-            var mongoView = await _postReactionMongoViewRepository.FindByIdAsync(reaction.Id);
+            var mongoView = await postReactionMongoRepository
+                .GetReactionViewById(reaction.PostId,reaction.Id);
 
             return await _postReactionResponseFactory.PreparePostReactionDto(mongoView!);
         }

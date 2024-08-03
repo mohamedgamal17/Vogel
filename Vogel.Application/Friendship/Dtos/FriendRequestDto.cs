@@ -7,8 +7,8 @@ namespace Vogel.Application.Friendship.Dtos
     {
         public string SenderId { get; set; }
         public string ReciverId { get; set; }
-        public PublicUserDto Sender { get; set; }
-        public PublicUserDto Reciver { get; set; }
+        public UserDto Sender { get; set; }
+        public UserDto Reciver { get; set; }
         public FriendRequestState State { get; set; }
     }
 }

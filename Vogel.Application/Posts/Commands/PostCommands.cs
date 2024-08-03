@@ -11,10 +11,10 @@ namespace Vogel.Application.Posts.Commands
     }
 
     [Authorize]
-    public class CreatePostCommand : PostCommandBase , ICommand<PostAggregateDto> { }
+    public class CreatePostCommand : PostCommandBase , ICommand<PostDto> { }
 
     [Authorize]
-    public class UpdatePostCommand  : PostCommandBase , ICommand<PostAggregateDto>
+    public class UpdatePostCommand  : PostCommandBase , ICommand<PostDto>
     {
         public string Id { get; set; }
     }

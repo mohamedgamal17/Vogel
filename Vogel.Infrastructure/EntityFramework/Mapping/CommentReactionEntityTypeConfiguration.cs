@@ -22,7 +22,7 @@ namespace Vogel.Infrastructure.EntityFramework.Mapping
             builder.AutoMapAuditing();
 
             builder.HasOne<Comment>().WithMany().HasForeignKey(x => x.CommentId).OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne<UserAggregate>().WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne<User>().WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

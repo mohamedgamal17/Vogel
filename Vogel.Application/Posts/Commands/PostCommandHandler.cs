@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using MongoDB.Driver;
 using Vogel.Application.Medias.Policies;
 using Vogel.Application.Posts.Dtos;
 using Vogel.Application.Posts.Factories;
@@ -11,36 +10,36 @@ using Vogel.BuildingBlocks.Domain.Repositories;
 using Vogel.BuildingBlocks.Domain.Results;
 using Vogel.Domain.Medias;
 using Vogel.Domain.Posts;
-using Vogel.MongoDb.Entities.Users;
+using Vogel.MongoDb.Entities.Posts;
 namespace Vogel.Application.Posts.Commands
 {
-    public class PostCommandHandler : 
-        IApplicationRequestHandler<CreatePostCommand, PostAggregateDto>,
-        IApplicationRequestHandler<UpdatePostCommand , PostAggregateDto>,
-        IApplicationRequestHandler<RemovePostCommand , Unit>
+    public class PostCommandHandler :
+        IApplicationRequestHandler<CreatePostCommand, PostDto>,
+        IApplicationRequestHandler<UpdatePostCommand, PostDto>,
+        IApplicationRequestHandler<RemovePostCommand, Unit>
     {
         private readonly ISecurityContext _securityContext;
         private readonly IRepository<Post> _postRepository;
         private readonly IRepository<Media> _mediaRepository;
-        private readonly UserMongoViewRepository _userMongoViewRepository;
+        private readonly PostMongoRepository _postMongoRepository;
         private readonly IApplicationAuthorizationService _applicationAuthorizationService;
         private readonly IPostResponseFactory _postResponseFactory;
 
-        public PostCommandHandler(ISecurityContext securityContext, IRepository<Post> postRepository, IRepository<Media> mediaRepository, UserMongoViewRepository userMongoViewRepository, IApplicationAuthorizationService applicationAuthorizationService, IPostResponseFactory postResponseFactory)
+        public PostCommandHandler(ISecurityContext securityContext, IRepository<Post> postRepository, IRepository<Media> mediaRepository, PostMongoRepository postMongoRepository, IApplicationAuthorizationService applicationAuthorizationService, IPostResponseFactory postResponseFactory)
         {
             _securityContext = securityContext;
             _postRepository = postRepository;
             _mediaRepository = mediaRepository;
-            _userMongoViewRepository = userMongoViewRepository;
+            _postMongoRepository = postMongoRepository;
             _applicationAuthorizationService = applicationAuthorizationService;
             _postResponseFactory = postResponseFactory;
         }
 
-        public async Task<Result<PostAggregateDto>> Handle(CreatePostCommand request, CancellationToken cancellationToken)
+        public async Task<Result<PostDto>> Handle(CreatePostCommand request, CancellationToken cancellationToken)
         {
             Media? media = default(Media);
 
-            if(request.MediaId != null)
+            if (request.MediaId != null)
             {
                 media = await _mediaRepository.FindByIdAsync(request.MediaId);
 
@@ -48,7 +47,7 @@ namespace Vogel.Application.Posts.Commands
 
                 if (authorizationResult.IsFailure)
                 {
-                    return new Result<PostAggregateDto>(authorizationResult.Exception!);
+                    return new Result<PostDto>(authorizationResult.Exception!);
                 }
             }
 
@@ -59,31 +58,29 @@ namespace Vogel.Application.Posts.Commands
                 MediaId = media?.Id
             };
 
-            post = await _postRepository.InsertAsync(post);
+            await _postRepository.InsertAsync(post);
 
-            var user = await _userMongoViewRepository.AsPublicUserViewCollection()
-                .Find(Builders<PublicUserMongoView>.Filter.Eq(x => x.Id, post.UserId))
-                .SingleAsync();
+            var postView = await _postMongoRepository.GetByIdPostMongoView(post.Id);
 
-            return await _postResponseFactory.PreparePostAggregateDto(post, user!, media);
+            return await _postResponseFactory.PreparePostDto(postView);
         }
 
-        public async Task<Result<PostAggregateDto>> Handle(UpdatePostCommand request, CancellationToken cancellationToken)
+        public async Task<Result<PostDto>> Handle(UpdatePostCommand request, CancellationToken cancellationToken)
         {
 
             var post = await _postRepository.FindByIdAsync(request.Id);
 
-            if(post == null)
+            if (post == null)
             {
-                return new Result<PostAggregateDto>(new EntityNotFoundException(typeof(Post), request.Id));
+                return new Result<PostDto>(new EntityNotFoundException(typeof(Post), request.Id));
             }
 
             var authorizationResult = await _applicationAuthorizationService
-                .AuthorizeAsync(post , PostOperationAuthorizationRequirement.Edit);
+                .AuthorizeAsync(post, PostOperationAuthorizationRequirement.Edit);
 
             if (authorizationResult.IsFailure)
             {
-                return new Result<PostAggregateDto>(authorizationResult.Exception!);
+                return new Result<PostDto>(authorizationResult.Exception!);
             }
 
             Media? media = default(Media);
@@ -96,7 +93,7 @@ namespace Vogel.Application.Posts.Commands
 
                 if (mediaAuthorizationResult.IsFailure)
                 {
-                    return new Result<PostAggregateDto>(mediaAuthorizationResult.Exception!);
+                    return new Result<PostDto>(mediaAuthorizationResult.Exception!);
                 }
             }
 
@@ -106,23 +103,16 @@ namespace Vogel.Application.Posts.Commands
 
             await _postRepository.UpdateAsync(post);
 
-            var user = await _userMongoViewRepository.AsPublicUserViewCollection()
-             .Find(Builders<PublicUserMongoView>.Filter.Eq(x => x.Id, post.UserId))
-             .SingleAsync();
+            var postView = await _postMongoRepository.GetByIdPostMongoView(post.Id);
 
-            if (media == null && post.MediaId != null)
-            {
-                media = await _mediaRepository.FindByIdAsync(post.MediaId);
-            }
-
-            return await _postResponseFactory.PreparePostAggregateDto(post , user! ,media);
+            return await _postResponseFactory.PreparePostDto(postView);
         }
 
         public async Task<Result<Unit>> Handle(RemovePostCommand request, CancellationToken cancellationToken)
         {
             var post = await _postRepository.FindByIdAsync(request.Id);
 
-            if(post == null)
+            if (post == null)
             {
                 return new Result<Unit>(new EntityNotFoundException(typeof(Post), request.Id));
             }
@@ -137,7 +127,7 @@ namespace Vogel.Application.Posts.Commands
 
             await _postRepository.DeleteAsync(post);
 
-            return Unit.Value;       
+            return Unit.Value;
         }
 
     }

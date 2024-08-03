@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace Vogel.BuildingBlocks.MongoDb
 {
@@ -7,17 +8,17 @@ namespace Vogel.BuildingBlocks.MongoDb
     {
 
     }
-    public interface IMongoRepository<TEntity , TKey> : IMongoRepository
-        where TEntity : IMongoEntity<TKey> 
+    public interface IMongoRepository<TEntity > : IMongoRepository
+        where TEntity : IMongoEntity
     {
         Task<TEntity> InsertAsync(TEntity entity);
         Task<List<TEntity>> InsertManyAsync(List<TEntity> entities);
         Task<TEntity> UpdateAsync(TEntity entity);
-        Task DeleteAsync(TKey id);
+        Task DeleteAsync(string id);
         Task DeleteAsync(TEntity entity);
-        IQueryable<TEntity> AsQuerable();
+        IMongoQueryable<TEntity> AsQuerable();
         IMongoCollection<TEntity> AsMongoCollection();
-        Task<TEntity?> FindByIdAsync(TKey id);
+        Task<TEntity?> FindByIdAsync(string id);
         Task<TEntity?> FindAsync(FilterDefinition<TEntity> filter);
         Task<TEntity> SingleAsync(FilterDefinition<TEntity> filter);
         Task<List<TEntity>> ApplyFilterAsync(FilterDefinition<TEntity> filter);

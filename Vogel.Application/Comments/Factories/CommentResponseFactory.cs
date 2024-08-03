@@ -13,17 +13,17 @@ namespace Vogel.Application.Comments.Factories
             _userFactoryResponse = userFactoryResponse;
         }
 
-        public async Task<List<CommentAggregateDto>> PreapreListCommentAggregateDto(List<CommentMongoView> comments)
+        public async Task<List<CommentDto>> PreapreListCommentDto(List<CommentMongoView> comments)
         {
-            var tasks = comments.Select(PrepareCommentAggregateDto);
+            var tasks = comments.Select(PrepareCommentDto);
 
             var result = await Task.WhenAll(tasks);
 
             return result.ToList();
         }
-        public async Task<CommentAggregateDto> PrepareCommentAggregateDto(CommentMongoView comment)
+        public async Task<CommentDto> PrepareCommentDto(CommentMongoView comment)
         {
-            var result = new CommentAggregateDto
+            var result = new CommentDto
             {
                 Id = comment.Id,
                 Content = comment.Content,
@@ -33,7 +33,7 @@ namespace Vogel.Application.Comments.Factories
 
             if(comment.User != null)
             {
-                result.User = await _userFactoryResponse.PreparePublicUserDto(comment.User);
+                result.User = await _userFactoryResponse.PrepareUserDto(comment.User);
             }
 
             if (comment.ReactionSummary != null)

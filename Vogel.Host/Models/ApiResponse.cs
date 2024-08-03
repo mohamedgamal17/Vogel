@@ -1,4 +1,4 @@
-﻿using Vogel.Application.Common.Models;
+﻿using Vogel.MongoDb.Entities.Common;
 
 namespace Vogel.Host.Models
 {

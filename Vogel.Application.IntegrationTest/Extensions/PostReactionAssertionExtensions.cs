@@ -25,7 +25,7 @@ namespace Vogel.Application.IntegrationTest.Extensions
             mongoEntity.AssertAuditingProperties(postReaction);
         }
         
-        public static void AssertPostReactionDto(this PostReactionDto dto , PostReaction postReaction , UserAggregate user = null)
+        public static void AssertPostReactionDto(this PostReactionDto dto , PostReaction postReaction , User user = null)
         {
             dto.Id.Should().Be(postReaction.Id);
             dto.PostId.Should().Be(postReaction.PostId);
@@ -33,7 +33,7 @@ namespace Vogel.Application.IntegrationTest.Extensions
             dto.Type.Should().Be((MongoDb.Entities.PostReactions.ReactionType)postReaction.Type);
             if(user != null)
             {
-                dto.User.AssertPublicUserDto(user);
+                dto.User.AssertUserDto(user);
             }
         }
     }

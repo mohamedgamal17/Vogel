@@ -6,7 +6,6 @@ using Vogel.Application.CommentReactions.Queries;
 using Vogel.Application.Comments.Commands;
 using Vogel.Application.Comments.Dtos;
 using Vogel.Application.Comments.Queries;
-using Vogel.Application.Common.Models;
 using Vogel.Application.PostReactions.Commands;
 using Vogel.Application.PostReactions.Dtos;
 using Vogel.Application.PostReactions.Queries;
@@ -16,6 +15,7 @@ using Vogel.Application.Posts.Queries;
 using Vogel.Host.Models;
 using Vogel.Host.Models.Comments;
 using Vogel.Host.Models.Posts;
+using Vogel.MongoDb.Entities.Common;
 namespace Vogel.Host.Controllers
 {
     [Route("api/posts")]
@@ -30,7 +30,7 @@ namespace Vogel.Host.Controllers
 
         [Route("")]
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<List<PostAggregateDto>>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<List<PostDto>>))]
         public async Task<IActionResult> ListPostAsync(string? cursor = null , int limit = 10)
         {
             var query = new ListPostQuery()
@@ -46,7 +46,7 @@ namespace Vogel.Host.Controllers
 
         [Route("{postId}")]
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<PostAggregateDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<PostDto>))]
         public async Task<IActionResult> GetPost(string postId)
         {
             var query = new GetPostByIdQuery { Id = postId };
@@ -58,7 +58,7 @@ namespace Vogel.Host.Controllers
 
         [Route("")]
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ApiResponse<PostAggregateDto>))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ApiResponse<PostDto>))]
         public async Task<IActionResult> CreatePost([FromBody]PostModel model)
         {
             var command = model.ToCreatePostCommand();
@@ -71,7 +71,7 @@ namespace Vogel.Host.Controllers
 
         [Route("{postId}")]
         [HttpPut]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<PostAggregateDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<PostDto>))]
         public async Task<IActionResult> UpdatePost(string postId , [FromBody] PostModel model)
         {
             var command = model.ToUpdatePostCommand(postId);
@@ -173,7 +173,7 @@ namespace Vogel.Host.Controllers
 
         [Route("{postId}/comments")]
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK,Type = typeof(ApiResponse<CommentAggregateDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK,Type = typeof(ApiResponse<CommentDto>))]
         public async Task<IActionResult> ListPostComments(string postId , string? cursor = null, int limit = 10)
         {
             var query = new ListCommentsQuery
@@ -190,7 +190,7 @@ namespace Vogel.Host.Controllers
 
         [Route("{postId}/comments/{commentId}")]
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<CommentAggregateDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<CommentDto>))]
         public async Task<IActionResult> GetComment(string postId, string commentId)
         {
             var query = new GetCommentQuery
@@ -206,7 +206,7 @@ namespace Vogel.Host.Controllers
 
         [Route("{postId}/comments/{commentId}/subcomments")]
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<CommentAggregateDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<CommentDto>))]
         public async Task<IActionResult> GetSubComments(string postId , string commentId , string? cursor = null, int limit = 10)
         {
             var query = new GetSubCommentsQuery
@@ -222,7 +222,7 @@ namespace Vogel.Host.Controllers
 
         [Route("{postId}/comments")]
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CommentAggregateDto))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CommentDto))]
         public async Task<IActionResult> CreatePostComment(string postId ,[FromBody] CreateCommentModel model)
         {
             var command = model.ToCreateCommentCommand(postId);
@@ -234,7 +234,7 @@ namespace Vogel.Host.Controllers
 
         [Route("{postId}/comments/{commentId}")]
         [HttpPut]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CommentAggregateDto))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CommentDto))]
         public async Task<IActionResult> UpdatePostComment(string postId , string commentId , [FromBody]UpdateCommentModel model)
         {
             var command = model.ToUpdateCommentCommand(postId, commentId);

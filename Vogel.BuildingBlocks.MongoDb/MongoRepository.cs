@@ -1,18 +1,19 @@
 ﻿using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using System.Globalization;
 using Vogel.BuildingBlocks.MongoDb.Extensions;
 
 namespace Vogel.BuildingBlocks.MongoDb
 {
-    public abstract class MongoRepository<TEntity, TKey> : IMongoRepository<TEntity, TKey>
-        where TEntity : IMongoEntity<TKey> 
+    public class MongoRepository<TEntity> : IMongoRepository<TEntity>
+        where TEntity : IMongoEntity
     {
         protected FilterDefinitionBuilder<TEntity> Filter = Builders<TEntity>.Filter;
         protected IMongoCollection<TEntity> MongoDbCollection { get; }
 
         protected readonly IMongoDatabase MongoDatabase;
 
-        protected MongoRepository(IMongoDatabase mongoDatabase)
+        public MongoRepository(IMongoDatabase mongoDatabase)
         {
             MongoDatabase = mongoDatabase;
 
@@ -40,7 +41,7 @@ namespace Vogel.BuildingBlocks.MongoDb
             return entity;
         }
 
-        public async Task DeleteAsync(TKey id)
+        public async Task DeleteAsync(string id)
         {
             await MongoDbCollection.DeleteOneAsync(Filter.Eq(x => x.Id, id));
         }
@@ -50,7 +51,7 @@ namespace Vogel.BuildingBlocks.MongoDb
         }
 
 
-        public IQueryable<TEntity> AsQuerable()
+        public IMongoQueryable<TEntity> AsQuerable()
         {
             return MongoDbCollection.AsQueryable();
         }
@@ -59,7 +60,7 @@ namespace Vogel.BuildingBlocks.MongoDb
             return MongoDbCollection;
         }
 
-        public async Task<TEntity?> FindByIdAsync(TKey id)
+        public async Task<TEntity?> FindByIdAsync(string id)
         {
             var filter = Filter.Eq(x => x.Id, id);
             var cursor = await MongoDbCollection.FindAsync(Filter.Eq(x=> x.Id, id));
@@ -86,6 +87,11 @@ namespace Vogel.BuildingBlocks.MongoDb
             var cursor = await MongoDbCollection.FindAsync(filter);
 
             return await cursor.ToListAsync();
+        }
+
+        public IMongoQueryable<TEntity> AsQueryable()
+        {
+            return MongoDbCollection.AsQueryable();
         }
 
     }

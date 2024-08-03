@@ -46,7 +46,7 @@ namespace Vogel.BuildingBlocks.MongoDb.Configuration
         {
             var repositoriesTypes = assembly.GetTypes()
                 .Where(x => x.IsClass && (x.BaseType?.IsGenericType ?? false))
-                .Where(x => x.BaseType?.GetGenericTypeDefinition() == typeof(MongoRepository<,>))
+                .Where(x => x.BaseType?.GetGenericTypeDefinition() == typeof(MongoRepository<>))
                 .ToList();
 
             foreach (var type in repositoriesTypes)
@@ -54,6 +54,7 @@ namespace Vogel.BuildingBlocks.MongoDb.Configuration
                 AddRepository(type);
             }
 
+           
             return this;
         }
 

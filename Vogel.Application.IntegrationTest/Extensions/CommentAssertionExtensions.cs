@@ -22,7 +22,7 @@ namespace Vogel.Application.IntegrationTest.Extensions
             comment.AssertAuditingProperties(mongoEntity);
         }
 
-        public static void AssertCommentDto(this CommentAggregateDto dto , Comment comment , UserAggregate? user = null)
+        public static void AssertCommentDto(this CommentDto dto , Comment comment , User? user = null)
         {
             dto.Id.Should().Be(comment.Id);
             dto.Content.Should().Be(comment.Content);
@@ -31,7 +31,7 @@ namespace Vogel.Application.IntegrationTest.Extensions
            
             if(user != null)
             {
-                dto.User.AssertPublicUserDto(user);
+                dto.User.AssertUserDto(user);
             }
         }
     }

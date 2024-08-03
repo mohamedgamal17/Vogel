@@ -33,7 +33,7 @@ namespace Vogel.Application.IntegrationTest.Users
 
             result.ShouldBeSuccess();
 
-            var user = await FindByIdAsync<UserAggregate>(result.Value!.Id);
+            var user = await FindByIdAsync<User>(result.Value!.Id);
 
             user.Should().NotBeNull();
 
@@ -107,7 +107,7 @@ namespace Vogel.Application.IntegrationTest.Users
 
             result.ShouldBeSuccess();
 
-            var user = await FindByIdAsync<UserAggregate>(result.Value!.Id);
+            var user = await FindByIdAsync<User>(result.Value!.Id);
 
             user.Should().NotBeNull();
 
@@ -199,13 +199,13 @@ namespace Vogel.Application.IntegrationTest.Users
             return command;
         }
 
-        private async Task<UserAggregate> CreateUserAsync()
+        private async Task<User> CreateUserAsync()
         {
             var media = await CreateMediaAsync();
 
             Faker faker = new Faker();
 
-            var user = new UserAggregate
+            var user = new User
             {
                 Id = CurrentUser?.Claims.SingleOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value ?? Guid.NewGuid().ToString(),
                 FirstName = faker.Person.FirstName,

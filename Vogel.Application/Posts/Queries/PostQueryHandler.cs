@@ -1,49 +1,42 @@
 ﻿using MongoDB.Driver;
-using Vogel.Application.Common.Models;
 using Vogel.Application.Posts.Dtos;
 using Vogel.Application.Posts.Factories;
 using Vogel.BuildingBlocks.Application.Requests;
 using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.BuildingBlocks.Domain.Results;
 using Vogel.Domain.Posts;
+using Vogel.MongoDb.Entities.Common;
 using Vogel.MongoDb.Entities.Posts;
+using Vogel.MongoDb.Entities.Extensions;
+using MongoDB.Driver.Linq;
 namespace Vogel.Application.Posts.Queries
 {
     public class PostQueryHandler :
-        IApplicationRequestHandler<ListPostQuery, Paging<PostAggregateDto>>,
-        IApplicationRequestHandler<ListUserPostQuery, Paging<PostAggregateDto>>,
-        IApplicationRequestHandler<GetUserPostById, PostAggregateDto>,
-        IApplicationRequestHandler<GetPostByIdQuery, PostAggregateDto>
+        IApplicationRequestHandler<ListPostQuery, Paging<PostDto>>,
+        IApplicationRequestHandler<ListUserPostQuery, Paging<PostDto>>,
+        IApplicationRequestHandler<GetUserPostById, PostDto>,
+        IApplicationRequestHandler<GetPostByIdQuery, PostDto>
     {
-        private readonly PostMongoViewRepository _postMongoViewRepository;
+        private readonly PostMongoRepository _postMongoRepository;
         private readonly IPostResponseFactory _postResponseFactory;
 
-        public PostQueryHandler(PostMongoViewRepository postMongoViewRepository, IPostResponseFactory postResponseFactory)
+        public PostQueryHandler(PostMongoRepository postMongoRepository, IPostResponseFactory postResponseFactory)
         {
-            _postMongoViewRepository = postMongoViewRepository;
+            _postMongoRepository = postMongoRepository;
             _postResponseFactory = postResponseFactory;
         }
 
-        public async Task<Result<Paging<PostAggregateDto>>> Handle(ListPostQuery request, CancellationToken cancellationToken)
+        public async Task<Result<Paging<PostDto>>> Handle(ListPostQuery request, CancellationToken cancellationToken)
         {
-            var query = _postMongoViewRepository.AsMongoCollection().Aggregate();
+            var paged = await _postMongoRepository.GetPostViewPaged(request.Cursor, request.Limit, request.Asending);
 
-            query = SortQuery(query, request);
-
-            var data = await Paginate(query, request);
-
-            var prepareResponseTask = _postResponseFactory.PrepareListPostAggregateDto(data);
-            var preaprePaginagInfoTask = PreparePagingInfo(query, request);
-
-            await Task.WhenAll(prepareResponseTask, preaprePaginagInfoTask);
-
-            var paged = new Paging<PostAggregateDto>
+            var result = new Paging<PostDto>
             {
-                Data = prepareResponseTask.Result,
-                Info = preaprePaginagInfoTask.Result
+                Data =await _postResponseFactory.PrepareListPostDto(paged.Data),
+                Info = paged.Info
             };
 
-            return paged;
+            return result;
         }
 
         private IAggregateFluent<PostMongoView> SortQuery(IAggregateFluent<PostMongoView> query, ListPostQueryBase request)
@@ -51,93 +44,46 @@ namespace Vogel.Application.Posts.Queries
             return request.Asending ? query.SortBy(x => x.Id) : query.SortByDescending(x => x.Id);
         }
 
-        public async Task<Result<PostAggregateDto>> Handle(GetPostByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<PostDto>> Handle(GetPostByIdQuery request, CancellationToken cancellationToken)
         {
-            var result = await _postMongoViewRepository.FindByIdAsync(request.Id);
+            var result = await _postMongoRepository.GetByIdPostMongoView(request.Id);
 
             if (result == null)
             {
-                return new Result<PostAggregateDto>(new EntityNotFoundException(typeof(Post), request.Id));
+                return new Result<PostDto>(new EntityNotFoundException(typeof(Post), request.Id));
             }
 
 
-            return await _postResponseFactory.PreparePostAggregateDto(result);
+            return await _postResponseFactory.PreparePostDto(result);
         }
 
-        public async Task<Result<Paging<PostAggregateDto>>> Handle(ListUserPostQuery request, CancellationToken cancellationToken)
+        public async Task<Result<Paging<PostDto>>> Handle(ListUserPostQuery request, CancellationToken cancellationToken)
         {
-            var query = _postMongoViewRepository.AsMongoCollection()
-                .Aggregate()
-                .Match(x => x.UserId == request.UserId);
- 
-            query = SortQuery(query, request);
-
-            var data = await Paginate(query, request);
-
-            var prepareResponseTask = _postResponseFactory.PrepareListPostAggregateDto(data);
-            var preaprePaginagInfoTask = PreparePagingInfo(query, request);
-
-            await Task.WhenAll(prepareResponseTask, preaprePaginagInfoTask);
-
-            var paged = new Paging<PostAggregateDto>
+            var paged = await _postMongoRepository.GetPostAsAggregate()
+                        .Match(x=> x.UserId == request.UserId)
+                        .ToPaged(request.Cursor,request.Limit,request.Asending);
+                        
+            var result = new Paging<PostDto>
             {
-                Data = prepareResponseTask.Result,
-                Info = preaprePaginagInfoTask.Result
+                Data = await _postResponseFactory.PrepareListPostDto(paged.Data),
+                Info = paged.Info
             };
 
-            return paged;
+            return result;
         }
 
-        public async Task<Result<PostAggregateDto>> Handle(GetUserPostById request, CancellationToken cancellationToken)
+        public async Task<Result<PostDto>> Handle(GetUserPostById request, CancellationToken cancellationToken)
         {
-              var result = await _postMongoViewRepository.AsMongoCollection()
-                  .Aggregate()
-                  .Match(x => x.UserId == request.UserId)
-                  .Match(x => x.Id == request.Id && x.UserId == request.UserId)
-                  .SingleOrDefaultAsync();
+            var result = await _postMongoRepository.GetPostAsAggregate()
+                      .Match(x => x.UserId == request.UserId && x.Id == request.Id)
+                      .SingleOrDefaultAsync();
 
             if (result == null)
             {
-                return new Result<PostAggregateDto>(new EntityNotFoundException(typeof(Post), request.Id));
+                return new Result<PostDto>(new EntityNotFoundException(typeof(Post), request.Id));
             }
 
-            return await _postResponseFactory.PreparePostAggregateDto(result);
-        }
-        private async Task<List<PostMongoView>> Paginate(IAggregateFluent<PostMongoView> query, ListPostQueryBase request)
-        {
-            if (request.Cursor != null)
-            {
-                var filter = request.Asending ? Builders<PostMongoView>.Filter.Gte(x => x.Id, request.Cursor)
-                    : Builders<PostMongoView>.Filter.Lte(x => x.Id, request.Cursor);
-
-                query = query.Match(filter);
-            }
-
-            return await query.Limit(request.Limit).ToListAsync();
-        }
-
-        private async Task<PagingInfo> PreparePagingInfo(IAggregateFluent<PostMongoView> query, ListPostQueryBase request)
-        {
-            if (request.Cursor != null)
-            {
-                var previosFilter = request.Asending ? Builders<PostMongoView>.Filter.Lt(x => x.Id, request.Cursor)
-                : Builders<PostMongoView>.Filter.Gt(x => x.Id, request.Cursor);
-
-                var nextFilter = request.Asending ? Builders<PostMongoView>.Filter.Gt(x => x.Id, request.Cursor)
-                    : Builders<PostMongoView>.Filter.Lt(x => x.Id, request.Cursor);
-
-                var next = await query.Match(nextFilter).Skip(request.Limit - 1).FirstOrDefaultAsync();
-
-                var previos = await query.Match(previosFilter).FirstOrDefaultAsync();
-
-                return new PagingInfo(next?.Id, previos?.Id, request.Asending);
-            }
-            else
-            {
-                var next = await query.Skip(request.Limit - 1).FirstOrDefaultAsync();
-
-                return new PagingInfo(next?.Id, null, request.Asending);
-            }
+            return await _postResponseFactory.PreparePostDto(result);
         }
 
     

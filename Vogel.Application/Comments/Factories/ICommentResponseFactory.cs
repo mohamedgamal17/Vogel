@@ -6,7 +6,7 @@ namespace Vogel.Application.Comments.Factories
 {
     public interface ICommentResponseFactory : IResponseFactory
     {
-        Task<List<CommentAggregateDto>> PreapreListCommentAggregateDto(List<CommentMongoView> comments);
-        Task<CommentAggregateDto> PrepareCommentAggregateDto(CommentMongoView comment);
+        Task<List<CommentDto>> PreapreListCommentDto(List<CommentMongoView> comments);
+        Task<CommentDto> PrepareCommentDto(CommentMongoView comment);
     }
 }

@@ -4,10 +4,7 @@ using Vogel.Application.Medias.Dtos;
 using Vogel.Application.PostReactions.Dtos;
 using Vogel.Application.Posts.Dtos;
 using Vogel.Application.Users.Factories;
-using Vogel.Domain.Medias;
-using Vogel.Domain.Posts;
 using Vogel.MongoDb.Entities.Posts;
-using Vogel.MongoDb.Entities.Users;
 namespace Vogel.Application.Posts.Factories
 {
     public class PostResponseFactory : IPostResponseFactory
@@ -22,18 +19,18 @@ namespace Vogel.Application.Posts.Factories
             _userResponseFactory = userResponseFactory;
         }
 
-        public async Task<List<PostAggregateDto>> PrepareListPostAggregateDto(List<PostMongoView> posts)
+        public async Task<List<PostDto>> PrepareListPostDto(List<PostMongoView> posts)
         {
-            var tasks = posts.Select(PreparePostAggregateDto);
+            var tasks = posts.Select(PreparePostDto);
 
             var results = await Task.WhenAll(tasks);
 
             return results.ToList();
         }
 
-        public async Task<PostAggregateDto> PreparePostAggregateDto(PostMongoView post)
+        public async Task<PostDto> PreparePostDto(PostMongoView post)
         {
-            var result = new PostAggregateDto
+            var result = new PostDto
             {
                 Id = post.Id,
                 Caption = post.Caption,
@@ -55,7 +52,7 @@ namespace Vogel.Application.Posts.Factories
 
             if (post.User != null)
             {
-                result.User = await _userResponseFactory.PreparePublicUserDto(post.User);
+                result.User = await _userResponseFactory.PrepareUserDto(post.User);
             }
 
             if(post.ReactionSummary != null)
@@ -74,30 +71,5 @@ namespace Vogel.Application.Posts.Factories
             return result;
         }
 
-        public async Task<PostAggregateDto> PreparePostAggregateDto(Post post, PublicUserMongoView user, Media? media = null)
-        {
-            var result = new PostAggregateDto
-            {
-                Id = post.Id,
-                Caption = post.Caption,
-                MediaId = post.MediaId,
-                UserId = post.UserId,
-                User = await _userResponseFactory.PreparePublicUserDto(user)
-            };
-
-            if (media != null)
-            {
-                result.Media = new MediaAggregateDto
-                {
-                    Id = media.Id,
-                    MimeType = media.MimeType,
-                    MediaType = (MongoDb.Entities.Medias.MediaType)media.MediaType,
-                    UserId = media.UserId,
-                    Reference = await _s3ObjectStorageService.GeneratePresignedDownloadUrlAsync(media.File)
-                };
-            }
-
-            return result;
-        }
     }
 }

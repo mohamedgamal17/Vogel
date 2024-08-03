@@ -36,12 +36,12 @@ namespace Vogel.Application.IntegrationTest
 
         private static ClaimsPrincipal? _currentUser = null;
 
-        private static UserAggregate? _currentUserProfile = null;
+        private static User? _currentUserProfile = null;
         public static IServiceProvider ServiceProvider => _serviceProvider;
         public static IConfiguration Configuration => _configuration;
         public static ClaimsPrincipal? CurrentUser => _currentUser;
 
-        public static UserAggregate? CurrentUserProfile => _currentUserProfile;
+        public static User? CurrentUserProfile => _currentUserProfile;
 
         static object _lockObj = new object();
 
@@ -254,7 +254,7 @@ namespace Vogel.Application.IntegrationTest
 
         public static async Task RunAsUserAsync(string id)
         {
-            var user = await InsertAsync(new UserAggregate
+            var user = await InsertAsync(new User
             {
                 Id = id,
                 FirstName = Guid.NewGuid().ToString(),

@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Vogel.Application.Common.Models;
 using Vogel.Application.Friendship.Commands;
 using Vogel.Application.Friendship.Dtos;
 using Vogel.Application.Friendship.Queries;
 using Vogel.Domain.Friendship;
 using Vogel.Host.Models;
+using Vogel.MongoDb.Entities.Common;
 
 namespace Vogel.Host.Controllers
 {
@@ -26,6 +26,7 @@ namespace Vogel.Host.Controllers
         {
             var query = new ListFriendQuery
             {
+                UserId = SecurityContext.User!.Id,
                 Cursor = cursor,
                 Asending = asending,
                 Limit = limit

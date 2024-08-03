@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Vogel.Application.Common.Models;
 using Vogel.Application.Friendship.Commands;
 using Vogel.Application.Friendship.Dtos;
 using Vogel.Application.Friendship.Queries;
 using Vogel.Host.Models;
 using Vogel.Host.Models.Friendship;
+using Vogel.MongoDb.Entities.Common;
 namespace Vogel.Host.Controllers
 {
 
@@ -23,11 +23,11 @@ namespace Vogel.Host.Controllers
         [HttpGet]
         [Route("")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<Paging<FriendRequestDto>>))]
-
         public async Task<IActionResult> ListFriendRequests(string? cursor = null, bool asending = false, int limit = 10)
         {
             var query = new ListFriendRequestQuery
             {
+                UserId = SecurityContext.User!.Id,
                 Cursor = cursor,
                 Asending = asending,
                 Limit = limit

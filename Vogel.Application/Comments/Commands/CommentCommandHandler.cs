@@ -14,34 +14,34 @@ using Vogel.MongoDb.Entities.Comments;
 namespace Vogel.Application.Comments.Commands
 {
     public class CommentCommandHandler :
-        IApplicationRequestHandler<CreateCommentCommand, CommentAggregateDto>,
-        IApplicationRequestHandler<UpdateCommentCommand, CommentAggregateDto>,
+        IApplicationRequestHandler<CreateCommentCommand, CommentDto>,
+        IApplicationRequestHandler<UpdateCommentCommand, CommentDto>,
         IApplicationRequestHandler<RemoveCommentCommand , Unit>
     {
         private readonly IRepository<Comment> _commentRepository;
         private readonly IRepository<Post> _postRepository;
         private readonly ISecurityContext _securityContext;
         private readonly ICommentResponseFactory _commentResponseFactory;
-        private readonly CommentMongoViewRepository _commentMongoViewRepository;
+        private readonly CommentMongoRepository _commentMongoRepository;
         private readonly IApplicationAuthorizationService _applicationAuthorizationService;
 
-        public CommentCommandHandler(IRepository<Comment> commentRepository, IRepository<Post> postRepository, ISecurityContext securityContext, ICommentResponseFactory commentResponseFactory, CommentMongoViewRepository commentMongoViewRepository, IApplicationAuthorizationService applicationAuthorizationService)
+        public CommentCommandHandler(IRepository<Comment> commentRepository, IRepository<Post> postRepository, ISecurityContext securityContext, ICommentResponseFactory commentResponseFactory, CommentMongoRepository commentMongoRepository, IApplicationAuthorizationService applicationAuthorizationService)
         {
             _commentRepository = commentRepository;
             _postRepository = postRepository;
             _securityContext = securityContext;
             _commentResponseFactory = commentResponseFactory;
-            _commentMongoViewRepository = commentMongoViewRepository;
+            _commentMongoRepository = commentMongoRepository;
             _applicationAuthorizationService = applicationAuthorizationService;
         }
 
-        public async Task<Result<CommentAggregateDto>> Handle(CreateCommentCommand request, CancellationToken cancellationToken)
+        public async Task<Result<CommentDto>> Handle(CreateCommentCommand request, CancellationToken cancellationToken)
         {
             var post = await _postRepository.FindByIdAsync(request.PostId);
 
             if(post == null)
             {
-                return new Result<CommentAggregateDto>(new EntityNotFoundException(typeof(Post), request.PostId));
+                return new Result<CommentDto>(new EntityNotFoundException(typeof(Post), request.PostId));
             }
 
             var comment = new Comment
@@ -54,12 +54,12 @@ namespace Vogel.Application.Comments.Commands
 
             await _commentRepository.InsertAsync(comment);
 
-            var commentAggregate = await _commentMongoViewRepository.FindByIdAsync(comment.Id);
+            var commentView = await _commentMongoRepository.GetCommentViewById(comment.Id);
 
-            return await _commentResponseFactory.PrepareCommentAggregateDto(commentAggregate!);
+            return await _commentResponseFactory.PrepareCommentDto(commentView!);
         }
 
-        public async Task<Result<CommentAggregateDto>> Handle(UpdateCommentCommand request, CancellationToken cancellationToken)
+        public async Task<Result<CommentDto>> Handle(UpdateCommentCommand request, CancellationToken cancellationToken)
         {
             var filter = new FilterDefinitionBuilder<Comment>()
                 .And(
@@ -71,7 +71,7 @@ namespace Vogel.Application.Comments.Commands
             
             if(comment == null)
             {
-                return new Result<CommentAggregateDto>(new EntityNotFoundException(typeof(Comment), request.CommentId));
+                return new Result<CommentDto>(new EntityNotFoundException(typeof(Comment), request.CommentId));
             }
 
             var authorizationResult = await _applicationAuthorizationService
@@ -79,16 +79,16 @@ namespace Vogel.Application.Comments.Commands
 
             if (authorizationResult.IsFailure)
             {
-                return new Result<CommentAggregateDto>(authorizationResult.Exception!);
+                return new Result<CommentDto>(authorizationResult.Exception!);
             }
 
             comment.Content = request.Content;
 
             await _commentRepository.UpdateAsync(comment);
 
-            var commentAggregate = await _commentMongoViewRepository.FindByIdAsync(comment.Id);
+            var commentView = await _commentMongoRepository.GetCommentViewById(comment.Id);
 
-            return await _commentResponseFactory.PrepareCommentAggregateDto(commentAggregate!);
+            return await _commentResponseFactory.PrepareCommentDto(commentView!);
         }
 
         public async Task<Result<Unit>> Handle(RemoveCommentCommand request, CancellationToken cancellationToken)
@@ -112,19 +112,6 @@ namespace Vogel.Application.Comments.Commands
             await _commentRepository.DeleteAsync(comment);
 
             return Unit.Value;
-        }
-
-        private CommentDto PrepareCommentDto(Comment comment)
-        {
-            var dto = new CommentDto
-            {
-                Id = comment.Id,
-                PostId = comment.PostId,
-                Content = comment.Content,
-                UserId = comment.UserId
-            };
-
-            return dto;
         }
     }
 }

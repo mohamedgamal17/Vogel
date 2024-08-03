@@ -34,7 +34,7 @@ namespace Vogel.Application.CommentReactions.Factories
 
             if(comment.User != null)
             {
-                dto.User = await _userResponseFactory.PreparePublicUserDto(comment.User);
+                dto.User = await _userResponseFactory.PrepareUserDto(comment.User);
             }
 
             return dto;

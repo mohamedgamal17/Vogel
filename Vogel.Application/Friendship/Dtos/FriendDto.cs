@@ -8,7 +8,7 @@ namespace Vogel.Application.Friendship.Dtos
     {
         public string SourceId { get; set; }
         public string TargetId { get; set; }
-        public PublicUserDto Source { get; set; }
-        public PublicUserDto Target { get; set; }
+        public UserDto Source { get; set; }
+        public UserDto Target { get; set; }
     }
 }

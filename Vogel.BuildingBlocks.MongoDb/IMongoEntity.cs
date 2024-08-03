@@ -4,18 +4,14 @@ namespace Vogel.BuildingBlocks.MongoDb
 {
     public interface IMongoEntity
     {
-
+        string Id { get; set; }
     }
 
-    public interface IMongoEntity<TKey> : IMongoEntity
-    {
-        TKey Id { get; set; }
-    }
-    public abstract class MongoEntity<TKey> : IMongoEntity<TKey>
+    public abstract class MongoEntity : IMongoEntity
     {
         [BsonId]
         [BsonElement("_id")]
-        public TKey Id { get; set; }
+        public string Id { get; set; }
     }
 
 }

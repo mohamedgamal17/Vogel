@@ -28,7 +28,7 @@ namespace Vogel.Application.IntegrationTest.Extensions
             friendRequest.AssertAuditingProperties(mongoEntity);
         }
 
-        public static void AssertFriendRequestDto(this FriendRequestDto friendRequestDto , FriendRequest friendRequest , UserAggregate? sender =null , UserAggregate? reciver = null)
+        public static void AssertFriendRequestDto(this FriendRequestDto friendRequestDto , FriendRequest friendRequest , User? sender =null , User? reciver = null)
         {
             friendRequestDto.Id.Should().Be(friendRequest.Id);
             friendRequestDto.SenderId.Should().Be(friendRequest.SenderId);
@@ -36,13 +36,13 @@ namespace Vogel.Application.IntegrationTest.Extensions
             if(sender != null)
             {
                 friendRequestDto.Sender.Should().NotBeNull();
-                friendRequestDto.Sender.AssertPublicUserDto(sender);
+                friendRequestDto.Sender.AssertUserDto(sender);
             }
 
             if (reciver != null )
             {
                 friendRequestDto.Reciver.Should().NotBeNull();
-                friendRequestDto.Reciver.AssertPublicUserDto(reciver);
+                friendRequestDto.Reciver.AssertUserDto(reciver);
                
             }
         }

@@ -1,137 +1,66 @@
-﻿using MongoDB.Driver;
-using Vogel.Application.Comments.Dtos;
+﻿using Vogel.Application.Comments.Dtos;
 using Vogel.Application.Comments.Factories;
-using Vogel.Application.Common.Models;
 using Vogel.BuildingBlocks.Application.Requests;
 using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.BuildingBlocks.Domain.Results;
-using Vogel.Domain;
 using Vogel.Domain.Comments;
 using Vogel.MongoDb.Entities.Comments;
+using Vogel.MongoDb.Entities.Common;
 namespace Vogel.Application.Comments.Queries
 {
     public class CommentQueryHandler : 
-        IApplicationRequestHandler<ListCommentsQuery, Paging<CommentAggregateDto>>,
-        IApplicationRequestHandler<GetCommentQuery, CommentAggregateDto>,
-        IApplicationRequestHandler<GetSubCommentsQuery, Paging<CommentAggregateDto>>
+        IApplicationRequestHandler<ListCommentsQuery, Paging<CommentDto>>,
+        IApplicationRequestHandler<GetCommentQuery, CommentDto>,
+        IApplicationRequestHandler<GetSubCommentsQuery, Paging<CommentDto>>
     {
-        private readonly CommentMongoViewRepository _commentMongoViewRepository;
+        private readonly CommentMongoRepository _commentMongoRepository;
 
         private readonly ICommentResponseFactory _commentResponseFactory;
 
-        public CommentQueryHandler(CommentMongoViewRepository commentMongoViewRepository, ICommentResponseFactory commentResponseFactory)
+        public CommentQueryHandler(CommentMongoRepository commentMongoRepository, ICommentResponseFactory commentResponseFactory)
         {
-            _commentMongoViewRepository = commentMongoViewRepository;
+            _commentMongoRepository = commentMongoRepository;
             _commentResponseFactory = commentResponseFactory;
         }
 
-        public async Task<Result<Paging<CommentAggregateDto>>> Handle(ListCommentsQuery request, CancellationToken cancellationToken)
+        public async Task<Result<Paging<CommentDto>>> Handle(ListCommentsQuery request, CancellationToken cancellationToken)
         {
-            var query = _commentMongoViewRepository.AsMongoCollection()
-                .Aggregate()
-                .Match(x => x.PostId == request.PostId);
+            var paged = await _commentMongoRepository.GetCommentViewPaged(request.PostId, null, request.Cursor, request.Limit,
+                request.Asending);
 
-            var sortedQuery = SortQuery(query, request);
-
-            var data = await Paginate(sortedQuery, request);
-
-            var paginInfo = await PreparePagingInfo(query, request);
-
-            var response = await _commentResponseFactory.PreapreListCommentAggregateDto(data);
-
-            var paged = new Paging<CommentAggregateDto>()
+            var result = new Paging<CommentDto>
             {
-                Data = response,
-                Info = paginInfo
+                Data = await _commentResponseFactory.PreapreListCommentDto(paged.Data),
+                Info = paged.Info
             };
 
-            return paged;
+            return result;
         }
 
-        public async Task<Result<CommentAggregateDto>> Handle(GetCommentQuery request, CancellationToken cancellationToken)
+        public async Task<Result<CommentDto>> Handle(GetCommentQuery request, CancellationToken cancellationToken)
         {
-
-            var query = _commentMongoViewRepository.AsMongoCollection()
-                .Aggregate()
-                .Match(x => x.PostId == request.PostId && x.Id == request.CommentId);
-
-            var comment = await query.SingleOrDefaultAsync();
+            var comment = await _commentMongoRepository.GetCommentViewById(request.CommentId);
 
             if(comment == null)
             {
-                return new Result<CommentAggregateDto>(new EntityNotFoundException(typeof(Comment), request.CommentId));
+                return new Result<CommentDto>(new EntityNotFoundException(typeof(Comment), request.CommentId));
             }
-
-
-            return await _commentResponseFactory.PrepareCommentAggregateDto(comment);
+            return await _commentResponseFactory.PrepareCommentDto(comment);
         }
 
 
-        public async Task<Result<Paging<CommentAggregateDto>>> Handle(GetSubCommentsQuery request, CancellationToken cancellationToken)
+        public async Task<Result<Paging<CommentDto>>> Handle(GetSubCommentsQuery request, CancellationToken cancellationToken)
         {
-            var query = _commentMongoViewRepository.AsMongoCollection()
-                .Aggregate()
-                .Match(x => x.PostId == request.PostId && x.CommentId == request.CommentId);
+            var paged = await _commentMongoRepository.GetCommentViewPaged(request.PostId, request.CommentId, request.Cursor, request.Limit, request.Asending);
 
-            var sortedQuery = SortQuery(query, request);
 
-            var data = await Paginate(sortedQuery, request);
-
-            var paginInfo = await PreparePagingInfo(query, request);
-
-            var response = await _commentResponseFactory.PreapreListCommentAggregateDto(data);
-
-            var paged = new Paging<CommentAggregateDto>()
+            var result = new Paging<CommentDto>()
             {
-                Data = response,
-                Info = paginInfo
+                Data = await _commentResponseFactory.PreapreListCommentDto(paged.Data),
+                Info = paged.Info
             };
 
-            return paged;
+            return result;
         }
-
-        private IAggregateFluent<CommentMongoView> SortQuery(IAggregateFluent<CommentMongoView> query, PagingParams request)
-        {
-            return request.Asending ? query.SortBy(x => x.Id) : query.SortByDescending(x => x.Id);
-        }
-
-        private async Task<List<CommentMongoView>> Paginate(IAggregateFluent<CommentMongoView> query, PagingParams request)
-        {
-            if (request.Cursor != null)
-            {
-                var filter = request.Asending ? Builders<CommentMongoView>.Filter.Gte(x => x.Id, request.Cursor)
-                    : Builders<CommentMongoView>.Filter.Lte(x => x.Id, request.Cursor);
-
-                query = query.Match(filter);
-            }
-
-            return await query.Limit(request.Limit).ToListAsync();
-        }
-
-        private async Task<PagingInfo> PreparePagingInfo(IAggregateFluent<CommentMongoView> query, PagingParams request)
-        {
-            if (request.Cursor != null)
-            {
-                var previosFilter = request.Asending ? Builders<CommentMongoView>.Filter.Lt(x => x.Id, request.Cursor)
-                : Builders<CommentMongoView>.Filter.Gt(x => x.Id, request.Cursor);
-
-                var nextFilter = request.Asending ? Builders<CommentMongoView>.Filter.Gt(x => x.Id, request.Cursor)
-                    : Builders<CommentMongoView>.Filter.Lt(x => x.Id, request.Cursor);
-
-                var next = await query.Match(nextFilter).Skip(request.Limit - 1).FirstOrDefaultAsync();
-
-                var previos = await query.Match(previosFilter).FirstOrDefaultAsync();
-
-                return new PagingInfo(next?.Id, previos?.Id, request.Asending);
-            }
-            else
-            {
-                var next = await query.Skip(request.Limit - 1).FirstOrDefaultAsync();
-
-                return new PagingInfo(next?.Id, null, request.Asending);
-            }
-        }
-
-     
     }
 }

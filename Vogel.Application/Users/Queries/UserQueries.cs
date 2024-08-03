@@ -3,6 +3,7 @@ using Vogel.Application.Common.Interfaces;
 using Vogel.Application.Common.Models;
 using Vogel.Application.Users.Dtos;
 using Vogel.BuildingBlocks.Application.Requests;
+using Vogel.MongoDb.Entities.Common;
 namespace Vogel.Application.Users.Queries
 {
     [Authorize]

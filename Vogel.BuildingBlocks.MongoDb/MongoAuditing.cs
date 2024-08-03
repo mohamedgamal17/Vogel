@@ -13,7 +13,7 @@ namespace Vogel.BuildingBlocks.MongoDb
         string? DeletorId { get; set; }
     }
 
-    public class FullAuditedMongoEntity<TKey> : MongoEntity<TKey>, IMongoAuditing
+    public class FullAuditedMongoEntity<TKey> : MongoEntity, IMongoAuditing
     {
         public string? CreatorId { get; set; }
 

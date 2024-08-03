@@ -5,9 +5,9 @@ using Vogel.Domain.Friendship;
 using Vogel.Domain.Users;
 namespace Vogel.Infrastructure.EntityFramework.Mapping
 {
-    public class UserEntityTypeConfiguration : IEntityTypeConfiguration<UserAggregate>
+    public class UserEntityTypeConfiguration : IEntityTypeConfiguration<User>
     {
-        public void Configure(EntityTypeBuilder<UserAggregate> builder)
+        public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.ToTable("Users");
 
@@ -23,7 +23,7 @@ namespace Vogel.Infrastructure.EntityFramework.Mapping
 
             builder.Property(x => x.AvatarId).HasMaxLength(256);
 
-            builder.HasOne(x=> x.Avatar).WithOne().HasForeignKey<UserAggregate>(x => x.AvatarId);
+            builder.HasOne(x=> x.Avatar).WithOne().HasForeignKey<User>(x => x.AvatarId);
 
             builder.AutoMapAuditing();
         }

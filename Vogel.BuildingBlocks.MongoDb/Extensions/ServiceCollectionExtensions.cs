@@ -24,6 +24,8 @@ namespace Vogel.BuildingBlocks.MongoDb.Extensions
 
             services.AddSingleton<IMongoMigrationEngine, MongoMigrationEngine>();
 
+            services.AddTransient(typeof(IMongoRepository<>), typeof(MongoRepository<>));
+
             return new VogelMongoDbBuilder(services);
         }
 
@@ -34,7 +36,11 @@ namespace Vogel.BuildingBlocks.MongoDb.Extensions
             {
                 var settings = sp.GetRequiredService<MongoDbSettings>();
 
-                return new MongoClient(settings.ConnectionString);
+                var clientSettings = MongoClientSettings.FromConnectionString(settings.ConnectionString);
+
+                clientSettings.LinqProvider = MongoDB.Driver.Linq.LinqProvider.V3;
+
+                return new MongoClient(clientSettings);
             });
         }
 

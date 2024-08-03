@@ -2,6 +2,7 @@
 using Vogel.Application.Common.Models;
 using Vogel.Application.PostReactions.Dtos;
 using Vogel.BuildingBlocks.Application.Requests;
+using Vogel.MongoDb.Entities.Common;
 
 namespace Vogel.Application.PostReactions.Queries
 {

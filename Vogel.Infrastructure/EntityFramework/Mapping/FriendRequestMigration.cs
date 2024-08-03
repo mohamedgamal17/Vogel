@@ -20,9 +20,9 @@ namespace Vogel.Infrastructure.EntityFramework.Mapping
 
             builder.Property(x => x.ReciverId).HasMaxLength(FriendRequestTableConsts.ReciverIdLenght);
 
-            builder.HasOne<UserAggregate>().WithMany().HasForeignKey(x => x.SenderId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne<User>().WithMany().HasForeignKey(x => x.SenderId).OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne<UserAggregate>().WithMany().HasForeignKey(x => x.ReciverId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne<User>().WithMany().HasForeignKey(x => x.ReciverId).OnDelete(DeleteBehavior.Restrict);
 
             builder.AutoMapAuditing();
         }

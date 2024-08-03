@@ -33,7 +33,7 @@ namespace Vogel.Application.PostReactions.Factories
 
             if(reaction.User != null)
             {
-                dto.User = await _userResponseFactory.PreparePublicUserDto(reaction.User);
+                dto.User = await _userResponseFactory.PrepareUserDto(reaction.User);
             }
 
             return dto;

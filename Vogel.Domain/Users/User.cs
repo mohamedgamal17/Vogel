@@ -1,17 +1,16 @@
-﻿using Vogel.BuildingBlocks.Domain;
-using Vogel.BuildingBlocks.Domain.Auditing;
+﻿using Vogel.BuildingBlocks.Domain.Auditing;
 using Vogel.Domain.Medias;
 
 namespace Vogel.Domain.Users
 {
-    public class UserAggregate : AuditedAggregateRoot<string>
+    public class User : AuditedAggregateRoot<string>
     {
-        public UserAggregate()
+        public User()
         {
             Id = Guid.NewGuid().ToString();
         }
 
-        public UserAggregate(string id)
+        public User(string id)
         {
             Id = id;
         }
