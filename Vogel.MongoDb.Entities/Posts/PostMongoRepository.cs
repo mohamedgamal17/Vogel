@@ -32,7 +32,26 @@ namespace Vogel.MongoDb.Entities.Posts
                 .Match(Builders<PostMongoView>.Filter.Eq(x => x.Id, id))
                 .SingleOrDefaultAsync();
         }
-      
+
+        public async Task<Paging<PostMongoView>> GetUserFriendsPosts(string userId, string? cursor = null, int limit = 10, bool ascending = false)
+        {
+            var userFriends = await _userMongoRepository.GetUserRelationshipView(userId);
+
+            if (userFriends == null)
+            {
+                return new Paging<PostMongoView>
+                {
+                    Data = new List<PostMongoView>(),
+                    Info = new PagingInfo(null, null, ascending)
+                };
+            }
+
+            return await GetPostAsAggregate()
+                .Match(
+                    Builders<PostMongoView>.Filter.In(x => x.UserId, userFriends.Friends.Select(x => x.UserId))
+                  )
+                .ToPaged(cursor, limit, ascending);
+        }
         public IAggregateFluent<PostMongoView> GetPostAsAggregate()
         {
             return AsMongoCollection()
@@ -63,5 +82,6 @@ namespace Vogel.MongoDb.Entities.Posts
                .Unwind(x => x.ReactionSummary, new AggregateUnwindOptions<PostMongoView> { PreserveNullAndEmptyArrays = true });
 
         }
+
     }
 }

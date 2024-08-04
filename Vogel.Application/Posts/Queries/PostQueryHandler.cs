@@ -9,6 +9,7 @@ using Vogel.MongoDb.Entities.Common;
 using Vogel.MongoDb.Entities.Posts;
 using Vogel.MongoDb.Entities.Extensions;
 using MongoDB.Driver.Linq;
+using Vogel.BuildingBlocks.Application.Security;
 namespace Vogel.Application.Posts.Queries
 {
     public class PostQueryHandler :
@@ -19,16 +20,20 @@ namespace Vogel.Application.Posts.Queries
     {
         private readonly PostMongoRepository _postMongoRepository;
         private readonly IPostResponseFactory _postResponseFactory;
+        private readonly ISecurityContext _securityContext;
 
-        public PostQueryHandler(PostMongoRepository postMongoRepository, IPostResponseFactory postResponseFactory)
+        public PostQueryHandler(PostMongoRepository postMongoRepository, IPostResponseFactory postResponseFactory, ISecurityContext securityContext)
         {
             _postMongoRepository = postMongoRepository;
             _postResponseFactory = postResponseFactory;
+            _securityContext = securityContext;
         }
 
         public async Task<Result<Paging<PostDto>>> Handle(ListPostQuery request, CancellationToken cancellationToken)
         {
-            var paged = await _postMongoRepository.GetPostViewPaged(request.Cursor, request.Limit, request.Asending);
+            string userId = _securityContext.User!.Id;
+
+            var paged = await _postMongoRepository.GetUserFriendsPosts(userId, request.Cursor, request.Limit, request.Asending);
 
             var result = new Paging<PostDto>
             {
