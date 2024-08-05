@@ -3,6 +3,7 @@ using Vogel.MongoDb.Entities.Users;
 
 namespace Vogel.MongoDb.Entities.PostReactions
 {
+    [MongoCollection(PostReactionMongoConsts.ReactionSummaryView)]
     public class PostReactionMongoView : FullAuditedMongoEntity<string>
     {
         public string UserId { get; set; }

@@ -5,17 +5,14 @@ using Vogel.MongoDb.Entities.Common;
 using Vogel.MongoDb.Entities.Extensions;
 using Vogel.MongoDb.Entities.Medias;
 using Vogel.MongoDb.Entities.Users;
-
 namespace Vogel.MongoDb.Entities.Friendship
 {
     public class FriendMongoRepository : MongoRepository<FriendMongoEntity>
     {
-        private readonly UserMongoRepository _userMongoRepository;
-        private readonly IMongoRepository<MediaMongoEntity> _mediaRepository;
-        public FriendMongoRepository(IMongoDatabase mongoDatabase, UserMongoRepository userMongoRepository, IMongoRepository<MediaMongoEntity> mediaRepository) : base(mongoDatabase)
+
+        public FriendMongoRepository(IMongoDatabase mongoDatabase) : base(mongoDatabase)
         {
-            _userMongoRepository = userMongoRepository;
-            _mediaRepository = mediaRepository;
+
         }
 
         public async Task<Paging<FriendMongoView>> GetFriendViewPaged(string userId, string? cursor = null, int limit = 10, bool ascending = false)
@@ -38,25 +35,28 @@ namespace Vogel.MongoDb.Entities.Friendship
         {
             return AsMongoCollection()
                 .Aggregate()
-                .Lookup<FriendMongoEntity, UserMongoEntity, FriendMongoView>(_userMongoRepository.AsMongoCollection(),
+                .Lookup<FriendMongoEntity, UserMongoEntity, FriendMongoView>(
+                GetCollection<UserMongoEntity>(UserMongoConsts.CollectionName),
                     l => l.SourceId,
                     f => f.Id,
                     r => r.Source
                 )
                 .Unwind(x => x.Source, new AggregateUnwindOptions<FriendMongoView>() { PreserveNullAndEmptyArrays = true })
-                .Lookup<FriendMongoView, MediaMongoEntity, FriendMongoView>(_mediaRepository.AsMongoCollection(),
+                .Lookup<FriendMongoView, MediaMongoEntity, FriendMongoView>(
+                GetCollection<MediaMongoEntity>(MediaMongoConsts.CollectionName),
                     l => l.Source.AvatarId,
                     f => f.Id,
                     r => r.Source.Avatar
                 )
                .Unwind(x => x.Source.Avatar, new AggregateUnwindOptions<FriendMongoView>() { PreserveNullAndEmptyArrays = true })
-               .Lookup<FriendMongoView, UserMongoEntity, FriendMongoView>(_userMongoRepository.AsMongoCollection(),
+               .Lookup<FriendMongoView, UserMongoEntity, FriendMongoView>(GetCollection<UserMongoEntity>(UserMongoConsts.CollectionName),
                     l => l.TargetId,
                     f => f.Id,
                     r => r.Target
                 )
                 .Unwind(x => x.Target, new AggregateUnwindOptions<FriendMongoView>() { PreserveNullAndEmptyArrays = true })
-                .Lookup<FriendMongoView, MediaMongoEntity, FriendMongoView>(_mediaRepository.AsMongoCollection(),
+                .Lookup<FriendMongoView, MediaMongoEntity, FriendMongoView>(
+                GetCollection<MediaMongoEntity>(MediaMongoConsts.CollectionName),
                     l => l.Target.AvatarId,
                     f => f.Id,
                     r => r.Target.Avatar

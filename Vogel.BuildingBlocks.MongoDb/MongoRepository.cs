@@ -94,5 +94,10 @@ namespace Vogel.BuildingBlocks.MongoDb
             return MongoDbCollection.AsQueryable();
         }
 
+        public IMongoCollection<T> GetCollection<T>(string name)
+        {
+            return MongoDatabase.GetCollection<T>(name);
+        }
+ 
     }
 }

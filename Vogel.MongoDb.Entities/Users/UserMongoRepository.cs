@@ -10,13 +10,10 @@ namespace Vogel.MongoDb.Entities.Users
 {
     public class UserMongoRepository : MongoRepository<UserMongoEntity>
     {
-        private readonly MediaMongoRepository _mediaMongoRepository;
-        private readonly FriendMongoRepository _frinedMongoRepository;
-        public UserMongoRepository(IMongoDatabase mongoDatabase, MediaMongoRepository mediaMongoRepository, FriendMongoRepository frinedMongoRepository)
+
+        public UserMongoRepository(IMongoDatabase mongoDatabase)
             : base(mongoDatabase)
         {
-            _mediaMongoRepository = mediaMongoRepository;
-            _frinedMongoRepository = frinedMongoRepository;
         }
 
         public async Task<Paging<UserMongoView>> GetUserViewPaged(string? cursor = null , bool ascending = false, int limit = 10)
@@ -30,7 +27,7 @@ namespace Vogel.MongoDb.Entities.Users
         {
             return AsMongoCollection()
                 .Aggregate()
-                .Lookup<UserMongoEntity, MediaMongoEntity, UserMongoView>(_mediaMongoRepository.AsMongoCollection(),
+                .Lookup<UserMongoEntity, MediaMongoEntity, UserMongoView>(GetCollection<MediaMongoEntity>(MediaMongoConsts.CollectionName),
                     l => l.AvatarId,
                     f => f.Id,
                     r => r.Avatar
@@ -51,7 +48,7 @@ namespace Vogel.MongoDb.Entities.Users
                 .Aggregate()
                 .Match(x => x.Id == userId)
                 .Lookup<UserMongoEntity, FriendMongoEntity, UserFriendView, List<UserFriendView>, UserRelationshipView>(
-                _frinedMongoRepository.AsMongoCollection(),
+                 MongoDatabase.GetCollection<FriendMongoEntity>(FriendshipMongoConsts.FriendCollection),
                      new BsonDocument { { "userId", "$_id" } },
                      new EmptyPipelineDefinition<FriendMongoEntity>()
                         .Match(

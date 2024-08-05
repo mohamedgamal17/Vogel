@@ -9,12 +9,10 @@ namespace Vogel.MongoDb.Entities.PostReactions
 {
     public class PostReactionMongoRepository : MongoRepository<PostReactionMongoEntity>
     {
-        private readonly UserMongoRepository _userMongoRepository;
-        private readonly IMongoRepository<MediaMongoEntity> _mediaRepository;
-        public PostReactionMongoRepository(IMongoDatabase mongoDatabase, UserMongoRepository userMongoRepository, IMongoRepository<MediaMongoEntity> mediaRepository) : base(mongoDatabase)
+
+        public PostReactionMongoRepository(IMongoDatabase mongoDatabase) : base(mongoDatabase)
         {
-            _userMongoRepository = userMongoRepository;
-            _mediaRepository = mediaRepository;
+
         }
 
         public async Task<Paging<PostReactionMongoView>> GetReactionViewPaged(string postId , string? cursor = null, int limit = 10 , bool ascending = false)
@@ -36,13 +34,14 @@ namespace Vogel.MongoDb.Entities.PostReactions
         {
             return AsMongoCollection()
                 .Aggregate()
-                .Lookup<PostReactionMongoEntity, UserMongoEntity, PostReactionMongoView>(_userMongoRepository.AsMongoCollection(),
+                .Lookup<PostReactionMongoEntity, UserMongoEntity, PostReactionMongoView>(GetCollection<UserMongoEntity>(UserMongoConsts.CollectionName),
                     l => l.UserId,
                     f => f.Id,
                     r => r.User
                 )
                 .Unwind(x => x.User, new AggregateUnwindOptions<PostReactionMongoView> { PreserveNullAndEmptyArrays = true })
-                .Lookup<PostReactionMongoView, MediaMongoEntity, PostReactionMongoView>(_mediaRepository.AsMongoCollection(),
+                .Lookup<PostReactionMongoView, MediaMongoEntity, PostReactionMongoView>(
+                GetCollection<MediaMongoEntity>(MediaMongoConsts.CollectionName),
                     l => l.User.AvatarId,
                     f => f.Id,
                     r => r.User.Avatar

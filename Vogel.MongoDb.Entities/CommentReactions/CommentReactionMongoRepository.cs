@@ -11,17 +11,15 @@ namespace Vogel.MongoDb.Entities.CommentReactions
 {
     public class CommentReactionMongoRepository : MongoRepository<CommentReactionMongoEntity>
     {
-        private readonly UserMongoRepository _userMongoRepository;
-        private readonly IMongoRepository<MediaMongoEntity> _mediaRepository;
-        public CommentReactionMongoRepository(IMongoDatabase mongoDatabase, UserMongoRepository userMongoRepository, IMongoRepository<MediaMongoEntity> mediaRepository) : base(mongoDatabase)
+
+        public CommentReactionMongoRepository(IMongoDatabase mongoDatabase) : base(mongoDatabase)
         {
-            _userMongoRepository = userMongoRepository;
-            _mediaRepository = mediaRepository;
+
         }
 
         public async Task<Paging<CommentReactionMongoView>> GetReactionViewPaged(string commentId , string? cursor = null, int limit = 10 , bool  ascending = false)
         {
-            return await GetReactionAsAggregate().ToPaged(cursor, limit, ascending);
+            return await GetReactionAsAggregate().Match(x=> x.Id == commentId).ToPaged(cursor, limit, ascending);
         }
 
         public async Task<CommentReactionMongoView> GetReactionViewById(string commentId,string reactionId)
@@ -36,13 +34,14 @@ namespace Vogel.MongoDb.Entities.CommentReactions
         {
             return AsMongoCollection()
                 .Aggregate()
-                .Lookup<CommentReactionMongoEntity, UserMongoEntity, CommentReactionMongoView>(_userMongoRepository.AsMongoCollection(),
+                .Lookup<CommentReactionMongoEntity, UserMongoEntity, CommentReactionMongoView>(
+                GetCollection<UserMongoEntity>(UserMongoConsts.CollectionName),
                     l => l.UserId,
                     f => f.Id,
                     r => r.User
                 )
                 .Unwind(x => x.User, new AggregateUnwindOptions<CommentReactionMongoView> { PreserveNullAndEmptyArrays = true })
-                .Lookup<CommentReactionMongoView, MediaMongoEntity, CommentReactionMongoView>(_mediaRepository.AsMongoCollection(),
+                .Lookup<CommentReactionMongoView, MediaMongoEntity, CommentReactionMongoView>(GetCollection<MediaMongoEntity>(MediaMongoConsts.CollectionName),
                     l => l.User.AvatarId,
                     f => f.Id,
                     r => r.User.Avatar

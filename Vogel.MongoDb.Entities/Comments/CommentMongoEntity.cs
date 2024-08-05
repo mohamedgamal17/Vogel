@@ -2,7 +2,7 @@
 
 namespace Vogel.MongoDb.Entities.Comments
 {
-    [MongoCollection("comments")]
+    [MongoCollection(CommentMongoConsts.CollectioName)]
     public class CommentMongoEntity : FullAuditedMongoEntity<string>
     {
         public string Content { get; set; }

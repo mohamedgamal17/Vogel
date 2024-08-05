@@ -3,7 +3,7 @@ using Vogel.MongoDb.Entities.Users;
 
 namespace Vogel.MongoDb.Entities.Friendship
 {
-    [MongoCollection("friends")]
+    [MongoCollection(FriendshipMongoConsts.FriendCollection)]
     public class FriendMongoEntity : FullAuditedMongoEntity<string>
     {
         public string SourceId { get; set; }

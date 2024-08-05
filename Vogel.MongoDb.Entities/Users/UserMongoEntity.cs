@@ -3,7 +3,7 @@ using Vogel.BuildingBlocks.MongoDb;
 
 namespace Vogel.MongoDb.Entities.Users
 {
-    [MongoCollection("users")]
+    [MongoCollection(UserMongoConsts.CollectionName)]
     public class UserMongoEntity : FullAuditedMongoEntity<string>
     {
         public string FirstName { get; set; }

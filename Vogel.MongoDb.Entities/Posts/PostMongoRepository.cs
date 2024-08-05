@@ -10,15 +10,12 @@ namespace Vogel.MongoDb.Entities.Posts
 {
     public class PostMongoRepository : MongoRepository<PostMongoEntity>
     {
-        private readonly UserMongoRepository _userMongoRepository;
-        private readonly MediaMongoRepository _mediaMongoRepository;
-        private readonly IMongoRepository<PostReactionSummaryMongoView> _postReactionSummaryRepository;
 
-        public PostMongoRepository(IMongoDatabase mongoDatabase, UserMongoRepository userMongoRepository, MediaMongoRepository mediaMongoRepository, IMongoRepository<PostReactionSummaryMongoView> postReactionSummaryRepository) : base(mongoDatabase)
+        private readonly UserMongoRepository _userMongoRepository;
+
+        public PostMongoRepository(IMongoDatabase mongoDatabase, UserMongoRepository userMongoRepository) : base(mongoDatabase)
         {
             _userMongoRepository = userMongoRepository;
-            _mediaMongoRepository = mediaMongoRepository;
-            _postReactionSummaryRepository = postReactionSummaryRepository;
         }
 
         public async Task<Paging<PostMongoView>> GetPostViewPaged(string? cursor = null , int limit = 10 , bool ascending = false)
@@ -62,19 +59,20 @@ namespace Vogel.MongoDb.Entities.Posts
                     r => r.User
                 )
                 .Unwind(x => x.User, new AggregateUnwindOptions<PostMongoView>() { PreserveNullAndEmptyArrays = true })
-                .Lookup<PostMongoView, MediaMongoEntity, PostMongoView>(_mediaMongoRepository.AsMongoCollection(),
+                .Lookup<PostMongoView, MediaMongoEntity, PostMongoView>(GetCollection<MediaMongoEntity>(MediaMongoConsts.CollectionName),
                     l => l.User.AvatarId,
                     f => f.Id,
                     r => r.User.Avatar
                 )
                .Unwind(x => x.User.Avatar, new AggregateUnwindOptions<PostMongoView>() { PreserveNullAndEmptyArrays = true })
-               .Lookup<PostMongoView, MediaMongoEntity, PostMongoView>(_mediaMongoRepository.AsMongoCollection(),
+               .Lookup<PostMongoView, MediaMongoEntity, PostMongoView>(GetCollection<MediaMongoEntity>(MediaMongoConsts.CollectionName),
                    l => l.MediaId,
                    f => f.Id,
                    r => r.Media
                )
                .Unwind(x => x.Media, new AggregateUnwindOptions<PostMongoView> { PreserveNullAndEmptyArrays = true })
-               .Lookup<PostMongoView, PostReactionSummaryMongoView, PostMongoView>(_postReactionSummaryRepository.AsMongoCollection(),
+               .Lookup<PostMongoView, PostReactionSummaryMongoView, PostMongoView>(
+                GetCollection<PostReactionSummaryMongoView>(PostReactionMongoConsts.ReactionSummaryView),
                    l => l.Id,
                    f => f.Id,
                    r => r.ReactionSummary

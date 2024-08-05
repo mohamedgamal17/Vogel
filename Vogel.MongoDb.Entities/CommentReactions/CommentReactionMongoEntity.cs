@@ -4,7 +4,7 @@ using Vogel.MongoDb.Entities.PostReactions;
 namespace Vogel.MongoDb.Entities.CommentReactions
 {
 
-    [MongoCollection("comment_reactions")]
+    [MongoCollection(CommentReactionMongoConsts.CollectionName)]
     public class CommentReactionMongoEntity : FullAuditedMongoEntity<string>
     {
         public string UserId { get; set; }

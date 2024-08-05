@@ -2,7 +2,7 @@
 
 namespace Vogel.MongoDb.Entities.PostReactions
 {
-    [MongoCollection("post_reactions")]
+    [MongoCollection(PostReactionMongoConsts.CollectioName)]
     public class PostReactionMongoEntity : FullAuditedMongoEntity<string>
     {
         public string UserId { get; set; }

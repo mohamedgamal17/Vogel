@@ -3,7 +3,7 @@ using Vogel.BuildingBlocks.MongoDb;
 
 namespace Vogel.MongoDb.Entities.CommentReactions
 {
-    [MongoCollection("post_reactions_summary_view")]
+    [MongoCollection(CommentReactionMongoConsts.ReactionSummarView)]
     public class CommentReactionSummaryMongoView : MongoEntity
     {
         public long TotalLike { get; set; }

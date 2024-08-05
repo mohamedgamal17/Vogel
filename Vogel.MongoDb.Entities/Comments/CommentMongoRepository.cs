@@ -12,16 +12,9 @@ namespace Vogel.MongoDb.Entities.Comments
 {
     public class CommentMongoRepository : MongoRepository<CommentMongoEntity>
     {
-        private readonly UserMongoRepository _userMongoRepository;
-        private readonly CommentReactionMongoRepository _commentReactionMongoRepository;
-        private readonly IMongoRepository<MediaMongoEntity> _mediaRepository;
-        private readonly IMongoRepository<CommentReactionSummaryMongoView> _commentReactionSummaryRepository;
-        public CommentMongoRepository(IMongoDatabase mongoDatabase, UserMongoRepository userMongoRepository, CommentReactionMongoRepository commentReactionMongoRepository, IMongoRepository<MediaMongoEntity> mediaRepository, IMongoRepository<CommentReactionSummaryMongoView> commentReactionSummaryRepository) : base(mongoDatabase)
+
+        public CommentMongoRepository(IMongoDatabase mongoDatabase) : base(mongoDatabase)
         {
-            _userMongoRepository = userMongoRepository;
-            _commentReactionMongoRepository = commentReactionMongoRepository;
-            _mediaRepository = mediaRepository;
-            _commentReactionSummaryRepository = commentReactionSummaryRepository;
         }
 
 
@@ -48,19 +41,22 @@ namespace Vogel.MongoDb.Entities.Comments
         {
             return AsMongoCollection()
                 .Aggregate()
-                .Lookup<CommentMongoEntity, UserMongoEntity, CommentMongoView>(_userMongoRepository.AsMongoCollection(),
+                .Lookup<CommentMongoEntity, UserMongoEntity, CommentMongoView>(
+                GetCollection<UserMongoEntity>(UserMongoConsts.CollectionName),
                     l=> l.UserId,
                     f=> f.Id,
                     r=> r.User
                 )
                 .Unwind(x=> x.User , new AggregateUnwindOptions<CommentMongoView> { PreserveNullAndEmptyArrays =true})
-                .Lookup<CommentMongoView, MediaMongoEntity,CommentMongoView>(_mediaRepository.AsMongoCollection(),
+                .Lookup<CommentMongoView, MediaMongoEntity,CommentMongoView>(
+                GetCollection<MediaMongoEntity>(MediaMongoConsts.CollectionName),
                     l=> l.User.AvatarId,
                     f=> f.Id,
                     r=> r.User.Avatar
                 )
                 .Unwind(x=>x.User.Avatar, new AggregateUnwindOptions<CommentMongoView> {PreserveNullAndEmptyArrays =true })
-                .Lookup<CommentMongoView, CommentReactionSummaryMongoView, CommentMongoView>(_commentReactionSummaryRepository.AsMongoCollection(),
+                .Lookup<CommentMongoView, CommentReactionSummaryMongoView, CommentMongoView>(
+                GetCollection<CommentReactionSummaryMongoView>(CommentReactionMongoConsts.ReactionSummarView),
                  l=> l.Id,
                  f=>f.Id,
                  r=> r.ReactionSummary
