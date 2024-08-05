@@ -17,4 +17,10 @@ namespace Vogel.Application.Users.Queries
     {
         public string Id { get; set; }
     }
+
+    [Authorize]
+    public class SearchOnUserByNameQuery :PagingParams ,IQuery<Paging<UserDto>>
+    {
+        public string Name { get; set; }
+    }
 }

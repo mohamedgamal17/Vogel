@@ -34,6 +34,25 @@ namespace Vogel.Host.Controllers
             return Ok(result);
         }
 
+        [Route("search/{name}")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Paging<UserDto>))]
+
+        public async Task<IActionResult> SearchOnUsers(string name , string? cursor = null, bool asending = false, int limit = 10)
+        {
+            var query = new SearchOnUserByNameQuery
+            {
+                Name = name,
+                Cursor = cursor,
+                Asending = asending,
+                Limit = limit
+            };
+
+            var result = await SendAsync(query);
+
+            return Ok(result);
+        }
+
         [Route("{id}")]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Paging<UserDto>))]
