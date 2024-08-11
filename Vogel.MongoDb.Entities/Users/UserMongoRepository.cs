@@ -63,6 +63,11 @@ namespace Vogel.MongoDb.Entities.Users
                     ,
                      x => x.Friends
                 )
+                .Project(x=> new UserRelationshipView
+                {
+                    Id = x.Id,
+                    Friends =x.Friends
+                })
                 .SingleOrDefaultAsync();
         }
 

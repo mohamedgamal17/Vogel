@@ -20,7 +20,8 @@ namespace Vogel.MongoDb.Entities.Posts
 
         public async Task<Paging<PostMongoView>> GetPostViewPaged(string? cursor = null , int limit = 10 , bool ascending = false)
         {
-            return await GetPostAsAggregate().ToPaged(cursor, limit, ascending);
+            return await GetPostAsAggregate()
+                .ToPaged(cursor, limit, ascending);
         }
 
         public async Task<PostMongoView> GetByIdPostMongoView(string id)
@@ -45,7 +46,8 @@ namespace Vogel.MongoDb.Entities.Posts
 
             return await GetPostAsAggregate()
                 .Match(
-                    Builders<PostMongoView>.Filter.In(x => x.UserId, userFriends.Friends.Select(x => x.UserId))
+                    Builders<PostMongoView>.Filter.In(x => x.UserId, userFriends.Friends.Select(x => x.UserId)) |
+                    Builders<PostMongoView>.Filter.Eq(x=> x.UserId, userId)
                   )
                 .ToPaged(cursor, limit, ascending);
         }
