@@ -16,8 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Vogel.BuildingBlocks.Application\Vogel.BuildingBlocks.Application.csproj" />
-    <ProjectReference Include="..\Vogel.BuildingBlocks.Domain\Vogel.BuildingBlocks.Domain.csproj" />
+
+    <ProjectReference Include="..\Libraries\Vogel.BuildingBlocks.Application\Vogel.BuildingBlocks.Application.csproj" />
+
     <ProjectReference Include="..\Vogel.Domain\Vogel.Domain.csproj" />
     <ProjectReference Include="..\Vogel.MongoDb.Entities\Vogel.MongoDb.Entities.csproj" />
   </ItemGroup>

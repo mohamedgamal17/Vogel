@@ -3,31 +3,31 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34309.116
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Domain", "Vogel.Domain\Vogel.Domain.csproj", "{126D2E7F-2563-4252-B7BB-74E3358080F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Domain", "src\Vogel.Domain\Vogel.Domain.csproj", "{126D2E7F-2563-4252-B7BB-74E3358080F1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Host", "Vogel.Host\Vogel.Host.csproj", "{105BD321-6A1B-4305-8C03-5715BEE11691}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Host", "src\Vogel.Host\Vogel.Host.csproj", "{105BD321-6A1B-4305-8C03-5715BEE11691}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Infrastructure", "Vogel.Infrastructure\Vogel.Infrastructure.csproj", "{BB86048A-7391-4AF2-B719-CA724E7AD420}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Infrastructure", "src\Vogel.Infrastructure\Vogel.Infrastructure.csproj", "{BB86048A-7391-4AF2-B719-CA724E7AD420}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Application", "Vogel.Application\Vogel.Application.csproj", "{EECD4E70-E712-46F0-B4CD-5A2935CA900D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Application", "src\Vogel.Application\Vogel.Application.csproj", "{EECD4E70-E712-46F0-B4CD-5A2935CA900D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Application.IntegrationTest", "Vogel.Application.IntegrationTest\Vogel.Application.IntegrationTest.csproj", "{29F15B88-B4A7-4076-8CBC-47330003615C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Application.IntegrationTest", "tests\Vogel.Application.IntegrationTest\Vogel.Application.IntegrationTest.csproj", "{29F15B88-B4A7-4076-8CBC-47330003615C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{3586116B-B295-4BE5-B9CF-995158B9C038}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{485EC930-3FBF-4771-B413-317F001C87A0}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs", "libs", "{3058D2E6-D22D-41C6-84EB-36F96C245F1C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{3058D2E6-D22D-41C6-84EB-36F96C245F1C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.BuildingBlocks.EntityFramework", "Vogel.BuildingBlocks.EntityFramework\Vogel.BuildingBlocks.EntityFramework.csproj", "{29C145C2-A41E-4106-B47C-59D465111FD0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.BuildingBlocks.EntityFramework", "src\Libraries\Vogel.BuildingBlocks.EntityFramework\Vogel.BuildingBlocks.EntityFramework.csproj", "{29C145C2-A41E-4106-B47C-59D465111FD0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.BuildingBlocks.Domain", "Vogel.BuildingBlocks.Domain\Vogel.BuildingBlocks.Domain.csproj", "{C2D6AAFD-E205-4DC6-A3C9-B24FFE9C8DB0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.BuildingBlocks.Domain", "src\Libraries\Vogel.BuildingBlocks.Domain\Vogel.BuildingBlocks.Domain.csproj", "{C2D6AAFD-E205-4DC6-A3C9-B24FFE9C8DB0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.BuildingBlocks.Application", "Vogel.BuildingBlocks.Application\Vogel.BuildingBlocks.Application.csproj", "{A4B2F42A-558B-4AD8-A889-49C66BF97D81}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.BuildingBlocks.Application", "src\Libraries\Vogel.BuildingBlocks.Application\Vogel.BuildingBlocks.Application.csproj", "{A4B2F42A-558B-4AD8-A889-49C66BF97D81}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.BuildingBlocks.MongoDb", "Vogel.BuildingBlocks.MongoDb\Vogel.BuildingBlocks.MongoDb.csproj", "{5C882639-710A-4C9E-8AA4-4D80861FC8ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.BuildingBlocks.MongoDb", "src\Libraries\Vogel.BuildingBlocks.MongoDb\Vogel.BuildingBlocks.MongoDb.csproj", "{5C882639-710A-4C9E-8AA4-4D80861FC8ED}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.MongoDb.Entities", "Vogel.MongoDb.Entities\Vogel.MongoDb.Entities.csproj", "{D2BD80B3-0EBD-4EE4-BD4F-3FD1FF39066C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.MongoDb.Entities", "src\Vogel.MongoDb.Entities\Vogel.MongoDb.Entities.csproj", "{D2BD80B3-0EBD-4EE4-BD4F-3FD1FF39066C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

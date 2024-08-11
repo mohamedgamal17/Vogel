@@ -22,8 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Libraries\Vogel.BuildingBlocks.EntityFramework\Vogel.BuildingBlocks.EntityFramework.csproj" />
     <ProjectReference Include="..\Vogel.Application\Vogel.Application.csproj" />
-    <ProjectReference Include="..\Vogel.BuildingBlocks.EntityFramework\Vogel.BuildingBlocks.EntityFramework.csproj" />
     <ProjectReference Include="..\Vogel.Domain\Vogel.Domain.csproj" />
   </ItemGroup>
 
