@@ -1,5 +1,4 @@
-﻿
-namespace Vogel.Domain.Users
+﻿namespace Vogel.Social.Domain.Users
 {
     public static class UserTableConsts
     {

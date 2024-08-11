@@ -1,4 +1,4 @@
-﻿namespace Vogel.Domain.Users
+﻿namespace Vogel.Social.Domain.Users
 {
     public enum Gender
     {

@@ -1,6 +1,6 @@
 ﻿using Vogel.BuildingBlocks.Domain.Auditing;
 
-namespace Vogel.Domain.Users
+namespace Vogel.Social.Domain.Users
 {
     public class User : AuditedAggregateRoot<string>
     {
@@ -11,7 +11,7 @@ namespace Vogel.Domain.Users
         public User()
         {
             Id = Guid.NewGuid().ToString();
-        }     
+        }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime BirthDate { get; set; }
