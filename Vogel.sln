@@ -35,6 +35,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Social", "Social", "{33602B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vogel.Social.Domain", "src\Modules\Social\Vogel.Social.Domain\Vogel.Social.Domain.csproj", "{404B421B-68DE-43E2-903C-60B30C3FEF69}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vogel.Social.MongoEntities", "Vogel.Social.MongoEntities\Vogel.Social.MongoEntities.csproj", "{168C24A7-FF33-4E37-834F-61B0876401D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +87,10 @@ Global
 		{404B421B-68DE-43E2-903C-60B30C3FEF69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{404B421B-68DE-43E2-903C-60B30C3FEF69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{404B421B-68DE-43E2-903C-60B30C3FEF69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{168C24A7-FF33-4E37-834F-61B0876401D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{168C24A7-FF33-4E37-834F-61B0876401D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{168C24A7-FF33-4E37-834F-61B0876401D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{168C24A7-FF33-4E37-834F-61B0876401D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -104,6 +110,7 @@ Global
 		{1E88F137-5504-44DD-A53A-2782D7BAB1D5} = {485EC930-3FBF-4771-B413-317F001C87A0}
 		{33602B80-CF6B-4E35-BD1B-6F1EA85CB400} = {1E88F137-5504-44DD-A53A-2782D7BAB1D5}
 		{404B421B-68DE-43E2-903C-60B30C3FEF69} = {33602B80-CF6B-4E35-BD1B-6F1EA85CB400}
+		{168C24A7-FF33-4E37-834F-61B0876401D7} = {33602B80-CF6B-4E35-BD1B-6F1EA85CB400}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A7AC3C50-99B3-48CD-965D-64A3D2BDD554}
