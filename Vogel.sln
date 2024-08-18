@@ -33,11 +33,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{1E88
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Social", "Social", "{33602B80-CF6B-4E35-BD1B-6F1EA85CB400}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vogel.Social.Domain", "src\Modules\Social\Vogel.Social.Domain\Vogel.Social.Domain.csproj", "{404B421B-68DE-43E2-903C-60B30C3FEF69}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Social.Domain", "src\Modules\Social\Vogel.Social.Domain\Vogel.Social.Domain.csproj", "{404B421B-68DE-43E2-903C-60B30C3FEF69}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vogel.Social.MongoEntities", "Vogel.Social.MongoEntities\Vogel.Social.MongoEntities.csproj", "{168C24A7-FF33-4E37-834F-61B0876401D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Social.MongoEntities", "Vogel.Social.MongoEntities\Vogel.Social.MongoEntities.csproj", "{168C24A7-FF33-4E37-834F-61B0876401D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vogel.Social.Shared", "Vogel.Social.Shared\Vogel.Social.Shared.csproj", "{300F0893-9781-45E2-A8B6-5EE499EB3DC9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Social.Shared", "Vogel.Social.Shared\Vogel.Social.Shared.csproj", "{300F0893-9781-45E2-A8B6-5EE499EB3DC9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vogel.Social.Application", "src\Modules\Social\Vogel.Social.Application\Vogel.Social.Application.csproj", "{EAFDB305-5C89-48B3-93A9-28D914EC23FF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -97,6 +99,10 @@ Global
 		{300F0893-9781-45E2-A8B6-5EE499EB3DC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{300F0893-9781-45E2-A8B6-5EE499EB3DC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{300F0893-9781-45E2-A8B6-5EE499EB3DC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EAFDB305-5C89-48B3-93A9-28D914EC23FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAFDB305-5C89-48B3-93A9-28D914EC23FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAFDB305-5C89-48B3-93A9-28D914EC23FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAFDB305-5C89-48B3-93A9-28D914EC23FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -118,6 +124,7 @@ Global
 		{404B421B-68DE-43E2-903C-60B30C3FEF69} = {33602B80-CF6B-4E35-BD1B-6F1EA85CB400}
 		{168C24A7-FF33-4E37-834F-61B0876401D7} = {33602B80-CF6B-4E35-BD1B-6F1EA85CB400}
 		{300F0893-9781-45E2-A8B6-5EE499EB3DC9} = {33602B80-CF6B-4E35-BD1B-6F1EA85CB400}
+		{EAFDB305-5C89-48B3-93A9-28D914EC23FF} = {33602B80-CF6B-4E35-BD1B-6F1EA85CB400}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A7AC3C50-99B3-48CD-965D-64A3D2BDD554}
