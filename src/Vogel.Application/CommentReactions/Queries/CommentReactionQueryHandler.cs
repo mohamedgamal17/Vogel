@@ -1,11 +1,11 @@
 ﻿using Vogel.Application.CommentReactions.Dtos;
 using Vogel.BuildingBlocks.Application.Requests;
-using Vogel.BuildingBlocks.Domain.Results;
 using Vogel.MongoDb.Entities.CommentReactions;
 using Vogel.Application.CommentReactions.Factories;
 using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.Domain.Comments;
 using Vogel.MongoDb.Entities.Common;
+using Vogel.BuildingBlocks.Shared.Results;
 namespace Vogel.Application.CommentReactions.Queries
 {
     public class CommentReactionQueryHandler :

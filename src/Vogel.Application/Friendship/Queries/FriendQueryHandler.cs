@@ -4,7 +4,7 @@ using Vogel.Application.Friendship.Policies;
 using Vogel.BuildingBlocks.Application.Requests;
 using Vogel.BuildingBlocks.Application.Security;
 using Vogel.BuildingBlocks.Domain.Exceptions;
-using Vogel.BuildingBlocks.Domain.Results;
+using Vogel.BuildingBlocks.Shared.Results;
 using Vogel.Domain.Friendship;
 using Vogel.MongoDb.Entities.Common;
 using Vogel.MongoDb.Entities.Friendship;

@@ -1,4 +1,4 @@
-﻿using Vogel.BuildingBlocks.Application.Dtos;
+﻿using Vogel.BuildingBlocks.Shared.Dtos;
 using Vogel.MongoDb.Entities.Medias;
 namespace Vogel.Application.Medias.Dtos
 {

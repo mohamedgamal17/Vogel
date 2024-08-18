@@ -8,7 +8,7 @@ using Vogel.BuildingBlocks.Application.Requests;
 using Vogel.BuildingBlocks.Application.Security;
 using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.BuildingBlocks.Domain.Repositories;
-using Vogel.BuildingBlocks.Domain.Results;
+using Vogel.BuildingBlocks.Shared.Results;
 using Vogel.Domain.Medias;
 namespace Vogel.Application.Medias.Commands
 {

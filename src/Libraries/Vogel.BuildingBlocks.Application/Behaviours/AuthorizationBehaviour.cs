@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Reflection;
 using Vogel.BuildingBlocks.Application.Security;
 using Vogel.BuildingBlocks.Domain.Exceptions;
-using Vogel.BuildingBlocks.Domain.Results;
+using Vogel.BuildingBlocks.Shared.Results;
 namespace Vogel.BuildingBlocks.Application.Behaviours
 {
     public class AuthorizationBehaviour<TRequest, TResponse> : IApplicationPiplineBehaviour<TRequest, TResponse>

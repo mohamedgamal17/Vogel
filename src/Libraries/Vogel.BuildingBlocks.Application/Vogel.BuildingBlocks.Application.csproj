@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Vogel.BuildingBlocks.Domain\Vogel.BuildingBlocks.Domain.csproj" />
+    <ProjectReference Include="..\Vogel.BuildingBlocks.Shared\Vogel.BuildingBlocks.Shared.csproj" />
   </ItemGroup>
 
 </Project>

@@ -3,13 +3,13 @@ using Vogel.Application.Users.Factories;
 using Vogel.BuildingBlocks.Application.Requests;
 using Vogel.BuildingBlocks.Application.Security;
 using Vogel.BuildingBlocks.Domain.Exceptions;
-using Vogel.BuildingBlocks.Domain.Results;
 using Vogel.Domain.Users;
 using Vogel.MongoDb.Entities.Common;
 using Vogel.MongoDb.Entities.Users;
 using MongoDB.Driver;
 using Vogel.MongoDb.Entities.Medias;
 using Vogel.MongoDb.Entities.Extensions;
+using Vogel.BuildingBlocks.Shared.Results;
 namespace Vogel.Application.Users.Queries
 {
     public class UserQueryHandler :

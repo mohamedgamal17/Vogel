@@ -1,4 +1,5 @@
-﻿using Vogel.BuildingBlocks.Application.Dtos;
+﻿
+using Vogel.BuildingBlocks.Shared.Dtos;
 
 namespace Vogel.Application.PostReactions.Dtos
 {

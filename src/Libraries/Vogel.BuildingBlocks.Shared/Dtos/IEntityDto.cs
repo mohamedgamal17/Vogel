@@ -1,4 +1,4 @@
-﻿namespace Vogel.BuildingBlocks.Application.Dtos
+﻿namespace Vogel.BuildingBlocks.Shared.Dtos
 {
     public interface IEntityDto<T>
     {

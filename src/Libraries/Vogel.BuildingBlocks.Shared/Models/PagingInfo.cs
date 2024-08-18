@@ -1,4 +1,4 @@
-﻿namespace Vogel.BuildingBlocks.MongoDb.Models
+﻿namespace Vogel.BuildingBlocks.Shared.Models
 {
     public class PagingInfo
     {

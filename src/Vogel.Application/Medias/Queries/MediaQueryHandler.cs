@@ -5,7 +5,7 @@ using Vogel.Application.Medias.Policies;
 using Vogel.BuildingBlocks.Application.Requests;
 using Vogel.BuildingBlocks.Application.Security;
 using Vogel.BuildingBlocks.Domain.Exceptions;
-using Vogel.BuildingBlocks.Domain.Results;
+using Vogel.BuildingBlocks.Shared.Results;
 using Vogel.Domain.Medias;
 using Vogel.MongoDb.Entities.Medias;
 namespace Vogel.Application.Medias.Queries

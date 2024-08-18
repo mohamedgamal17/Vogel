@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace Vogel.BuildingBlocks.Application.Dtos
+namespace Vogel.BuildingBlocks.Shared.Dtos
 {
     public abstract class EntityDto<T> : IEntityDto<T>
     {

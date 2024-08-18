@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
-using Vogel.BuildingBlocks.Domain.Results;
+using Vogel.BuildingBlocks.Shared.Results;
 namespace Vogel.BuildingBlocks.Application.Behaviours
 {
     public class ExceptionHandlingBehaviour<TRequest, TResponse> : IApplicationPiplineBehaviour<TRequest, TResponse>

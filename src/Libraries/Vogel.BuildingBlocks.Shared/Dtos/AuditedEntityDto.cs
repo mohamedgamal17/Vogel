@@ -1,6 +1,6 @@
-﻿namespace Vogel.BuildingBlocks.Application.Dtos
+﻿namespace Vogel.BuildingBlocks.Shared.Dtos
 {
-    public abstract class AuditedEntityDto<T> : EntityDto<T> , IAuditedEntityDto<T>
+    public abstract class AuditedEntityDto<T> : EntityDto<T>, IAuditedEntityDto<T>
     {
         public string? CreatorId { get; set; }
         public DateTime CreationTime { get; set; }

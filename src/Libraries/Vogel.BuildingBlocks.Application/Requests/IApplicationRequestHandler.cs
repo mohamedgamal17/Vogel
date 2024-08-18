@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using Vogel.BuildingBlocks.Domain.Results;
+using Vogel.BuildingBlocks.Shared.Results;
 namespace Vogel.BuildingBlocks.Application.Requests
 {
     public interface IApplicationRequestHandler<TRequest, TResult> : MediatR.IRequestHandler<TRequest, Result<TResult>>

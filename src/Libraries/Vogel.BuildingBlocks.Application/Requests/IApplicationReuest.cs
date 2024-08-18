@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using Vogel.BuildingBlocks.Domain.Results;
+using Vogel.BuildingBlocks.Shared.Results;
 
 namespace Vogel.BuildingBlocks.Application.Requests
 {

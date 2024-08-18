@@ -1,7 +1,7 @@
 ﻿using Vogel.Application.Medias.Dtos;
 using Vogel.Application.PostReactions.Dtos;
 using Vogel.Application.Users.Dtos;
-using Vogel.BuildingBlocks.Application.Dtos;
+using Vogel.BuildingBlocks.Shared.Dtos;
 namespace Vogel.Application.Posts.Dtos
 {
     public class PostDto : EntityDto<string>

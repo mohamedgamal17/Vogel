@@ -1,6 +1,6 @@
 ﻿using Vogel.Application.CommentReactions.Dtos;
 using Vogel.Application.Users.Dtos;
-using Vogel.BuildingBlocks.Application.Dtos;
+using Vogel.BuildingBlocks.Shared.Dtos;
 namespace Vogel.Application.Comments.Dtos
 {
     public class CommentDto : EntityDto<string>

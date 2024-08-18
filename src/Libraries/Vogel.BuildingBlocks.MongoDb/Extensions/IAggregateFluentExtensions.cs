@@ -1,6 +1,6 @@
 ﻿using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using Vogel.BuildingBlocks.MongoDb.Models;
+using Vogel.BuildingBlocks.Shared.Models;
 namespace Vogel.BuildingBlocks.MongoDb.Extensions
 {
     public static class IAggregateFluentExtensions

@@ -1,5 +1,5 @@
 ﻿using Vogel.Application.Users.Dtos;
-using Vogel.BuildingBlocks.Application.Dtos;
+using Vogel.BuildingBlocks.Shared.Dtos;
 using Vogel.MongoDb.Entities.PostReactions;
 
 namespace Vogel.Application.CommentReactions.Dtos

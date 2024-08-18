@@ -1,4 +1,4 @@
-﻿namespace Vogel.BuildingBlocks.Domain.Results
+﻿namespace Vogel.BuildingBlocks.Shared.Results
 {
     public class Result<T>
     {

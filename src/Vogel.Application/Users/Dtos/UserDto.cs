@@ -1,5 +1,5 @@
 ﻿using Vogel.Application.Medias.Dtos;
-using Vogel.BuildingBlocks.Application.Dtos;
+using Vogel.BuildingBlocks.Shared.Dtos;
 using Vogel.MongoDb.Entities.Users;
 
 namespace Vogel.Application.Users.Dtos

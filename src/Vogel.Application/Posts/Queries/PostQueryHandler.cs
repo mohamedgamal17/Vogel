@@ -3,13 +3,13 @@ using Vogel.Application.Posts.Dtos;
 using Vogel.Application.Posts.Factories;
 using Vogel.BuildingBlocks.Application.Requests;
 using Vogel.BuildingBlocks.Domain.Exceptions;
-using Vogel.BuildingBlocks.Domain.Results;
 using Vogel.Domain.Posts;
 using Vogel.MongoDb.Entities.Common;
 using Vogel.MongoDb.Entities.Posts;
 using Vogel.MongoDb.Entities.Extensions;
 using MongoDB.Driver.Linq;
 using Vogel.BuildingBlocks.Application.Security;
+using Vogel.BuildingBlocks.Shared.Results;
 namespace Vogel.Application.Posts.Queries
 {
     public class PostQueryHandler :

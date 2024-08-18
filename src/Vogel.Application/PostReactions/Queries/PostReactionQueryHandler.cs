@@ -2,7 +2,7 @@
 using Vogel.Application.PostReactions.Factories;
 using Vogel.BuildingBlocks.Application.Requests;
 using Vogel.BuildingBlocks.Domain.Exceptions;
-using Vogel.BuildingBlocks.Domain.Results;
+using Vogel.BuildingBlocks.Shared.Results;
 using Vogel.Domain.Posts;
 using Vogel.MongoDb.Entities.Common;
 using Vogel.MongoDb.Entities.PostReactions;
