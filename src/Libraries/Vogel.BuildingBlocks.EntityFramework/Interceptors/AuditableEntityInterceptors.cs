@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Vogel.BuildingBlocks.Application.Security;
 using Vogel.BuildingBlocks.Domain.Auditing;
+using Vogel.BuildingBlocks.Infrastructure.Security;
 namespace Vogel.BuildingBlocks.EntityFramework.Interceptors
 {
     public class AuditableEntityInterceptors : SaveChangesInterceptor

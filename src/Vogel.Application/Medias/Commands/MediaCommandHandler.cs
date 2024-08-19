@@ -5,9 +5,9 @@ using Vogel.Application.Medias.Dtos;
 using Vogel.Application.Medias.Factories;
 using Vogel.Application.Medias.Policies;
 using Vogel.BuildingBlocks.Application.Requests;
-using Vogel.BuildingBlocks.Application.Security;
 using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.BuildingBlocks.Domain.Repositories;
+using Vogel.BuildingBlocks.Infrastructure.Security;
 using Vogel.BuildingBlocks.Shared.Results;
 using Vogel.Domain.Medias;
 namespace Vogel.Application.Medias.Commands

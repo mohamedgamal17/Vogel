@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Vogel.BuildingBlocks.Application.Requests;
-using Vogel.BuildingBlocks.Application.Security;
 using Vogel.BuildingBlocks.Domain.Exceptions;
+using Vogel.BuildingBlocks.Infrastructure.Security;
 using Vogel.BuildingBlocks.Shared.Results;
 using Vogel.Host.Models;
 using Vogel.MongoDb.Entities.Common;

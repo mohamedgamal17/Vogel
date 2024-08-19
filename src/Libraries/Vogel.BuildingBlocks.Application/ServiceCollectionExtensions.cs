@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using Vogel.BuildingBlocks.Application.Behaviours;
 using Vogel.BuildingBlocks.Application.Factories;
-using Vogel.BuildingBlocks.Application.Security;
 namespace Vogel.BuildingBlocks.Application
 {
     public static class ServiceCollectionExtensions
@@ -22,9 +21,6 @@ namespace Vogel.BuildingBlocks.Application
                 cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehaviour<,>));
             });
 
-            services.AddTransient<IApplicationAuthorizationService, ApplicationAuthorizationService>();
-
-            services.AddTransient<ISecurityContext, SecurityContext>();
 
             if(assembly != null)
             {

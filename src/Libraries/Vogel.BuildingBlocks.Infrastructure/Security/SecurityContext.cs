@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
-namespace Vogel.BuildingBlocks.Application.Security
+namespace Vogel.BuildingBlocks.Infrastructure.Security
 {
     public class SecurityContext : ISecurityContext
     {

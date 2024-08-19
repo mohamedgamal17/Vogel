@@ -1,4 +1,4 @@
-﻿namespace Vogel.BuildingBlocks.Application.Security
+﻿namespace Vogel.BuildingBlocks.Infrastructure.Security
 {
     public class ApplicationUser
     {

@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Vogel.BuildingBlocks.Shared.Results;
-namespace Vogel.BuildingBlocks.Application.Security
+namespace Vogel.BuildingBlocks.Infrastructure.Security
 {
     public interface IApplicationAuthorizationService
     {

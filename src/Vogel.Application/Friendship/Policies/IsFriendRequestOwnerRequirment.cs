@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Vogel.BuildingBlocks.Application.Security;
+using Vogel.BuildingBlocks.Infrastructure.Security;
 using Vogel.Domain.Friendship;
 using Vogel.MongoDb.Entities.Friendship;
 

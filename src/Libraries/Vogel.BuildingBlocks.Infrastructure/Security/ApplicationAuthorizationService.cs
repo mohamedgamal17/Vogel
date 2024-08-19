@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.BuildingBlocks.Shared.Results;
-namespace Vogel.BuildingBlocks.Application.Security
+namespace Vogel.BuildingBlocks.Infrastructure.Security
 {
     public class ApplicationAuthorizationService : IApplicationAuthorizationService
     {
