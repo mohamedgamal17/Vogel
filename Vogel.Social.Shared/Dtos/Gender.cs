@@ -1,4 +1,4 @@
-﻿namespace Vogel.Social.Shared.Pictures.Dtos
+﻿namespace Vogel.Social.Shared.Dtos
 {
     public enum Gender
     {

@@ -1,6 +1,6 @@
 ﻿using Vogel.BuildingBlocks.Application.Dtos;
 
-namespace Vogel.Social.Shared.Pictures.Dtos
+namespace Vogel.Social.Shared.Dtos
 {
     public class PictureDto : EntityDto<string>
     {
