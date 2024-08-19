@@ -7,8 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Libraries\Vogel.BuildingBlocks.Application\Vogel.BuildingBlocks.Application.csproj" />
-    <ProjectReference Include="..\src\Vogel.Application\Vogel.Application.csproj" />
+    <ProjectReference Include="..\src\Libraries\Vogel.BuildingBlocks.Shared\Vogel.BuildingBlocks.Shared.csproj" />
   </ItemGroup>
+
+
 
 </Project>

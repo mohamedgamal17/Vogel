@@ -7,8 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Pictures\Commands\" />
-    <Folder Include="Pictures\Factories\" />
+    <ProjectReference Include="..\..\..\..\Vogel.Social.MongoEntities\Vogel.Social.MongoEntities.csproj" />
+    <ProjectReference Include="..\..\..\..\Vogel.Social.Shared\Vogel.Social.Shared.csproj" />
+    <ProjectReference Include="..\..\..\Libraries\Vogel.BuildingBlocks.Application\Vogel.BuildingBlocks.Application.csproj" />
+    <ProjectReference Include="..\Vogel.Social.Domain\Vogel.Social.Domain.csproj" />
   </ItemGroup>
 
 </Project>
