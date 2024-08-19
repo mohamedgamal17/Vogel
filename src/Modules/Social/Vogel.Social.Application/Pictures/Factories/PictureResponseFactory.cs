@@ -2,7 +2,6 @@
 using Vogel.Social.Domain.Pictures;
 using Vogel.Social.MongoEntities.Pictures;
 using Vogel.Social.Shared.Dtos;
-
 namespace Vogel.Social.Application.Pictures.Factories
 {
     public class PictureResponseFactory : IPictureResponseFactory
@@ -12,6 +11,15 @@ namespace Vogel.Social.Application.Pictures.Factories
         public PictureResponseFactory(IS3ObjectStorageService s3ObjectStorageService)
         {
             _s3ObjectStorageService = s3ObjectStorageService;
+        }
+
+        public async Task<List<PictureDto>> PrepareListPictureDto(List<PictureMongoEntity> pictures)
+        {
+            var tasks = pictures.Select(PreparePictureDto);
+
+            var result = await Task.WhenAll(tasks);
+
+            return result.ToList();
         }
 
         public async Task<PictureDto> PreparePictureDto(Picture picture)

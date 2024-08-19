@@ -7,6 +7,7 @@ namespace Vogel.Social.Application.Pictures.Factories
 {
     public interface IPictureResponseFactory : IResponseFactory
     {
+        Task<List<PictureDto>> PrepareListPictureDto(List<PictureMongoEntity> pictures);
         Task<PictureDto> PreparePictureDto(Picture picture);
         Task<PictureDto> PreparePictureDto(PictureMongoEntity picture);
     }
