@@ -16,4 +16,10 @@
     <ProjectReference Include="..\src\Libraries\Vogel.BuildingBlocks.MongoDb\Vogel.BuildingBlocks.MongoDb.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="AssemblyReference.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+  </ItemGroup>
+
 </Project>

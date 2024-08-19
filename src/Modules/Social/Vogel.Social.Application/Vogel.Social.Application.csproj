@@ -17,4 +17,10 @@
     <ProjectReference Include="..\Vogel.Social.Domain\Vogel.Social.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="AssemblyReference.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+  </ItemGroup>
+
 </Project>
