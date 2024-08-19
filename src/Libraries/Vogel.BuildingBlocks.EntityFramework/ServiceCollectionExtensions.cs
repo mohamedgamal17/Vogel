@@ -13,8 +13,6 @@ namespace Vogel.BuildingBlocks.EntityFramework
 
             services.AddScoped<DispatchDomainEventInterceptor>();
 
-            services.AddTransient(typeof(IRepository<>), typeof(EFCoreRepository<>));
-
             services.AddTransient<TimeProvider>(_=> TimeProvider.System);
 
             return services;

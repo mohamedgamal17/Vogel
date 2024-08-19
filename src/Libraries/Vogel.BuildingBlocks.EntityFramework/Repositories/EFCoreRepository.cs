@@ -4,11 +4,13 @@ using Vogel.BuildingBlocks.Domain;
 using Vogel.BuildingBlocks.Domain.Repositories;
 namespace Vogel.BuildingBlocks.EntityFramework.Repositories
 {
-    public class EFCoreRepository<TEntity> : IRepository<TEntity> where TEntity : class, IEntity
+    public abstract class EFCoreRepository<TEntity,TContext> : IRepository<TEntity> 
+        where TEntity : class, IEntity
+        where TContext : DbContext
     {
-        private readonly DbContext _dbContext;
+        private readonly TContext _dbContext;
 
-        public EFCoreRepository(DbContext dbContext)
+        public EFCoreRepository(TContext dbContext)
         {
             _dbContext = dbContext;
         }
