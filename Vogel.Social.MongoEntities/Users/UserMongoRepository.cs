@@ -1,9 +1,8 @@
-﻿
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using MongoDB.Driver;
 using Vogel.BuildingBlocks.MongoDb;
 using Vogel.BuildingBlocks.MongoDb.Extensions;
-using Vogel.BuildingBlocks.MongoDb.Models;
+using Vogel.BuildingBlocks.Shared.Models;
 using Vogel.Social.MongoEntities.Friendship;
 using Vogel.Social.MongoEntities.Pictures;
 
