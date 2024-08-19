@@ -1,5 +1,6 @@
 ﻿using Vogel.Application.Common.Interfaces;
 using Vogel.Application.Common.Models;
+using Vogel.BuildingBlocks.Infrastructure.S3Storage;
 
 namespace Vogel.Application.IntegrationTest.Fakes
 {

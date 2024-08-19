@@ -6,6 +6,7 @@ using MongoDB.Driver;
 using Vogel.Application.Common.Interfaces;
 using Vogel.BuildingBlocks.EntityFramework;
 using Vogel.BuildingBlocks.EntityFramework.Interceptors;
+using Vogel.BuildingBlocks.Infrastructure.S3Storage;
 using Vogel.Infrastructure.EntityFramework;
 namespace Vogel.Infrastructure
 {

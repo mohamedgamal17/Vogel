@@ -1,22 +1,19 @@
 ﻿using Minio;
 using Minio.DataModel.Args;
-using Vogel.Application.Common.Interfaces;
-using Vogel.Application.Common.Models;
-using Vogel.BuildingBlocks.Infrastructure.S3Storage;
 
-namespace Vogel.Infrastructure
+namespace Vogel.BuildingBlocks.Infrastructure.S3Storage
 {
     public class S3ObjectStorageService : IS3ObjectStorageService
     {
         private readonly IMinioClient _minioClient;
         private readonly S3ObjectStorageConfiguration _s3ObjectStorageConfiguration;
-        public S3ObjectStorageService(IMinioClient minioClient, S3ObjectStorageConfiguration s3ObjectStorageConfiguration)
+        public S3ObjectStorageService(S3ObjectStorageConfiguration s3ObjectStorageConfiguration)
         {
             _s3ObjectStorageConfiguration = s3ObjectStorageConfiguration;
             _minioClient = GenerateMinioClient(s3ObjectStorageConfiguration);
         }
 
-        public async Task<S3ObjectStorageSaveResponseModel> SaveObjectAsync(S3ObjectStorageSaveModel model )
+        public async Task<S3ObjectStorageSaveResponseModel> SaveObjectAsync(S3ObjectStorageSaveModel model)
         {
             bool isBucketExist = await IsBucketExist();
 
@@ -43,7 +40,7 @@ namespace Vogel.Infrastructure
             return result;
         }
 
-        public async Task<string> GeneratePresignedDownloadUrlAsync(string objectName , int expiry = 604800)
+        public async Task<string> GeneratePresignedDownloadUrlAsync(string objectName, int expiry = 604800)
         {
             var request = new PresignedGetObjectArgs()
                 .WithBucket(_s3ObjectStorageConfiguration.BucketName)
@@ -53,7 +50,7 @@ namespace Vogel.Infrastructure
             var response = await _minioClient.PresignedGetObjectAsync(request);
 
             return response;
-        } 
+        }
 
         public async Task RemoveObjectAsync(string objectName)
         {
@@ -77,7 +74,7 @@ namespace Vogel.Infrastructure
                 .WithBucket(_s3ObjectStorageConfiguration.BucketName);
 
             await _minioClient.MakeBucketAsync(args);
-                
+
         }
 
         private IMinioClient GenerateMinioClient(S3ObjectStorageConfiguration configuration)

@@ -25,6 +25,7 @@ using Vogel.BuildingBlocks.MongoDb.Migrations;
 using Vogel.Domain.Users;
 using Bogus.DataSets;
 using Vogel.Domain.Medias;
+using Vogel.BuildingBlocks.Infrastructure.S3Storage;
 namespace Vogel.Application.IntegrationTest
 {
     [SetUpFixture]
