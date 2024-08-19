@@ -22,43 +22,9 @@ namespace Vogel.BuildingBlocks.Application
             });
 
 
-            if(assembly != null)
-            {
-                RegisterAuthorizationPolicyHandlers(services, assembly);
-
-                RegisterResponseFactories(services, assembly);
-            }
-
             return services;
         }
 
-        private static void RegisterAuthorizationPolicyHandlers(IServiceCollection services , Assembly assembly)
-        {
-            var types = assembly.GetTypes()
-                .Where(x => x.IsClass)
-                .Where(x => x.GetInterfaces().Any(i => i == typeof(IAuthorizationHandler)))
-                .ToList();
-
-            foreach (var type in types)
-            {
-                services.AddTransient(type.GetInterfaces().First(), type);
-            }
-
-        }
-        private static void RegisterResponseFactories(IServiceCollection services, Assembly assembly)
-        {
-
-            var types = assembly.GetTypes()
-                .Where(x => x.IsClass)
-                .Where(x => x.GetInterfaces().Any(c => c == typeof(IResponseFactory)))
-                .ToList();
-
-            foreach (var type in types)
-            {
-                services.AddTransient(type.GetInterfaces().First(), type);
-            }
-
-        }
-
+  
     }
 }
