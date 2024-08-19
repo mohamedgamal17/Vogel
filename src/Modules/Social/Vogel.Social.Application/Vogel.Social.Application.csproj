@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Pictures\Commands\" />
+    <Folder Include="Pictures\Factories\" />
+  </ItemGroup>
+
 </Project>
