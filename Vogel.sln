@@ -45,7 +45,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.BuildingBlocks.Shared
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.BuildingBlocks.Infrastructure", "src\Libraries\Vogel.BuildingBlocks.Infrastructure\Vogel.BuildingBlocks.Infrastructure.csproj", "{8EB018EE-4590-4CEF-B9FD-0C2A1BFC6602}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vogel.Social.Infrastructure", "src\Modules\Social\Vogel.Social.Infrastructure\Vogel.Social.Infrastructure.csproj", "{40FA1102-F14C-4AF6-B332-A51986E77300}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Social.Infrastructure", "src\Modules\Social\Vogel.Social.Infrastructure\Vogel.Social.Infrastructure.csproj", "{40FA1102-F14C-4AF6-B332-A51986E77300}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vogel.Social.Api", "src\Modules\Social\Vogel.Social.Api\Vogel.Social.Api.csproj", "{F3F34A84-8A12-469F-B178-C7E76E2C969C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -121,6 +123,10 @@ Global
 		{40FA1102-F14C-4AF6-B332-A51986E77300}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{40FA1102-F14C-4AF6-B332-A51986E77300}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{40FA1102-F14C-4AF6-B332-A51986E77300}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3F34A84-8A12-469F-B178-C7E76E2C969C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3F34A84-8A12-469F-B178-C7E76E2C969C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3F34A84-8A12-469F-B178-C7E76E2C969C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3F34A84-8A12-469F-B178-C7E76E2C969C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -146,6 +152,7 @@ Global
 		{965C2365-A1E1-47ED-B51D-FABB3E801CE6} = {3058D2E6-D22D-41C6-84EB-36F96C245F1C}
 		{8EB018EE-4590-4CEF-B9FD-0C2A1BFC6602} = {3058D2E6-D22D-41C6-84EB-36F96C245F1C}
 		{40FA1102-F14C-4AF6-B332-A51986E77300} = {33602B80-CF6B-4E35-BD1B-6F1EA85CB400}
+		{F3F34A84-8A12-469F-B178-C7E76E2C969C} = {33602B80-CF6B-4E35-BD1B-6F1EA85CB400}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A7AC3C50-99B3-48CD-965D-64A3D2BDD554}
