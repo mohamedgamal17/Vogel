@@ -6,4 +6,14 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="FastEndpoints" Version="5.28.0" />
+    <PackageReference Include="MimeMapping" Version="3.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\src\Modules\Social\Vogel.Social.Application\Vogel.Social.Application.csproj" />
+    <ProjectReference Include="..\src\Modules\Social\Vogel.Social.Infrastructure\Vogel.Social.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
