@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 using Vogel.BuildingBlocks.EntityFramework;
 using Vogel.Social.Infrastructure.EntityFramework.Constants;
 
@@ -14,6 +15,8 @@ namespace Vogel.Social.Infrastructure.EntityFramework
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema(SocialDbConstants.Schema);
+
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
             base.OnModelCreating(modelBuilder);
        

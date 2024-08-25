@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Vogel.Social.Presentation\Vogel.Social.Presentation.csproj" />
     <ProjectReference Include="..\..\..\Libraries\Vogel.BuildingBlocks.EntityFramework\Vogel.BuildingBlocks.EntityFramework.csproj" />
     <ProjectReference Include="..\Vogel.Social.Application\Vogel.Social.Application.csproj" />
     <ProjectReference Include="..\Vogel.Social.Domain\Vogel.Social.Domain.csproj" />
