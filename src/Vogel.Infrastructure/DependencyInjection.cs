@@ -35,7 +35,7 @@ namespace Vogel.Infrastructure
             });
 
 
-            services.AddVogelEfCoreInterceptors();
+            services.RegisterEfCoreInterceptors();
         }
 
         private static void ConfigureS3StorageProvider(IServiceCollection services, IConfiguration configuration)

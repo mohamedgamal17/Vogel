@@ -7,7 +7,7 @@ namespace Vogel.BuildingBlocks.EntityFramework
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddVogelEfCoreInterceptors(this IServiceCollection services)
+        public static IServiceCollection RegisterEfCoreInterceptors(this IServiceCollection services)
         {
             services.AddScoped<AuditableEntityInterceptors>();
 
