@@ -8,7 +8,7 @@ namespace Vogel.Social.Infrastructure.Installers
 {
     public class ApplicationServiceInstaller : IServiceInstaller
     {
-        public void InstallAsync(IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
+        public void Install(IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
         {
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AssemblyReference.Assembly))
                 .RegisterFactoriesFromAssembly(AssemblyReference.Assembly)

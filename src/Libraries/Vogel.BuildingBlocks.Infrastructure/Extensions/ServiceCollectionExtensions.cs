@@ -49,7 +49,7 @@ namespace Vogel.BuildingBlocks.Infrastructure.Extensions
             {
                 var obj = (IServiceInstaller) (Activator.CreateInstance(type , new object[] {})!);
 
-                obj.InstallAsync(services, configuration, hostEnvironment);
+                obj.Install(services, configuration, hostEnvironment);
             }
         }
 
