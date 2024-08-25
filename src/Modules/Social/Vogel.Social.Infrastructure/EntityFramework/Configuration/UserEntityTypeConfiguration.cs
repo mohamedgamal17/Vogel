@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Vogel.BuildingBlocks.EntityFramework.Extensions;
 using Vogel.Social.Domain.Pictures;
 using Vogel.Social.Domain.Users;
-namespace Vogel.Infrastructure.EntityFramework.Mapping
+namespace Vogel.Social.Infrastructure.EntityFramework.Configuration
 {
     public class UserEntityTypeConfiguration : IEntityTypeConfiguration<User>
     {
