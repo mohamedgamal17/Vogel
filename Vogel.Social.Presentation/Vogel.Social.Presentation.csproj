@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\src\Modules\Social\Vogel.Social.Application\Vogel.Social.Application.csproj" />
-    <ProjectReference Include="..\src\Modules\Social\Vogel.Social.Infrastructure\Vogel.Social.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
