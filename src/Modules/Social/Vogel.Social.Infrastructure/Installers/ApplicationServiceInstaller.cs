@@ -10,9 +10,10 @@ namespace Vogel.Social.Infrastructure.Installers
     {
         public void Install(IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
         {
-            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AssemblyReference.Assembly))
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Application.AssemblyReference.Assembly))
                 .RegisterFactoriesFromAssembly(AssemblyReference.Assembly)
                 .RegisterPoliciesHandlerFromAssembly(AssemblyReference.Assembly);
+
 
         }
     }
