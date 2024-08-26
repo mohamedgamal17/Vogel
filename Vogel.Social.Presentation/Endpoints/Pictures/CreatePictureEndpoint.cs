@@ -46,13 +46,13 @@ namespace Vogel.Social.Presentation.Endpoints.Pictures
 
         public override void Configure() 
         {
-            Post();
-            Group<PictureRoutingGroup>();
+            Post("");
             Description(x =>
             {
                 x.Produces(StatusCodes.Status201Created, typeof(PictureDto))
                 .Produces(StatusCodes.Status400BadRequest, typeof(ValidationProblemDetails));
             });
+            Group<PictureRoutingGroup>();
         }
         public override async Task HandleAsync(CreatePictureRequest req, CancellationToken ct)
         {

@@ -13,7 +13,6 @@ namespace Vogel.Social.Presentation.Endpoints.Users
                 {
                     x.Produces(401, typeof(ProblemDetails))
                     .Produces(500, typeof(ProblemDetails))
-                    .WithTags("users")
                     .WithSummary("user profile routes");
                 });
             });

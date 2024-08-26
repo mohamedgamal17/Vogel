@@ -8,7 +8,7 @@ using Vogel.Social.Shared.Dtos;
 
 namespace Vogel.Social.Presentation.Endpoints.Users
 {
-    public class GetUserProfileEndpoint : Endpoint<GetCurrentUserQuery, UserDto>
+    public class GetUserProfileEndpoint : Endpoint<EmptyRequest,UserDto>
     {
         private readonly IMediator _mediator;
 
@@ -19,7 +19,7 @@ namespace Vogel.Social.Presentation.Endpoints.Users
 
         public override void Configure()
         {
-            Get();
+            Get("");
             Options(x => x.WithName("GetCurrentUserProfile"));
             Description(x => x.Produces(StatusCodes.Status200OK, typeof(UserDto))
                 .Produces(StatusCodes.Status404NotFound, typeof(ProblemDetails))
@@ -27,9 +27,10 @@ namespace Vogel.Social.Presentation.Endpoints.Users
             Group<UserRoutingGroup>();
         }
 
-        public override async Task HandleAsync(GetCurrentUserQuery req, CancellationToken ct)
+
+        public override async Task HandleAsync(EmptyRequest req ,CancellationToken ct)
         {
-            var result = await _mediator.Send(req);
+            var result = await _mediator.Send(new GetCurrentUserQuery());
 
             var response = result.ToOk();
 

@@ -19,7 +19,7 @@ namespace Vogel.Social.Presentation.Endpoints.People
 
         public override void Configure()
         {
-            Get();
+            Get("");
             Description(x => x.Produces(StatusCodes.Status200OK, typeof(Paging<UserDto>)));
             Group<PeopleRoutingGroup>();
         }

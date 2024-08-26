@@ -11,7 +11,6 @@ namespace Vogel.Social.Presentation.Endpoints.People
             {
                 ep.Description(x => x.Produces(StatusCodes.Status500InternalServerError, typeof(ProblemDetails))
                     .WithSummary("people routes")
-                    .WithTags("people")               
                 );
                 
             });

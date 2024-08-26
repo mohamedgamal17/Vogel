@@ -19,9 +19,10 @@ namespace Vogel.Social.Presentation.Endpoints.Pictures
 
         public override void Configure()
         {
-            Get();
-            Group<PictureRoutingGroup>();
+            Get("");
             Description(x => x.Produces(StatusCodes.Status200OK, typeof(Paging<PictureDto>)));
+            Group<PictureRoutingGroup>();
+
         }
 
         public override async Task HandleAsync(ListCurrentUserPicturesQuery req, CancellationToken ct)

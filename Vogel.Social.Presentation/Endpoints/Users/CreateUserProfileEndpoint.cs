@@ -18,7 +18,7 @@ namespace Vogel.Social.Presentation.Endpoints.Users
 
         public override void Configure()
         {
-            Post();
+            Post("");
             Description(x => x.Produces(StatusCodes.Status201Created, typeof(UserDto))
                 .Produces(StatusCodes.Status400BadRequest, typeof(ValidationProblemDetails))
             );

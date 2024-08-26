@@ -21,10 +21,10 @@ namespace Vogel.Social.Presentation.Endpoints.Pictures
         {
             Get("{id}");
             Options(x => x.WithName("GetPictureById"));
-            Group<PictureRoutingGroup>();
             Description(x => x.Produces(StatusCodes.Status200OK, typeof(PictureDto))
                 .Produces(StatusCodes.Status404NotFound, typeof(ProblemDetails))
             );
+            Group<PictureRoutingGroup>();
         }
 
         public override async Task HandleAsync(GetPictureByIdQuery req, CancellationToken ct)
