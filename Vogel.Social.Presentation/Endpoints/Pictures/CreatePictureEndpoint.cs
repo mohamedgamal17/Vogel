@@ -11,7 +11,6 @@ namespace Vogel.Social.Presentation.Endpoints.Pictures
 
     public class CreatePictureRequest
     {
-        [FastEndpoints.FromBody]
         public IFormFile Image { get; set; }
 
         public async Task<CreatePictureCommand> ToCreatePictureCommand()
@@ -47,6 +46,7 @@ namespace Vogel.Social.Presentation.Endpoints.Pictures
         public override void Configure() 
         {
             Post("");
+            AllowFileUploads();
             Description(x =>
             {
                 x.Produces(StatusCodes.Status201Created, typeof(PictureDto))
