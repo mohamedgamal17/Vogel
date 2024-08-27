@@ -10,8 +10,9 @@ namespace Vogel.Social.Infrastructure.Installers
     {
         public void Install(IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
         {
-            services.RegisterRepositoriesFromAssembly(MongoEntities.AssemblyReference.Assembly)
+            services.RegisterMongoRepositoriesFromAssembly(MongoEntities.AssemblyReference.Assembly)
                 .RegisterMigrationFromAssembly(MongoEntities.AssemblyReference.Assembly);
+
         }
     }
 }
