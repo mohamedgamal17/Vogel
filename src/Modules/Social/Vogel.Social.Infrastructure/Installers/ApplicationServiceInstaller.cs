@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Vogel.BuildingBlocks.Application.Extensions;
 using Vogel.BuildingBlocks.Infrastructure.Modularity;
+using Vogel.BuildingBlocks.MongoDb.Extensions;
 using Vogel.Social.MongoEntities;
 namespace Vogel.Social.Infrastructure.Installers
 {
@@ -11,10 +12,10 @@ namespace Vogel.Social.Infrastructure.Installers
         public void Install(IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
         {
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Application.AssemblyReference.Assembly))
-                .RegisterFactoriesFromAssembly(AssemblyReference.Assembly)
-                .RegisterPoliciesHandlerFromAssembly(AssemblyReference.Assembly);
-
-
+                .RegisterFactoriesFromAssembly(Application.AssemblyReference.Assembly)
+                .RegisterPoliciesHandlerFromAssembly(Application.AssemblyReference.Assembly)
+                .AddAutoMapper(Application.AssemblyReference.Assembly);
+        
         }
     }
 }
