@@ -25,6 +25,14 @@ namespace Vogel.BuildingBlocks.Application
             return services;
         }
 
-  
+        public static IServiceCollection RegisterMediatRCommonPibelineBehaviors(this IServiceCollection services)
+        {
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ExceptionHandlingBehaviour<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehaviour<,>));
+            return services;
+        }
+
+
+
     }
 }
