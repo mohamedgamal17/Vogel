@@ -57,7 +57,7 @@ namespace Vogel.BuildingBlocks.MongoDb.Extensions
             });
         }
 
-        public static IServiceCollection RegisterRepositoriesFromAssembly(this IServiceCollection services,Assembly assembly)
+        public static IServiceCollection RegisterMongoRepositoriesFromAssembly(this IServiceCollection services,Assembly assembly)
         {
             var repositoriesTypes = assembly.GetTypes()
              .Where(x => x.IsClass && (x.BaseType?.IsGenericType ?? false))
