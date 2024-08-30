@@ -30,6 +30,8 @@ namespace Vogel.Host
                      BuildingBlocks.Infrastructure.AssemblyReference.Assembly,
                      Social.Infrastructure.AssemblyReference.Assembly
                 );
+
+            services.AddTransient<IModuleBootstrapper, HostModuleBootstrapper>();
         }
 
         private void ConfigureAuthentication(IServiceCollection services, IConfiguration configuration)

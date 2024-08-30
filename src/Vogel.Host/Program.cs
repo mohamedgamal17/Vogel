@@ -3,7 +3,6 @@ using FastEndpoints;
 using Vogel.BuildingBlocks.Infrastructure.Extensions;
 using Vogel.Host;
 using FastEndpoints.Swagger;
-
 var builder = WebApplication.CreateBuilder();
 
 builder.InstallModule<HostModuleInstaller>();
@@ -28,6 +27,8 @@ app.UseHttpsRedirection()
     .UseAuthentication()
     .UseAuthorization()
     .UseFastEndpoints();
+
+await app.RunModulesBootstrapperAsync();
 
 app.Run();
 
