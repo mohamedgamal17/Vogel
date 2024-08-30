@@ -1,66 +1,35 @@
 using Autofac.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
-using Vogel.BuildingBlocks.MongoDb.Migrations;
+using FastEndpoints;
+using Vogel.BuildingBlocks.Infrastructure.Extensions;
 using Vogel.Host;
-using Vogel.Infrastructure.EntityFramework;
+using FastEndpoints.Swagger;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder();
 
-// Add services to the container.
-builder.Services.AddVogelWeb(builder.Configuration);
+builder.InstallModule<HostModuleInstaller>();
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
 var app = builder.Build();
 
 
-await MigrateSqlDatabase(app.Services);
-
-await MigrateMongoDatabase(app.Services);
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (builder.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        var config = app.Configuration;
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Vogel API");
-        options.OAuthClientId(config.GetValue<string>("SwaggerClient:ClientId"));
-        options.OAuthClientSecret(config.GetValue<string>("SwaggerClient:ClientSecret"));
-        options.OAuthUsePkce();
-    });
+    app.UseSwaggerGen();
 }
 
-app.UseHttpsRedirection();
-
-app.UseCors(builder=>
-    builder
+app.UseHttpsRedirection()
+    .UseCors(bld =>
+        bld
         .AllowAnyOrigin()
         .AllowAnyMethod()
         .AllowAnyHeader()
-    );
-
-
-app.UseAuthentication();
-
-app.UseAuthorization();
-
-app.MapControllers();
+    )
+    .UseAuthentication()
+    .UseAuthorization()
+    .UseFastEndpoints();
 
 app.Run();
 
 
-async Task MigrateSqlDatabase(IServiceProvider serviceProvider)
-{
-    var dbcontext = serviceProvider.GetRequiredService<ApplicationDbContext>();
 
-    await dbcontext.Database.MigrateAsync();
-}
-
-async Task MigrateMongoDatabase(IServiceProvider serviceProvider)
-{
-    var mongoEngine = serviceProvider.GetRequiredService<IMongoMigrationEngine>();
-
-    await mongoEngine.MigrateAsync();
-}
