@@ -5,15 +5,14 @@ namespace Vogel.BuildingBlocks.Infrastructure.Extensions
 {
     public static class HostExtensions
     {
-        public static async Task Bootstrap<TModule>(this IHost host) where TModule : class , IModuleBootstrapper
+        public static async Task RunModulesBootstrapperAsync(this IHost host)
         {
-            var type = typeof(TModule);
+            var moduleBootstrappers =  host.Services.GetServices<IModuleBootstrapper>();
 
-            var obj = Activator.CreateInstance(type)!;
-
-            var module = ((IModuleBootstrapper)obj)!;
-
-            await module.Bootstrap(host.Services);
+            foreach(var moduleBootstrap in moduleBootstrappers)
+            {
+                await moduleBootstrap.Bootstrap(host.Services);
+            }
         }
     }
 }
