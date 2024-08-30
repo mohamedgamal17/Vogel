@@ -14,6 +14,8 @@ namespace Vogel.Social.Infrastructure
             services.InstallServiceFromAssembly(configuration, environment,
                     Assembly.GetExecutingAssembly()
                 );
+
+            services.AddTransient<IModuleBootstrapper, SocialModuleBootstrapper>();
         }
     }
 }
