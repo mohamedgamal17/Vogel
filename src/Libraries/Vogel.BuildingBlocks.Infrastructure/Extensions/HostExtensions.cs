@@ -7,11 +7,15 @@ namespace Vogel.BuildingBlocks.Infrastructure.Extensions
     {
         public static async Task RunModulesBootstrapperAsync(this IHost host)
         {
-            var moduleBootstrappers =  host.Services.GetServices<IModuleBootstrapper>();
+            await host.Services.RunModulesBootstrapperAsync();
+        }
 
-            foreach(var moduleBootstrap in moduleBootstrappers)
+        public static async Task RunModulesBootstrapperAsync(this IServiceProvider serviceProvider)
+        {
+            var moduleBootstrappers = serviceProvider.GetServices<IModuleBootstrapper>();
+            foreach (var moduleBootstrap in moduleBootstrappers)
             {
-                await moduleBootstrap.Bootstrap(host.Services);
+                await moduleBootstrap.Bootstrap(serviceProvider);
             }
         }
     }
