@@ -9,6 +9,8 @@ using Vogel.BuildingBlocks.Infrastructure.Extensions;
 using Vogel.BuildingBlocks.Infrastructure.Modularity;
 using Vogel.BuildingBlocks.Infrastructure.S3Storage;
 using Vogel.BuildingBlocks.Infrastructure.Security;
+using Vogel.BuildingBlocks.Application;
+using Vogel.BuildingBlocks.EntityFramework;
 namespace Vogel.Application.Tests
 {
     public class ApplicationTestModuleInstaller : IModuleInstaller
@@ -24,6 +26,9 @@ namespace Vogel.Application.Tests
             services.AddLogging()
                 .AddTransient<ILogger, TestOutputLogger>()
                 .AddSingleton<ILoggerFactory>(provider => new TestOutputLoggerFactory(true));
+
+            services.RegisterMediatRCommonPibelineBehaviors()
+                .RegisterEfCoreInterceptors();
         }
 
     }
