@@ -8,13 +8,13 @@ namespace Vogel.Social.Application.Tests.Extensions
 {
     public static class PictureFluentAssertionExtensions
     {
-        public static void AssertMedia(this Picture picture, CreatePictureCommand command , string userId)
+        public static void AssertPicture(this Picture picture, CreatePictureCommand command , string userId)
         {
             picture.File.Should().Be(command.Name);
             picture.UserId.Should().Be(userId);
         }
 
-        public static void AssertMediaMongoEntity(this Picture picture, PictureMongoEntity mongoEntity)
+        public static void AssertPictureMongoEntity(this Picture picture, PictureMongoEntity mongoEntity)
         {
             picture.Id.Should().Be(mongoEntity.Id);
             picture.UserId.Should().Be(mongoEntity.UserId);
@@ -22,7 +22,7 @@ namespace Vogel.Social.Application.Tests.Extensions
             picture.AssertAuditingProperties(mongoEntity);
         }
 
-        public static void AssertMediaDto(this PictureDto dto, Picture picture)
+        public static void AssertPictureDto(this PictureDto dto, Picture picture)
         {
             dto.Id.Should().Be(picture.Id);
             dto.UserId.Should().Be(picture.UserId);
