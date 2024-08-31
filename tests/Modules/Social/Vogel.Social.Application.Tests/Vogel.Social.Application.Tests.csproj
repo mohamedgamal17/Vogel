@@ -18,6 +18,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\src\Modules\Social\Vogel.Social.Infrastructure\Vogel.Social.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\Vogel.Application.Tests\Vogel.Application.Tests.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Using Include="NUnit.Framework" />
   </ItemGroup>
 
