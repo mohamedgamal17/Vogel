@@ -1,11 +1,15 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Hosting.Internal;
+using MongoDB.Driver;
 using NUnit.Framework;
+using System;
 using System.Reflection;
+using Vogel.BuildingBlocks.MongoDb.Configuration;
 
 namespace Vogel.Application.Tests
 {
@@ -60,6 +64,22 @@ namespace Vogel.Application.Tests
             var container = containerBuilder.Build();
             var serviceProvider = new AutofacServiceProvider(container);
             return serviceProvider;
+        }
+
+
+        protected async Task DropSqlDb()
+        {
+            var dbContext = ServiceProvider.GetRequiredService<DbContext>();
+            await dbContext.Database.EnsureDeletedAsync();
+        }
+
+        protected async Task DropMongoDb()
+        {
+            var mongoConfiguration = ServiceProvider.GetRequiredService<MongoDbSettings>();
+
+            var mongoClient = ServiceProvider.GetRequiredService<IMongoClient>();
+
+            await mongoClient.DropDatabaseAsync(mongoConfiguration.Database);
         }
     }
 }
