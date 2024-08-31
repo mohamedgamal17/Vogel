@@ -17,4 +17,8 @@
 		<PackageReference Include="NUnit.Analyzers" Version="3.6.1" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\..\src\Libraries\Vogel.BuildingBlocks.Infrastructure\Vogel.BuildingBlocks.Infrastructure.csproj" />
+	</ItemGroup>
+
 </Project>
