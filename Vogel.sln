@@ -49,7 +49,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Social.Infrastructure
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Social.Presentation", "Vogel.Social.Presentation\Vogel.Social.Presentation.csproj", "{2066F994-C4E4-446E-B0BD-CEA0C13CA3BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vogel.Application.Tests", "tests\Vogel.Application.Tests\Vogel.Application.Tests.csproj", "{317AC9D3-6CBE-4408-A131-DE46CB7A78E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Application.Tests", "tests\Vogel.Application.Tests\Vogel.Application.Tests.csproj", "{317AC9D3-6CBE-4408-A131-DE46CB7A78E2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{E7612343-9637-4B91-97D6-12F6702DC01E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Social", "Social", "{96F57579-FA66-4B5F-A86F-1B477471679B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vogel.Social.Application.Tests", "tests\Modules\Social\Vogel.Social.Application.Tests\Vogel.Social.Application.Tests.csproj", "{A9C04B54-1764-487F-88F1-474C3FFA5CDE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -133,6 +139,10 @@ Global
 		{317AC9D3-6CBE-4408-A131-DE46CB7A78E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{317AC9D3-6CBE-4408-A131-DE46CB7A78E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{317AC9D3-6CBE-4408-A131-DE46CB7A78E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9C04B54-1764-487F-88F1-474C3FFA5CDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9C04B54-1764-487F-88F1-474C3FFA5CDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9C04B54-1764-487F-88F1-474C3FFA5CDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9C04B54-1764-487F-88F1-474C3FFA5CDE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -160,6 +170,9 @@ Global
 		{40FA1102-F14C-4AF6-B332-A51986E77300} = {33602B80-CF6B-4E35-BD1B-6F1EA85CB400}
 		{2066F994-C4E4-446E-B0BD-CEA0C13CA3BC} = {33602B80-CF6B-4E35-BD1B-6F1EA85CB400}
 		{317AC9D3-6CBE-4408-A131-DE46CB7A78E2} = {3586116B-B295-4BE5-B9CF-995158B9C038}
+		{E7612343-9637-4B91-97D6-12F6702DC01E} = {3586116B-B295-4BE5-B9CF-995158B9C038}
+		{96F57579-FA66-4B5F-A86F-1B477471679B} = {E7612343-9637-4B91-97D6-12F6702DC01E}
+		{A9C04B54-1764-487F-88F1-474C3FFA5CDE} = {96F57579-FA66-4B5F-A86F-1B477471679B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A7AC3C50-99B3-48CD-965D-64A3D2BDD554}
