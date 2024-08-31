@@ -1,8 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using System.Reflection;
+﻿using System.Reflection;
 using Vogel.BuildingBlocks.Infrastructure.Modularity;
-
 namespace Vogel.BuildingBlocks.Infrastructure.Extensions
 {
     public static class ServiceCollectionExtensions
@@ -20,8 +17,37 @@ namespace Vogel.BuildingBlocks.Infrastructure.Extensions
                      .Where(x => x.IsClass && x.IsAssignableTo(typeof(IServiceInstaller)))
                      .ToList();
 
-                ResolveServicesInstallers(types, services, configuration, hostEnvironment);
+                types.ForEach((t) => services.InstallService(t, configuration, hostEnvironment));
             }
+
+            return services;
+        }
+
+        public static IServiceCollection InstallService<TService>(this IServiceCollection services, IConfiguration configuration , IHostEnvironment hostEnvironment)
+        {
+            return services.InstallService(typeof(TService), configuration, hostEnvironment);
+        }
+
+        public static IServiceCollection InstallService(this IServiceCollection services , Type serviceType, IConfiguration configuration , IHostEnvironment hostEnvironment)
+        {
+            if (serviceType.IsAssignableTo(typeof(IServiceInstaller)))
+            {
+                throw new InvalidOperationException($"[{serviceType.AssemblyQualifiedName}] must implement type of [{typeof(IServiceInstaller).AssemblyQualifiedName}]");
+            }
+
+
+            var hasEmptyConstructor = serviceType.GetConstructors(BindingFlags.Public | BindingFlags.Instance)
+                 .Where(x => x.GetParameters().Length == 0)
+                 .Any();
+
+            if (!hasEmptyConstructor)
+            {
+                throw new InvalidOperationException($"[{serviceType.AssemblyQualifiedName}] must have parameterless constructor to be able to install module");
+            }
+
+            var obj = (IModuleInstaller)(Activator.CreateInstance(serviceType, new object[] { })!);
+
+            obj.Install(services, configuration, hostEnvironment);
 
             return services;
         }
