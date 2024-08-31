@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +20,7 @@ namespace Vogel.Application.Tests
         protected IServiceProvider ServiceProvider { get; private set; }
         protected IConfiguration Configuration { get; private set; }
         protected IHostEnvironment HostEnvironment { get; private set; }
+        protected IMediator Mediator { get; private set; }
         protected abstract Task SetupAsync(IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment);
         protected abstract Task InitializeAsync(IServiceProvider services);
         protected abstract Task ShutdownAsync(IServiceProvider services);
@@ -38,6 +40,7 @@ namespace Vogel.Application.Tests
             services.AddSingleton(HostEnvironment);
             await SetupAsync(services, Configuration,HostEnvironment);
             ServiceProvider = BuildServiceProvider(services);
+            Mediator = ServiceProvider.GetRequiredService<IMediator>();
             await InitializeAsync(ServiceProvider);
         }
 
