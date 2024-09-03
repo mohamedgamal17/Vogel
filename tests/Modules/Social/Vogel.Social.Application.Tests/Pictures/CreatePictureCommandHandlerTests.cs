@@ -5,18 +5,19 @@ using Vogel.BuildingBlocks.Domain.Repositories;
 using Vogel.BuildingBlocks.MongoDb;
 using Vogel.Social.Application.Pictures.Commands.CreatePicture;
 using Vogel.Social.Application.Tests.Extensions;
+using Vogel.Social.Domain;
 using Vogel.Social.Domain.Pictures;
 using Vogel.Social.MongoEntities.Pictures;
 namespace Vogel.Social.Application.Tests.Pictures
 {
     public class CreatePictureCommandHandlerTests : SocialTestFixture
     {
-        public IRepository<Picture> PictureRepository { get; private set; }
+        public ISocialRepository<Picture> PictureRepository { get; private set; }
         public IMongoRepository<PictureMongoEntity> PictureMongoRepository { get; private set; }
 
         public CreatePictureCommandHandlerTests()
         {
-            PictureRepository = ServiceProvider.GetRequiredService<IRepository<Picture>>();
+            PictureRepository = ServiceProvider.GetRequiredService<ISocialRepository<Picture>>();
             PictureMongoRepository = ServiceProvider.GetRequiredService<IMongoRepository<PictureMongoEntity>>();
         }
 
