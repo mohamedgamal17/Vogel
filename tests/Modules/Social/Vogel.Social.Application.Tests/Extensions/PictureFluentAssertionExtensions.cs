@@ -14,7 +14,7 @@ namespace Vogel.Social.Application.Tests.Extensions
             picture.UserId.Should().Be(userId);
         }
 
-        public static void AssertPictureMongoEntity(this Picture picture, PictureMongoEntity mongoEntity)
+        public static void AssertPictureMongoEntity(this PictureMongoEntity picture, Picture mongoEntity)
         {
             picture.Id.Should().Be(mongoEntity.Id);
             picture.UserId.Should().Be(mongoEntity.UserId);
