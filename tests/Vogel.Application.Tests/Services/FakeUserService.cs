@@ -6,57 +6,59 @@ namespace Vogel.Application.Tests.Services
 {
     public class FakeUserService
     {
-        private ApplicationUser? _currentUser = null;
-
-        private ClaimsPrincipal? _currentUserPrincipal = null;
-        public bool IsAuthenticated => _currentUser != null;
-
-        private readonly object _obj = new object();
+        private AsyncLocal<ClaimsPrincipal?> _ambientUserPrincipal = new AsyncLocal<ClaimsPrincipal?>();
+        public bool IsAuthenticated => _ambientUserPrincipal.Value != null;
         public void Login()
         {
             Login(Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), new List<string>());
         }
 
-
-        public void Login(string id , string username , List<string> roles)
+        public void Login(string id, string username, List<string> roles)
         {
-            lock (_obj)
+
+            var princibal = new ClaimsPrincipal();
+
+            var identity = new ClaimsIdentity();
+
+            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, id));
+            identity.AddClaim(new Claim(ClaimTypes.Name, username));
+
+            if (roles != null)
             {
-                _currentUser = new ApplicationUser
-                {
-                    Id = id,
-                    UserName = username,
-                    Roles = roles
-                };
-
-                var princibal = new ClaimsPrincipal();
-
-                var identity = new ClaimsIdentity();
-
-                identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, id));
-                identity.AddClaim(new Claim(ClaimTypes.Name, username));
-
-                if (roles != null)
-                {
-                    roles.ForEach(r => identity.AddClaim(new Claim(ClaimTypes.Role, r)));
-                }
-
-                princibal.AddIdentity(identity);
-
-                _currentUserPrincipal = princibal;
+                roles.ForEach(r => identity.AddClaim(new Claim(ClaimTypes.Role, r)));
             }
+
+            princibal.AddIdentity(identity);
+
+            _ambientUserPrincipal.Value = princibal;
+
         }
 
         public void Logout()
         {
-            lock (_obj)
-            {
-                _currentUser = null;
-                _currentUserPrincipal = null;
-            }
+
+            _ambientUserPrincipal.Value = null;
+
         }
 
-        public ApplicationUser GetCurrentUser() => _currentUser;
-        public ClaimsPrincipal? GetCurrentUserPrincibal() => _currentUserPrincipal;
+        public ApplicationUser? GetCurrentUser()
+        {
+            var princibal = _ambientUserPrincipal.Value;
+
+            if (princibal != null)
+            {
+                var user = new ApplicationUser
+                {
+                    Id = princibal.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value,
+                    UserName = princibal.Claims.Single(x => x.Type == ClaimTypes.Name).Value,
+                    Roles = princibal.Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value).ToList()
+                };
+
+                return user;
+            }
+
+            return null;
+        }
+        public ClaimsPrincipal? GetCurrentUserPrincibal() => _ambientUserPrincipal.Value;
     }
 }
