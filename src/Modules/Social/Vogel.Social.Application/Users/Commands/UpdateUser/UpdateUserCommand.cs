@@ -1,8 +1,10 @@
-﻿using Vogel.BuildingBlocks.Application.Requests;
+﻿using Microsoft.AspNetCore.Authorization;
+using Vogel.BuildingBlocks.Application.Requests;
 using Vogel.Social.Shared.Dtos;
 
 namespace Vogel.Social.Application.Users.Commands.UpdateUser
 {
+    [Authorize]
     public class UpdateUserCommand : ICommand<UserDto>
     {
         public string FirstName { get; set; }
