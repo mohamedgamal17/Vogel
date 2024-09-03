@@ -41,7 +41,7 @@ namespace Vogel.Social.Application.Tests.Users
                 LastName = Guid.NewGuid().ToString(),
                 AvatarId = fakePhoto.Id,
                 BirthDate = DateTime.Now.AddYears(-18),
-                Gender = Domain.Users.Gender.Female
+                Gender = Shared.Common.Gender.Female
             };
 
 
@@ -77,7 +77,7 @@ namespace Vogel.Social.Application.Tests.Users
                 LastName = Guid.NewGuid().ToString(),
                 AvatarId = fakePhoto.Id,
                 BirthDate = DateTime.Now.AddYears(-18),
-                Gender = Domain.Users.Gender.Female
+                Gender = Shared.Common.Gender.Female
             };
 
             var result = await Mediator.Send(command);
@@ -100,7 +100,7 @@ namespace Vogel.Social.Application.Tests.Users
                 LastName = Guid.NewGuid().ToString(),
                 AvatarId = fakePhoto.Id,
                 BirthDate = DateTime.Now.AddYears(-18),
-                Gender = Domain.Users.Gender.Female
+                Gender = Shared.Common.Gender.Female
             };
 
             var result = await Mediator.Send(command);
@@ -121,7 +121,7 @@ namespace Vogel.Social.Application.Tests.Users
                 LastName = Guid.NewGuid().ToString(),
                 AvatarId = fakePhoto.Id,
                 BirthDate = DateTime.Now.AddYears(-18),
-                Gender = Domain.Users.Gender.Female
+                Gender = Shared.Common.Gender.Female
             };
 
             var result = await Mediator.Send(command);
@@ -142,7 +142,7 @@ namespace Vogel.Social.Application.Tests.Users
                 LastName = Guid.NewGuid().ToString(),
                 AvatarId = Guid.NewGuid().ToString(),
                 BirthDate = DateTime.Now.AddYears(-18),
-                Gender = Domain.Users.Gender.Female
+                Gender = Shared.Common.Gender.Female
             };
 
             var result = await Mediator.Send(command);
@@ -162,7 +162,7 @@ namespace Vogel.Social.Application.Tests.Users
                 FirstName = faker.Person.FirstName,
                 LastName = faker.Person.LastName,
                 BirthDate = DateTime.Now,
-                Gender = Domain.Users.Gender.Male,
+                Gender = Shared.Common.Gender.Male,
                 AvatarId = picture.Id,
             };
 

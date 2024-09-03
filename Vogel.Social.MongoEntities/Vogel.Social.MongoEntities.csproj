@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\src\Libraries\Vogel.BuildingBlocks.MongoDb\Vogel.BuildingBlocks.MongoDb.csproj" />
+    <ProjectReference Include="..\Vogel.Social.Shared\Vogel.Social.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

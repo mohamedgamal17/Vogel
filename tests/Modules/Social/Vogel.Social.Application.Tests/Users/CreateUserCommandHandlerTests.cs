@@ -38,7 +38,7 @@ namespace Vogel.Social.Application.Tests.Users
                 LastName = Guid.NewGuid().ToString(),
                 AvatarId = fakePicture.Id,
                 BirthDate = DateTime.Now.AddYears(-18),
-                Gender = Domain.Users.Gender.Male
+                Gender = Shared.Common.Gender.Male
             };
 
             var result = await Mediator.Send(command);
@@ -71,7 +71,7 @@ namespace Vogel.Social.Application.Tests.Users
                 LastName = Guid.NewGuid().ToString(),
                 AvatarId = fakePicture.Id,
                 BirthDate = DateTime.Now.AddYears(-18),
-                Gender = Domain.Users.Gender.Male
+                Gender = Shared.Common.Gender.Male
             };
 
             var result = await Mediator.Send(command);
@@ -91,7 +91,7 @@ namespace Vogel.Social.Application.Tests.Users
                 FirstName = Guid.NewGuid().ToString(),
                 LastName = Guid.NewGuid().ToString(),
                 BirthDate = DateTime.Now.AddYears(-18),
-                Gender = Domain.Users.Gender.Male
+                Gender = Shared.Common.Gender.Male
             };
 
             var result = await Mediator.Send(command);
@@ -107,7 +107,7 @@ namespace Vogel.Social.Application.Tests.Users
                 FirstName = Guid.NewGuid().ToString(),
                 LastName = Guid.NewGuid().ToString(),
                 BirthDate = DateTime.Now.AddYears(-18),
-                Gender = Domain.Users.Gender.Male
+                Gender = Shared.Common.Gender.Male
             };
 
             var result = await Mediator.Send(command);
@@ -124,7 +124,7 @@ namespace Vogel.Social.Application.Tests.Users
                 FirstName = Guid.NewGuid().ToString(),
                 LastName = Guid.NewGuid().ToString(),
                 BirthDate = DateTime.Now.AddYears(-18),
-                Gender = Domain.Users.Gender.Male,
+                Gender = Shared.Common.Gender.Male,
                 AvatarId = Guid.NewGuid().ToString()
             };
 
@@ -146,7 +146,7 @@ namespace Vogel.Social.Application.Tests.Users
                 FirstName = faker.Person.FirstName,
                 LastName = faker.Person.LastName,
                 BirthDate = DateTime.Now,
-                Gender = Domain.Users.Gender.Male,
+                Gender = Shared.Common.Gender.Male,
                 AvatarId = picture.Id,
             };
 

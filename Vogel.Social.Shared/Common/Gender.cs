@@ -1,4 +1,4 @@
-﻿namespace Vogel.Social.MongoEntities.Users
+﻿namespace Vogel.Social.Shared.Common
 {
     public enum Gender
     {

@@ -1,5 +1,5 @@
 ﻿using Vogel.BuildingBlocks.Domain.Auditing;
-
+using Vogel.Social.Shared.Common;
 namespace Vogel.Social.Domain.Users
 {
     public class User : AuditedAggregateRoot<string>

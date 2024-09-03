@@ -1,6 +1,5 @@
-﻿using MongoDB.Driver;
-using Vogel.BuildingBlocks.MongoDb;
-
+﻿using Vogel.BuildingBlocks.MongoDb;
+using Vogel.Social.Shared.Common;
 namespace Vogel.Social.MongoEntities.Users
 {
     [MongoCollection(UserMongoConsts.CollectionName)]

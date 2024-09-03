@@ -1,5 +1,6 @@
 ﻿using Vogel.BuildingBlocks.MongoDb;
 using Vogel.Social.MongoEntities.Pictures;
+using Vogel.Social.Shared.Common;
 
 namespace Vogel.Social.MongoEntities.Users
 {

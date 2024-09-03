@@ -1,4 +1,5 @@
 ﻿using Vogel.BuildingBlocks.Shared.Dtos;
+using Vogel.Social.Shared.Common;
 
 namespace Vogel.Social.Shared.Dtos
 {

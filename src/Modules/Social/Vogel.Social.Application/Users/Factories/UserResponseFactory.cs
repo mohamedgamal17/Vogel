@@ -29,7 +29,7 @@ namespace Vogel.Social.Application.Users.Factories
                 Id = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Gender = (Shared.Dtos.Gender)user.Gender,
+                Gender = user.Gender,
                 AvatarId = user.AvatarId,
                 BirthDate = user.BirthDate.ToShortDateString()
             };
