@@ -10,6 +10,7 @@ using MongoDB.Driver;
 using NUnit.Framework;
 using System;
 using System.Reflection;
+using Vogel.Application.Tests.Services;
 using Vogel.BuildingBlocks.MongoDb.Configuration;
 
 namespace Vogel.Application.Tests
@@ -21,13 +22,13 @@ namespace Vogel.Application.Tests
         protected IConfiguration Configuration { get; private set; }
         protected IHostEnvironment HostEnvironment { get; private set; }
         protected IMediator Mediator { get; private set; }
+
+        protected FakeUserService UserService { get; private set; }
         protected abstract Task SetupAsync(IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment);
         protected abstract Task InitializeAsync(IServiceProvider services);
         protected abstract Task ShutdownAsync(IServiceProvider services);
 
-
-        [OneTimeSetUp]
-        protected virtual async Task BeforeAnyTests()
+        protected TestFixture()
         {
             var services = new ServiceCollection();
             Configuration = BuildConfiguration();
@@ -36,11 +37,19 @@ namespace Vogel.Application.Tests
                 EnvironmentName = Environments.Development,
                 ApplicationName = Assembly.GetExecutingAssembly().FullName!
             };
+
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddSingleton(HostEnvironment);
-            await SetupAsync(services, Configuration,HostEnvironment);
+            SetupAsync(services, Configuration, HostEnvironment).Wait();
             ServiceProvider = BuildServiceProvider(services);
+        }
+
+
+        [OneTimeSetUp]
+        protected virtual async Task BeforeAnyTests()
+        {        
             Mediator = ServiceProvider.GetRequiredService<IMediator>();
+            UserService = ServiceProvider.GetRequiredService<FakeUserService>();
             await InitializeAsync(ServiceProvider);
         }
 
