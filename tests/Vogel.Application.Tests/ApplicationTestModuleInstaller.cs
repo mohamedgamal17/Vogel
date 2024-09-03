@@ -21,7 +21,7 @@ namespace Vogel.Application.Tests
                 InstallModule<InfrastructureModuleInstaller>(configuration, environment)
                 .Replace<IS3ObjectStorageService, FakeS3ObjectService>()
                 .Replace<ISecurityContext, FakeSecurityContext>()
-                .AddTransient<FakeUserService>();
+                .AddScoped<FakeUserService>();
 
             services.AddLogging()
                 .AddTransient<ILogger, TestOutputLogger>()
@@ -29,6 +29,8 @@ namespace Vogel.Application.Tests
 
             services.RegisterMediatRCommonPibelineBehaviors()
                 .RegisterEfCoreInterceptors();
+
+            services.AddAuthorization();
         }
 
     }

@@ -12,6 +12,7 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
 		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />		
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.5" />
 		<PackageReference Include="FluentAssertions" Version="6.12.0" />
 		<PackageReference Include="NUnit" Version="3.13.3" />
 		<PackageReference Include="NUnit3TestAdapter" Version="4.4.2" />
