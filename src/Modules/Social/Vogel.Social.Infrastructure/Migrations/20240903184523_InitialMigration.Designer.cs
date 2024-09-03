@@ -12,7 +12,7 @@ using Vogel.Social.Infrastructure.EntityFramework;
 namespace Vogel.Social.Infrastructure.Migrations
 {
     [DbContext(typeof(SocialDbContext))]
-    [Migration("20240830204018_InitialMigration")]
+    [Migration("20240903184523_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -71,8 +71,7 @@ namespace Vogel.Social.Infrastructure.Migrations
 
                     b.HasIndex("ModifierId");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("Pictures", "Social");
                 });

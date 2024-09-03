@@ -85,8 +85,7 @@ namespace Vogel.Social.Infrastructure.Migrations
                 name: "IX_Pictures_UserId",
                 schema: "Social",
                 table: "Pictures",
-                column: "UserId",
-                unique: true);
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_AvatarId",

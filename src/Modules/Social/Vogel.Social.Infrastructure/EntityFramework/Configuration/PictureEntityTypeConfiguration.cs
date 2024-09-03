@@ -19,7 +19,7 @@ namespace Vogel.Social.Infrastructure.EntityFramework.Configuration
 
             builder.Property(x => x.File).HasMaxLength(PictureTableConsts.FileLength);
 
-            builder.HasIndex(x => x.UserId);
+            builder.HasIndex(x => x.UserId).IsUnique(false);
 
             builder.AutoMapAuditing();
         }

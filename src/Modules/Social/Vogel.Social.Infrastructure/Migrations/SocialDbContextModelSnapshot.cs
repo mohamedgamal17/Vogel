@@ -68,8 +68,7 @@ namespace Vogel.Social.Infrastructure.Migrations
 
                     b.HasIndex("ModifierId");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("Pictures", "Social");
                 });
