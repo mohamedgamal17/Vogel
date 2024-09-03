@@ -30,7 +30,7 @@ namespace Vogel.BuildingBlocks.Infrastructure.Extensions
 
         public static IServiceCollection InstallService(this IServiceCollection services , Type serviceType, IConfiguration configuration , IHostEnvironment hostEnvironment)
         {
-            if (serviceType.IsAssignableTo(typeof(IServiceInstaller)))
+            if (serviceType.IsAssignableFrom(typeof(IServiceInstaller)))
             {
                 throw new InvalidOperationException($"[{serviceType.AssemblyQualifiedName}] must implement type of [{typeof(IServiceInstaller).AssemblyQualifiedName}]");
             }
@@ -45,7 +45,7 @@ namespace Vogel.BuildingBlocks.Infrastructure.Extensions
                 throw new InvalidOperationException($"[{serviceType.AssemblyQualifiedName}] must have parameterless constructor to be able to install module");
             }
 
-            var obj = (IModuleInstaller)(Activator.CreateInstance(serviceType, new object[] { })!);
+            var obj = (IServiceInstaller)(Activator.CreateInstance(serviceType, new object[] { })!);
 
             obj.Install(services, configuration, hostEnvironment);
 
@@ -79,7 +79,7 @@ namespace Vogel.BuildingBlocks.Infrastructure.Extensions
 
         public static IServiceCollection InstallModule(this IServiceCollection services, Type moduleType , IConfiguration configuration , IHostEnvironment hostEnvironment)
         {
-            if (moduleType.IsAssignableTo(typeof(IModuleInstaller)))
+            if (moduleType.IsAssignableFrom(typeof(IModuleInstaller)))
             {
                 throw new InvalidOperationException($"[{moduleType.AssemblyQualifiedName}] must implement type of [{typeof(IModuleInstaller).AssemblyQualifiedName}]");
             }
@@ -111,7 +111,7 @@ namespace Vogel.BuildingBlocks.Infrastructure.Extensions
 
             services.Remove(oldService);
 
-            var serviceDescriptor = new ServiceDescriptor(service, service, oldService.Lifetime);
+            var serviceDescriptor = new ServiceDescriptor(service, implementaion, oldService.Lifetime);
 
             services.Add(serviceDescriptor);
 
