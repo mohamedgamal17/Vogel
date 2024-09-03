@@ -6,11 +6,12 @@ using Vogel.BuildingBlocks.Infrastructure.Extensions;
 
 namespace Vogel.Social.Application.Tests
 {
+    [TestFixture]
     public class SocialTestFixture : TestFixture
     {
         protected override Task SetupAsync(IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment)
         {
-            services.InstallModule<ApplicationTestModuleInstaller>(configuration,hostEnvironment);
+            services.InstallModule<SocialApplicationTestModuleInstaller>(configuration,hostEnvironment);
             return Task.CompletedTask;
         }
         protected override async Task InitializeAsync(IServiceProvider services)
