@@ -29,13 +29,13 @@ namespace Vogel.Social.Application.Tests.Extensions
             user.AvatarId.Should().Be(command.AvatarId);
         }
 
-        public static void AssertUserMongoEntity(this User user, UserMongoEntity mongoEntity)
+        public static void AssertUserMongoEntity(this UserMongoEntity user, User mongoEntity)
         {
             user.Id.Should().Be(mongoEntity.Id);
             user.FirstName.Should().Be(mongoEntity.FirstName);
             user.LastName.Should().Be(mongoEntity.LastName);
             user.AvatarId.Should().Be(mongoEntity.AvatarId);
-            user.Gender.Should().Be((Domain.Users.Gender)mongoEntity.Gender);
+            user.Gender.Should().Be((MongoEntities.Users.Gender)mongoEntity.Gender);
             user.AssertAuditingProperties(mongoEntity);
         }
 
