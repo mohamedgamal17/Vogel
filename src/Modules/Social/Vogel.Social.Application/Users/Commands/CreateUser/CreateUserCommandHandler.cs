@@ -47,6 +47,11 @@ namespace Vogel.Social.Application.Users.Commands.CreateUser
             {
                 avatar = await _pictureRepository.FindByIdAsync(request.AvatarId);
 
+                if (avatar == null)
+                {
+                    return new Result<UserDto>(new EntityNotFoundException(typeof(Picture), request.AvatarId));
+                }
+
                 var authorizationResult = await _applicationAuthorizationService.AuthorizeAsync(avatar!, PictureOperationRequirements.IsPictureOwner);
 
                 if (authorizationResult.IsFailure)
