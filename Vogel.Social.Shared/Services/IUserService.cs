@@ -6,6 +6,7 @@ namespace Vogel.Social.Shared.Services
     public interface IUserService
     {
         Task<Result<Paging<UserDto>>> ListUsers(string? cursor = null, bool ascending = false, int limit = 10);
+        Task<Result<Paging<UserDto>>> ListUsersByIds(IEnumerable<string> ids, string? cursor = null, bool ascending = false, int limit = 10);
         Task<Result<UserDto>> GetUserById(string id);
     }
 }
