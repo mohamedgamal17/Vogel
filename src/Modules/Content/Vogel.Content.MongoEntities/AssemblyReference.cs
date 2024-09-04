@@ -1,5 +1,7 @@
 using System.Reflection;
-namespace Vogel.Social.MongoEntities
+
+
+namespace Vogel.Content.MongoEntities
 {
     public static class AssemblyReference
     {
