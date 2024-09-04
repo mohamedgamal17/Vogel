@@ -35,9 +35,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Social", "Social", "{33602B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Social.Domain", "src\Modules\Social\Vogel.Social.Domain\Vogel.Social.Domain.csproj", "{404B421B-68DE-43E2-903C-60B30C3FEF69}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Social.MongoEntities", "Vogel.Social.MongoEntities\Vogel.Social.MongoEntities.csproj", "{168C24A7-FF33-4E37-834F-61B0876401D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Social.MongoEntities", "src\Modules\Social\Vogel.Social.MongoEntities\Vogel.Social.MongoEntities.csproj", "{168C24A7-FF33-4E37-834F-61B0876401D7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Social.Shared", "Vogel.Social.Shared\Vogel.Social.Shared.csproj", "{300F0893-9781-45E2-A8B6-5EE499EB3DC9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Social.Shared", "src\Modules\Social\Vogel.Social.Shared\Vogel.Social.Shared.csproj", "{300F0893-9781-45E2-A8B6-5EE499EB3DC9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Social.Application", "src\Modules\Social\Vogel.Social.Application\Vogel.Social.Application.csproj", "{EAFDB305-5C89-48B3-93A9-28D914EC23FF}"
 EndProject
@@ -47,7 +47,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.BuildingBlocks.Infras
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Social.Infrastructure", "src\Modules\Social\Vogel.Social.Infrastructure\Vogel.Social.Infrastructure.csproj", "{40FA1102-F14C-4AF6-B332-A51986E77300}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Social.Presentation", "Vogel.Social.Presentation\Vogel.Social.Presentation.csproj", "{2066F994-C4E4-446E-B0BD-CEA0C13CA3BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Social.Presentation", "src\Modules\Social\Vogel.Social.Presentation\Vogel.Social.Presentation.csproj", "{2066F994-C4E4-446E-B0BD-CEA0C13CA3BC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Application.Tests", "tests\Vogel.Application.Tests\Vogel.Application.Tests.csproj", "{317AC9D3-6CBE-4408-A131-DE46CB7A78E2}"
 EndProject

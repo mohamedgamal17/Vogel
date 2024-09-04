@@ -7,14 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
-	<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.0" />
-
+    <PackageReference Include="FastEndpoints" Version="5.28.0" />
+    <PackageReference Include="MimeMapping" Version="3.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Libraries\Vogel.BuildingBlocks.MongoDb\Vogel.BuildingBlocks.MongoDb.csproj" />
-    <ProjectReference Include="..\Vogel.Social.Shared\Vogel.Social.Shared.csproj" />
+    <ProjectReference Include="..\Vogel.Social.Application\Vogel.Social.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>
