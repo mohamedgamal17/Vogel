@@ -1,7 +1,7 @@
-﻿using Vogel.Application.Medias.Dtos;
-using Vogel.Application.PostReactions.Dtos;
-using Vogel.Application.Users.Dtos;
-using Vogel.BuildingBlocks.Shared.Dtos;
+﻿using Vogel.BuildingBlocks.Shared.Dtos;
+using Vogel.Content.Application.Medias.Dtos;
+using Vogel.Content.Application.PostReactions.Dtos;
+using Vogel.Social.Shared.Dtos;
 namespace Vogel.Content.Application.Posts.Dtos
 {
     public class PostDto : EntityDto<string>
@@ -10,7 +10,7 @@ namespace Vogel.Content.Application.Posts.Dtos
         public string? UserId { get; set; }
         public string? MediaId { get; set; }
         public UserDto User { get; set; }
-        public MediaAggregateDto Media { get; set; }
+        public MediaDto Media { get; set; }
         public PostReactionSummaryDto ReactionSummary { get; set; }
     }
 

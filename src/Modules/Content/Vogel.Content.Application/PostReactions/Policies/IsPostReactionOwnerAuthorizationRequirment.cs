@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Vogel.BuildingBlocks.Infrastructure.Security;
-using Vogel.Domain.Posts;
-
+using Vogel.Content.Domain.Posts;
 namespace Vogel.Content.Application.PostReactions.Policies
 {
     public class IsPostReactionOwnerAuthorizationRequirment : IAuthorizationRequirement

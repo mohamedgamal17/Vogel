@@ -1,10 +1,8 @@
-﻿
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using MongoDB.Driver.Core.Authentication;
 using System.Security.Claims;
-using Vogel.Domain.Posts;
-
+using Vogel.Content.Domain.Posts;
 namespace Vogel.Content.Application.Posts.Policies
 {
     public class PostOperationAuthorizationHandler : AuthorizationHandler<OperationAuthorizationRequirement, Post>
