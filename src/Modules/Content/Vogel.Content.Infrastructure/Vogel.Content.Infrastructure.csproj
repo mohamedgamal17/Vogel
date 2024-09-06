@@ -19,5 +19,10 @@
 		<ProjectReference Include="..\Vogel.Content.MongoEntities\Vogel.Content.MongoEntities.csproj" />
 		<ProjectReference Include="..\Vogel.Content.Presentation\Vogel.Content.Presentation.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Compile Update="AssemblyReference.cs">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Compile>
+	</ItemGroup>
 
 </Project>
