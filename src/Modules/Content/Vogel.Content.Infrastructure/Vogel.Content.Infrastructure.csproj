@@ -14,7 +14,10 @@
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\Libraries\Vogel.BuildingBlocks.EntityFramework\Vogel.BuildingBlocks.EntityFramework.csproj" />
+		<ProjectReference Include="..\Vogel.Content.Application\Vogel.Content.Application.csproj" />
 		<ProjectReference Include="..\Vogel.Content.Domain\Vogel.Content.Domain.csproj" />
+		<ProjectReference Include="..\Vogel.Content.MongoEntities\Vogel.Content.MongoEntities.csproj" />
+		<ProjectReference Include="..\Vogel.Content.Presentation\Vogel.Content.Presentation.csproj" />
 	</ItemGroup>
 
 </Project>
