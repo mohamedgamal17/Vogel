@@ -59,11 +59,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Social.Application.Te
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Content", "Content", "{7CF93ABF-C711-4E1A-A6D9-BEFD281B4B58}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vogel.Content.Domain", "src\Modules\Content\Vogel.Content.Domain\Vogel.Content.Domain.csproj", "{409D1DA1-22C2-4E74-B261-D237151D9210}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Content.Domain", "src\Modules\Content\Vogel.Content.Domain\Vogel.Content.Domain.csproj", "{409D1DA1-22C2-4E74-B261-D237151D9210}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vogel.Content.MongoEntities", "src\Modules\Content\Vogel.Content.MongoEntities\Vogel.Content.MongoEntities.csproj", "{483B454E-A0DA-4A36-977F-9810D76ED6D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Content.MongoEntities", "src\Modules\Content\Vogel.Content.MongoEntities\Vogel.Content.MongoEntities.csproj", "{483B454E-A0DA-4A36-977F-9810D76ED6D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vogel.Content.Application", "src\Modules\Content\Vogel.Content.Application\Vogel.Content.Application.csproj", "{16A9A97F-D7F2-4005-BD07-ABBFFE388DB7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Content.Application", "src\Modules\Content\Vogel.Content.Application\Vogel.Content.Application.csproj", "{16A9A97F-D7F2-4005-BD07-ABBFFE388DB7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vogel.Content.Infrastructure", "src\Modules\Content\Vogel.Content.Infrastructure\Vogel.Content.Infrastructure.csproj", "{4A822C62-504D-47A4-9FA9-877756F77867}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -163,6 +165,10 @@ Global
 		{16A9A97F-D7F2-4005-BD07-ABBFFE388DB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16A9A97F-D7F2-4005-BD07-ABBFFE388DB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16A9A97F-D7F2-4005-BD07-ABBFFE388DB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A822C62-504D-47A4-9FA9-877756F77867}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A822C62-504D-47A4-9FA9-877756F77867}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A822C62-504D-47A4-9FA9-877756F77867}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A822C62-504D-47A4-9FA9-877756F77867}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -197,6 +203,7 @@ Global
 		{409D1DA1-22C2-4E74-B261-D237151D9210} = {7CF93ABF-C711-4E1A-A6D9-BEFD281B4B58}
 		{483B454E-A0DA-4A36-977F-9810D76ED6D0} = {7CF93ABF-C711-4E1A-A6D9-BEFD281B4B58}
 		{16A9A97F-D7F2-4005-BD07-ABBFFE388DB7} = {7CF93ABF-C711-4E1A-A6D9-BEFD281B4B58}
+		{4A822C62-504D-47A4-9FA9-877756F77867} = {7CF93ABF-C711-4E1A-A6D9-BEFD281B4B58}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A7AC3C50-99B3-48CD-965D-64A3D2BDD554}
