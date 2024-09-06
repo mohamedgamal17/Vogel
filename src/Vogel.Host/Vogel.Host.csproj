@@ -27,7 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Vogel.Social.Presentation\Vogel.Social.Presentation.csproj" />
     <ProjectReference Include="..\Modules\Social\Vogel.Social.Infrastructure\Vogel.Social.Infrastructure.csproj" />
   </ItemGroup>
 
