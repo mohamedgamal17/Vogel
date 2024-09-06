@@ -1,9 +1,9 @@
 ﻿using MediatR;
-using Vogel.Application.CommentReactions.Policies;
 using Vogel.BuildingBlocks.Application.Requests;
 using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.BuildingBlocks.Infrastructure.Security;
 using Vogel.BuildingBlocks.Shared.Results;
+using Vogel.Content.Application.CommentReactions.Policies;
 using Vogel.Content.Domain.Comments;
 using Vogel.Social.Domain;
 namespace Vogel.Content.Application.CommentReactions.Commands.RemoveCommentReaction

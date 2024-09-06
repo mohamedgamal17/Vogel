@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Vogel.BuildingBlocks.Infrastructure.Security;
 using Vogel.Content.Domain.Comments;
-namespace Vogel.Application.CommentReactions.Policies
+namespace Vogel.Content.Application.CommentReactions.Policies
 {
     public class IsCommentReactionOwnerAuthorizationRequirment : IAuthorizationRequirement
     {
@@ -18,7 +18,7 @@ namespace Vogel.Application.CommentReactions.Policies
 
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IsCommentReactionOwnerAuthorizationRequirment requirement, CommentReaction resource)
         {
-            if(resource.UserId == _securityContext.User!.Id)
+            if (resource.UserId == _securityContext.User!.Id)
             {
                 context.Succeed(requirement);
             }

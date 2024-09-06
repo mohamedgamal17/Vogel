@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 
-namespace Vogel.Application.CommentReactions.Policies
+namespace Vogel.Content.Application.CommentReactions.Policies
 {
     public class CommentReactionOperationAuthorizationRequirment
     {
