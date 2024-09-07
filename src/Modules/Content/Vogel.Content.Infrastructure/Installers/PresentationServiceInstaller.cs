@@ -12,7 +12,6 @@ namespace Vogel.Content.Infrastructure.Installers
         {
             services.AddFastEndpoints(opt =>
             {
-                opt.DisableAutoDiscovery = true;
                 opt.Assemblies = new Assembly[] { Presentation.AssemblyReference.Assembly };
             });
         }
