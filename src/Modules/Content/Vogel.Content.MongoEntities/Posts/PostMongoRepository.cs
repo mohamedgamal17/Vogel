@@ -7,50 +7,39 @@ namespace Vogel.Content.MongoEntities.Posts
 {
     public class PostMongoRepository : MongoRepository<PostMongoEntity>
     {
-        private readonly IMongoRepository<PostReactionMongoEntity> _postReactionRepository;
+        private readonly PostReactionMongoRepository _postReactionRepository;
         private readonly IMongoRepository<MediaMongoEntity> _mediaRepository;
-        public PostMongoRepository(IMongoDatabase mongoDatabase, IMongoRepository<PostReactionMongoEntity> postReactionRepository, IMongoRepository<MediaMongoEntity> mediaRepository) : base(mongoDatabase)
+        public PostMongoRepository(IMongoDatabase mongoDatabase, PostReactionMongoRepository postReactionRepository, IMongoRepository<MediaMongoEntity> mediaRepository) : base(mongoDatabase)
         {
             _postReactionRepository = postReactionRepository;
             _mediaRepository = mediaRepository;
         }
 
-        public async Task<PostMongoView> GetPostViewById(string id)
+        public async Task<PostMongoView> GetPostViewById(string postId)
         {
-            var reactionQuery = from react in _postReactionRepository.AsQuerable()
-                                group react by react.PostId into grouped
-                                select new PostReactionSummaryMongoView
-                                {
-                                    Id = grouped.Key,
-                                    TotalLike = grouped.Where(x => x.Type == ReactionType.Like).Count(),
-                                    TotalLove = grouped.Where(x => x.Type == ReactionType.Love).Count(),
-                                    TotalAngry = grouped.Where(x => x.Type == ReactionType.Angry).Count(),
-                                    TotalLaugh = grouped.Where(x => x.Type == ReactionType.Laugh).Count(),
-                                    TotalSad = grouped.Where(x => x.Type == ReactionType.Sad).Count()
-                                };
+            var query = PreparePostMongoViewQuery()
+                .Match(Builders<PostMongoView>.Filter.Eq(x => x.Id, postId));
 
-            var query = from post in AsQuerable()
-                        join media in _mediaRepository.AsQuerable()
-                        on post.MediaId equals media.Id
-                        join reactSummary in reactionQuery
-                        on post.Id equals reactSummary.Id
-                        select new PostMongoView
-                        {
-                            Id = post.Id,
-                            Caption = post.Caption,
-                            UserId = post.UserId,
-                            MediaId = post.MediaId,
-                            Media = media,
-                            ReactionSummary = reactSummary,
-                            CreatorId = post.CreatorId,
-                            CreationTime = post.CreationTime,
-                            ModifierId = post.ModifierId,
-                            ModificationTime = post.ModificationTime,
-                            DeletorId = post.DeletorId,
-                            DeletionTime = post.DeletionTime
-                        };
+            var view  = await query.SingleOrDefaultAsync();
 
-            return await query.SingleOrDefaultAsync(x => x.Id == id);
+            var reactionSummary = await _postReactionRepository.GetPostReactionSummary(postId);
+
+            view.ReactionSummary = reactionSummary;
+
+            return view;
+        }
+
+        private IAggregateFluent<PostMongoView> PreparePostMongoViewQuery()
+        {
+            return AsMongoCollection()
+                .Aggregate()
+                .Lookup<PostMongoEntity, MediaMongoEntity, PostMongoView>(
+                    foreignCollection: _mediaRepository.AsMongoCollection(),
+                    localField: l => l.MediaId,
+                    foreignField: f => f.Id,
+                    @as: r => r.Media
+                )
+                .Unwind<PostMongoView, PostMongoView>(x => x.Media, new AggregateUnwindOptions<PostMongoView> { PreserveNullAndEmptyArrays = true });
         }
     }
 }
