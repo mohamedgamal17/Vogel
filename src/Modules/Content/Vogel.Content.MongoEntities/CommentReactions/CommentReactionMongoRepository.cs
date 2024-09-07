@@ -32,11 +32,11 @@ namespace Vogel.Content.MongoEntities.CommentReactions
             return data;
         }
 
-        public async Task<CommentReactionSummaryMongoView?> GetCommentReactionSummary(string postId)
+        public async Task<CommentReactionSummaryMongoView?> GetCommentReactionSummary(string commentId)
         {
             var query = AsMongoCollection()
              .Aggregate()
-             .Match(Filter.Eq(x => x.CommentId, postId))
+             .Match(Filter.Eq(x => x.CommentId, commentId))
              .Group(k => k.CommentId, grouped => new CommentReactionSummaryMongoView
              {
                  Id = grouped.Key,
