@@ -65,9 +65,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Content.MongoEntities
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Content.Application", "src\Modules\Content\Vogel.Content.Application\Vogel.Content.Application.csproj", "{16A9A97F-D7F2-4005-BD07-ABBFFE388DB7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vogel.Content.Infrastructure", "src\Modules\Content\Vogel.Content.Infrastructure\Vogel.Content.Infrastructure.csproj", "{4A822C62-504D-47A4-9FA9-877756F77867}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Content.Infrastructure", "src\Modules\Content\Vogel.Content.Infrastructure\Vogel.Content.Infrastructure.csproj", "{4A822C62-504D-47A4-9FA9-877756F77867}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vogel.Content.Presentation", "src\Modules\Content\Vogel.Content.Presentation\Vogel.Content.Presentation.csproj", "{CED1ADBF-77AB-4618-8F33-8BB74EF547C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Content.Presentation", "src\Modules\Content\Vogel.Content.Presentation\Vogel.Content.Presentation.csproj", "{CED1ADBF-77AB-4618-8F33-8BB74EF547C1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Content", "Content", "{CBB0DDF6-4219-497F-A6EB-290903043F7D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vogel.Content.Application.Tests", "tests\Modules\Content\Vogel.Content.Application.Tests\Vogel.Content.Application.Tests.csproj", "{CE30B094-E195-47BD-8007-868BE8A01A96}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -175,6 +179,10 @@ Global
 		{CED1ADBF-77AB-4618-8F33-8BB74EF547C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CED1ADBF-77AB-4618-8F33-8BB74EF547C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CED1ADBF-77AB-4618-8F33-8BB74EF547C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE30B094-E195-47BD-8007-868BE8A01A96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE30B094-E195-47BD-8007-868BE8A01A96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE30B094-E195-47BD-8007-868BE8A01A96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE30B094-E195-47BD-8007-868BE8A01A96}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -211,6 +219,8 @@ Global
 		{16A9A97F-D7F2-4005-BD07-ABBFFE388DB7} = {7CF93ABF-C711-4E1A-A6D9-BEFD281B4B58}
 		{4A822C62-504D-47A4-9FA9-877756F77867} = {7CF93ABF-C711-4E1A-A6D9-BEFD281B4B58}
 		{CED1ADBF-77AB-4618-8F33-8BB74EF547C1} = {7CF93ABF-C711-4E1A-A6D9-BEFD281B4B58}
+		{CBB0DDF6-4219-497F-A6EB-290903043F7D} = {E7612343-9637-4B91-97D6-12F6702DC01E}
+		{CE30B094-E195-47BD-8007-868BE8A01A96} = {CBB0DDF6-4219-497F-A6EB-290903043F7D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A7AC3C50-99B3-48CD-965D-64A3D2BDD554}
