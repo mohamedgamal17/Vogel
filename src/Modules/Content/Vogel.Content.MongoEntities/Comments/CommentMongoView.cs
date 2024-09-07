@@ -9,6 +9,6 @@ namespace Vogel.Content.MongoEntities.Comments
         public string PostId { get; set; }
         public string UserId { get; set; }
         public string? CommentId { get; set; }
-        public CommentReactionSummaryMongoView ReactionSummary { get; set; }
+        public CommentReactionSummaryMongoView? ReactionSummary { get; set; }
     }
 }
