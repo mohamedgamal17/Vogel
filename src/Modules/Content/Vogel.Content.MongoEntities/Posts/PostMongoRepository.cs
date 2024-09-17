@@ -15,16 +15,19 @@ namespace Vogel.Content.MongoEntities.Posts
             _mediaRepository = mediaRepository;
         }
 
-        public async Task<PostMongoView> GetPostViewById(string postId)
+        public async Task<PostMongoView?> GetPostViewById(string postId)
         {
             var query = PreparePostMongoViewQuery()
                 .Match(Builders<PostMongoView>.Filter.Eq(x => x.Id, postId));
 
             var view  = await query.SingleOrDefaultAsync();
 
-            var reactionSummary = await _postReactionRepository.GetPostReactionSummary(postId);
+            if(view != null)
+            {
+                var reactionSummary = await _postReactionRepository.GetPostReactionSummary(postId);
 
-            view.ReactionSummary = reactionSummary;
+                view.ReactionSummary = reactionSummary;
+            }       
 
             return view;
         }
