@@ -6,19 +6,19 @@ using Vogel.BuildingBlocks.Shared.Results;
 using Vogel.Content.Application.PostReactions.Dtos;
 using Vogel.Content.Application.PostReactions.Factories;
 using Vogel.Content.Application.PostReactions.Policies;
+using Vogel.Content.Domain;
 using Vogel.Content.Domain.Posts;
 using Vogel.Content.MongoEntities.PostReactions;
-using Vogel.Social.Domain;
 namespace Vogel.Content.Application.PostReactions.Commands.UpdatePostReaction
 {
     public class UpdatePostReactionCommandHandler : IApplicationRequestHandler<UpdatePostReactionCommand, PostReactionDto>
     {
-        private readonly ISocialRepository<PostReaction> _postReactionRepository;
+        private readonly IContentRepository<PostReaction> _postReactionRepository;
         private readonly IMongoRepository<PostReactionMongoEntity> _postReactionMongoRepository;
         private readonly IPostReactionResponseFactory _postReactionResponseFactory;
         private readonly IApplicationAuthorizationService _applicationAuthorizationService;
 
-        public UpdatePostReactionCommandHandler(ISocialRepository<PostReaction> postReactionRepository, IMongoRepository<PostReactionMongoEntity> postReactionMongoRepository, IPostReactionResponseFactory postReactionResponseFactory, IApplicationAuthorizationService applicationAuthorizationService)
+        public UpdatePostReactionCommandHandler(IContentRepository<PostReaction> postReactionRepository, IMongoRepository<PostReactionMongoEntity> postReactionMongoRepository, IPostReactionResponseFactory postReactionResponseFactory, IApplicationAuthorizationService applicationAuthorizationService)
         {
             _postReactionRepository = postReactionRepository;
             _postReactionMongoRepository = postReactionMongoRepository;

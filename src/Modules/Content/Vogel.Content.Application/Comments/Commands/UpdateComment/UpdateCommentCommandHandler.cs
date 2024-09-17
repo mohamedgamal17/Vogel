@@ -5,20 +5,19 @@ using Vogel.BuildingBlocks.Shared.Results;
 using Vogel.Content.Application.Comments.Dtos;
 using Vogel.Content.Application.Comments.Factories;
 using Vogel.Content.Application.Comments.Polices;
+using Vogel.Content.Domain;
 using Vogel.Content.Domain.Comments;
 using Vogel.Content.MongoEntities.Comments;
-using Vogel.Social.Domain;
-
 namespace Vogel.Content.Application.Comments.Commands.UpdateComment
 {
     public class UpdateCommentCommandHandler : IApplicationRequestHandler<UpdateCommentCommand, CommentDto>
     {
-        private readonly ISocialRepository<Comment> _commentRepository;
+        private readonly IContentRepository<Comment> _commentRepository;
         private readonly ICommentResponseFactory _commentResponseFactory;
         private readonly CommentMongoRepository _commentMongoRepository;
         private readonly IApplicationAuthorizationService _applicationAuthorizationService;
 
-        public UpdateCommentCommandHandler(ISocialRepository<Comment> commentRepository,  ICommentResponseFactory commentResponseFactory, CommentMongoRepository commentMongoRepository, IApplicationAuthorizationService applicationAuthorizationService)
+        public UpdateCommentCommandHandler(IContentRepository<Comment> commentRepository,  ICommentResponseFactory commentResponseFactory, CommentMongoRepository commentMongoRepository, IApplicationAuthorizationService applicationAuthorizationService)
         {
             _commentRepository = commentRepository;
             _commentResponseFactory = commentResponseFactory;

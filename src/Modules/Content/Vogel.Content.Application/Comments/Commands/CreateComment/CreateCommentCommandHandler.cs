@@ -4,22 +4,21 @@ using Vogel.BuildingBlocks.Infrastructure.Security;
 using Vogel.BuildingBlocks.Shared.Results;
 using Vogel.Content.Application.Comments.Dtos;
 using Vogel.Content.Application.Comments.Factories;
+using Vogel.Content.Domain;
 using Vogel.Content.Domain.Comments;
 using Vogel.Content.Domain.Posts;
 using Vogel.Content.MongoEntities.Comments;
-using Vogel.Social.Domain;
-
 namespace Vogel.Content.Application.Comments.Commands.CreateComment
 {
     public class CreateCommentCommandHandler : IApplicationRequestHandler<CreateCommentCommand, CommentDto>
     {
-        private readonly ISocialRepository<Comment> _commentRepository;
-        private readonly ISocialRepository<Post> _postRepository;
+        private readonly IContentRepository<Comment> _commentRepository;
+        private readonly IContentRepository<Post> _postRepository;
         private readonly ISecurityContext _securityContext;
         private readonly ICommentResponseFactory _commentResponseFactory;
         private readonly CommentMongoRepository _commentMongoRepository;
 
-        public CreateCommentCommandHandler(ISocialRepository<Comment> commentRepository, ISocialRepository<Post> postRepository, ISecurityContext securityContext, ICommentResponseFactory commentResponseFactory, CommentMongoRepository commentMongoRepository)
+        public CreateCommentCommandHandler(IContentRepository<Comment> commentRepository, IContentRepository<Post> postRepository, ISecurityContext securityContext, ICommentResponseFactory commentResponseFactory, CommentMongoRepository commentMongoRepository)
         {
             _commentRepository = commentRepository;
             _postRepository = postRepository;

@@ -4,17 +4,16 @@ using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.BuildingBlocks.Infrastructure.Security;
 using Vogel.BuildingBlocks.Shared.Results;
 using Vogel.Content.Application.Comments.Polices;
+using Vogel.Content.Domain;
 using Vogel.Content.Domain.Comments;
-using Vogel.Social.Domain;
-
 namespace Vogel.Content.Application.Comments.Commands.RemoveComent
 {
     public class RemoveCommentCommandHandler : IApplicationRequestHandler<RemoveCommentCommand, Unit>
     {
-        private readonly ISocialRepository<Comment> _commentRepository;
+        private readonly IContentRepository<Comment> _commentRepository;
         private readonly IApplicationAuthorizationService _applicationAuthorizationService;
 
-        public RemoveCommentCommandHandler(ISocialRepository<Comment> commentRepository,IApplicationAuthorizationService applicationAuthorizationService)
+        public RemoveCommentCommandHandler(IContentRepository<Comment> commentRepository,IApplicationAuthorizationService applicationAuthorizationService)
         {
             _commentRepository = commentRepository;
             _applicationAuthorizationService = applicationAuthorizationService;

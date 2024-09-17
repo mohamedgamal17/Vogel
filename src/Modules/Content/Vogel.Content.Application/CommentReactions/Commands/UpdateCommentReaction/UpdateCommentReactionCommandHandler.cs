@@ -6,20 +6,20 @@ using Vogel.BuildingBlocks.Shared.Results;
 using Vogel.Content.Application.CommentReactions.Dtos;
 using Vogel.Content.Application.CommentReactions.Factories;
 using Vogel.Content.Application.CommentReactions.Policies;
+using Vogel.Content.Domain;
 using Vogel.Content.Domain.Comments;
 using Vogel.Content.MongoEntities.CommentReactions;
-using Vogel.Social.Domain;
 namespace Vogel.Content.Application.CommentReactions.Commands.UpdateCommentReaction
 {
     public class UpdateCommentReactionCommandHandler : IApplicationRequestHandler<UpdateCommentReactionCommand, CommentReactionDto>
     {
-        private readonly ISocialRepository<CommentReaction> _commentReactionRepository;
-        private readonly ISocialRepository<Comment> _commentRepository;
+        private readonly IContentRepository<CommentReaction> _commentReactionRepository;
+        private readonly IContentRepository<Comment> _commentRepository;
         private readonly IMongoRepository<CommentReactionMongoEntity> _commentReactionMongoRepository;
         private readonly ICommentReactionResponseFactory _commentReactionResponseFactory;
         private readonly IApplicationAuthorizationService _applicationAuthorizationService;
 
-        public UpdateCommentReactionCommandHandler(ISocialRepository<CommentReaction> commentReactionRepository, ISocialRepository<Comment> commentRepository, IMongoRepository<CommentReactionMongoEntity> commentReactionMongoRepository, ICommentReactionResponseFactory commentReactionResponseFactory, IApplicationAuthorizationService applicationAuthorizationService)
+        public UpdateCommentReactionCommandHandler(IContentRepository<CommentReaction> commentReactionRepository, IContentRepository<Comment> commentRepository, IMongoRepository<CommentReactionMongoEntity> commentReactionMongoRepository, ICommentReactionResponseFactory commentReactionResponseFactory, IApplicationAuthorizationService applicationAuthorizationService)
         {
             _commentReactionRepository = commentReactionRepository;
             _commentRepository = commentRepository;

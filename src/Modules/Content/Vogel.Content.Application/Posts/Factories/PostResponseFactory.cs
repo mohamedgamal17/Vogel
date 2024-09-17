@@ -5,7 +5,6 @@ using Vogel.Content.Application.Medias.Dtos;
 using Vogel.Content.Application.PostReactions.Dtos;
 using Vogel.Content.Application.Posts.Dtos;
 using Vogel.Content.MongoEntities.Posts;
-using Vogel.Social.Application.Users.Factories;
 using Vogel.Social.Shared.Dtos;
 using Vogel.Social.Shared.Services;
 namespace Vogel.Content.Application.Posts.Factories
@@ -14,13 +13,10 @@ namespace Vogel.Content.Application.Posts.Factories
     {
         private readonly IS3ObjectStorageService _s3ObjectStorageService;
 
-        private readonly IUserResponseFactory _userResponseFactory;
-
         private readonly IUserService _userService;
-        public PostResponseFactory(IS3ObjectStorageService s3ObjectStorageService, IUserResponseFactory userResponseFactory, IUserService userService)
+        public PostResponseFactory(IS3ObjectStorageService s3ObjectStorageService,  IUserService userService)
         {
             _s3ObjectStorageService = s3ObjectStorageService;
-            _userResponseFactory = userResponseFactory;
             _userService = userService;
         }
 
