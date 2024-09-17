@@ -5,7 +5,9 @@ using Vogel.Application.Tests;
 using Vogel.BuildingBlocks.Infrastructure.Extensions;
 using Vogel.BuildingBlocks.Infrastructure.Modularity;
 using Vogel.BuildingBlocks.MongoDb.Extensions;
+using Vogel.Content.Application.Tests.Fakers;
 using Vogel.Content.Infrastructure;
+using Vogel.Social.Shared.Services;
 namespace Vogel.Content.Application.Tests
 {
     public class ContentApplicationTestModuleInstaller : IModuleInstaller
@@ -20,6 +22,8 @@ namespace Vogel.Content.Application.Tests
                 opt.ConnectionString = configuration.GetValue<string>("MongoDb:ConnectionString")!;
                 opt.Database = configuration.GetValue<string>("MongoDb:Database")!;
             });
+
+            services.AddTransient<IUserService, FakeUserService>();
         }
     }
 }
