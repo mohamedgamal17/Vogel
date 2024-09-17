@@ -9,14 +9,14 @@ namespace Vogel.Content.Application.Tests.Extensions
 {
     public static class PostAssertionExtenions
     {
-        public static void AssertPostCommand(this Post post, CreatePostCommand command, string userId)
+        public static void AssertPost(this Post post, CreatePostCommand command, string userId)
         {
             post.Caption.Should().Be(command.Caption);
             post.MediaId.Should().Be(command.MediaId);
             post.UserId.Should().Be(userId);
         }
 
-        public static void AssertPostCommand(this Post post, UpdatePostCommand command, string userId)
+        public static void AssertPost(this Post post, UpdatePostCommand command, string userId)
         {
             post.Caption.Should().Be(command.Caption);
             post.MediaId.Should().Be(command.MediaId);
