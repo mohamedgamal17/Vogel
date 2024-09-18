@@ -19,7 +19,7 @@ namespace Vogel.Content.MongoEntities.Comments
                 .Match(
                     Filter.And(
                         Filter.Eq(x=> x.PostId , postId),
-                        Filter.Eq(x=> x.CommentId,  commentId)
+                        Filter.Eq(x=> x.Id,  commentId)
                     )
                 );
 
