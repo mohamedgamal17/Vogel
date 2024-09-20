@@ -1,4 +1,4 @@
-﻿namespace Vogel.Social.Domain.Friendship
+﻿namespace Vogel.Social.Shared.Common
 {
     public enum FriendRequestState
     {

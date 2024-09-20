@@ -1,4 +1,5 @@
 ﻿using Vogel.BuildingBlocks.Domain.Auditing;
+using Vogel.Social.Shared.Common;
 
 namespace Vogel.Social.Domain.Friendship
 {

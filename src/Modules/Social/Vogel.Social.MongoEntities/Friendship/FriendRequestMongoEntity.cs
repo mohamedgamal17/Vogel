@@ -1,4 +1,5 @@
 ﻿using Vogel.BuildingBlocks.MongoDb;
+using Vogel.Social.Shared.Common;
 namespace Vogel.Social.MongoEntities.Friendship
 {
     [MongoCollection(FriendshipMongoConsts.FriendRequestCollection)]
