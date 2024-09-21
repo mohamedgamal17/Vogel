@@ -3,20 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Vogel.Social.Infrastructure.EntityFramework;
 
 #nullable disable
 
-namespace Vogel.Social.Infrastructure.Migrations
+namespace Vogel.Social.Infrastructure.EntityFramework.Migrations
 {
     [DbContext(typeof(SocialDbContext))]
-    [Migration("20240903184523_InitialMigration")]
-    partial class InitialMigration
+    partial class SocialDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

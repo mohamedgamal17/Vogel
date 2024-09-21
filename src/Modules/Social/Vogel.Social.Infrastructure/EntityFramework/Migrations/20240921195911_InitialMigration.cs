@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Vogel.Social.Infrastructure.Migrations
+namespace Vogel.Social.Infrastructure.EntityFramework.Migrations
 {
     /// <inheritdoc />
     public partial class InitialMigration : Migration
