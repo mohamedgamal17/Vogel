@@ -7,8 +7,6 @@ using Vogel.Content.Application.Posts.Dtos;
 using Vogel.Content.MongoEntities.Posts;
 using Vogel.Social.Shared.Services;
 using MongoDB.Driver;
-using Vogel.BuildingBlocks.MongoDb;
-using Vogel.Content.MongoEntities.Medias;
 using Vogel.BuildingBlocks.MongoDb.Extensions;
 using Vogel.Content.Application.Posts.Factories;
 namespace Vogel.Content.Application.Posts.Queries.ListPost
@@ -18,15 +16,13 @@ namespace Vogel.Content.Application.Posts.Queries.ListPost
         private readonly PostMongoRepository _postMongoRepository;
         private readonly ISecurityContext _securityContext;
         private readonly IUserFriendService _userFriendService;
-        private readonly IMongoRepository<MediaMongoEntity> _mediaMongoEntity;
         private readonly IPostResponseFactory _postResponseFactory;
 
-        public ListPostQueryHandler(PostMongoRepository postMongoRepository, ISecurityContext securityContext, IUserFriendService userFriendService, IMongoRepository<MediaMongoEntity> mediaMongoEntity, IPostResponseFactory postResponseFactory)
+        public ListPostQueryHandler(PostMongoRepository postMongoRepository, ISecurityContext securityContext, IUserFriendService userFriendService, IPostResponseFactory postResponseFactory)
         {
             _postMongoRepository = postMongoRepository;
             _securityContext = securityContext;
             _userFriendService = userFriendService;
-            _mediaMongoEntity = mediaMongoEntity;
             _postResponseFactory = postResponseFactory;
         }
 
@@ -34,21 +30,11 @@ namespace Vogel.Content.Application.Posts.Queries.ListPost
         {
             var userFriends = await PrepareUserFriends();
 
-            var query = _postMongoRepository.AsMongoCollection()
-                 .Aggregate()
-                 .Lookup<PostMongoEntity, MediaMongoEntity, PostMongoView>(
-                     _mediaMongoEntity.AsMongoCollection(),
-                     l => l.MediaId,
-                     f => f.Id,
-                     x => x.Media
-                 )
-                 .Unwind(x => x.Media, new AggregateUnwindOptions<PostMongoView> { PreserveNullAndEmptyArrays = true });
-
+            var query = _postMongoRepository.PreparePostViewQuery();
 
             query = query.Match(
                    Builders<PostMongoView>.Filter.In(x => x.UserId, userFriends)
                 );
-
 
             var paged = await query.ToPaged(request.Cursor, request.Limit, request.Asending);
 

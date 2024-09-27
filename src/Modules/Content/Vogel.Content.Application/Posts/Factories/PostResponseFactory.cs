@@ -4,6 +4,7 @@ using Vogel.BuildingBlocks.Shared.Extensions;
 using Vogel.Content.Application.Medias.Dtos;
 using Vogel.Content.Application.PostReactions.Dtos;
 using Vogel.Content.Application.Posts.Dtos;
+using Vogel.Content.MongoEntities.PostReactions;
 using Vogel.Content.MongoEntities.Posts;
 using Vogel.Social.Shared.Dtos;
 using Vogel.Social.Shared.Services;
@@ -14,27 +15,33 @@ namespace Vogel.Content.Application.Posts.Factories
         private readonly IS3ObjectStorageService _s3ObjectStorageService;
 
         private readonly IUserService _userService;
-        public PostResponseFactory(IS3ObjectStorageService s3ObjectStorageService,  IUserService userService)
+
+        private readonly PostReactionMongoRepository _postReactionMongoRepository;
+        public PostResponseFactory(IS3ObjectStorageService s3ObjectStorageService, IUserService userService, PostReactionMongoRepository postReactionMongoRepository)
         {
             _s3ObjectStorageService = s3ObjectStorageService;
             _userService = userService;
+            _postReactionMongoRepository = postReactionMongoRepository;
         }
 
         public async Task<List<PostDto>> PrepareListPostDto(List<PostMongoView> posts)
         {
-            var usersIds = posts.Select(x => x.UserId).ToList();
+            var usersDictionary = await PrepareDictionaryOfUsers(posts);
 
-            var result = await _userService.ListUsersByIds(usersIds, limit: usersIds.Count);
+            var reactionsDictionary = await PrepareDictionaryOfPostReactionSummary(posts);
 
-            result.ThrowIfFailure();
+            var tasks = posts.Select(post =>
+            {
+                var user = usersDictionary.GetValueOrDefault(post.UserId);
+                var reaction = reactionsDictionary.GetValueOrDefault(post.Id);
 
-            var users = result.Value!.Data.ToDictionary((x) => x.Id, c => c)!;
+                return PreparePostDto(post, user, reaction);
 
-            var tasks = posts.Select(p=> PreparePostDto(p, users[p.UserId]));
+            });
 
-            var results = await Task.WhenAll(tasks);
+            var result = await Task.WhenAll(tasks);
 
-            return results.ToList();
+            return result.ToList();
         }
 
         public async Task<PostDto> PreparePostDto(PostMongoView post)
@@ -43,10 +50,12 @@ namespace Vogel.Content.Application.Posts.Factories
 
             userResult.ThrowIfFailure();
 
-            return await PreparePostDto(post, userResult.Value!);
+            var reaction = await _postReactionMongoRepository.GetPostReactionSummary(post.Id);
+
+            return await PreparePostDto(post, userResult.Value!, reaction);
         }
 
-        private async Task<PostDto> PreparePostDto(PostMongoView post, UserDto user)
+        private async Task<PostDto> PreparePostDto(PostMongoView post, UserDto? user = null , PostReactionSummaryMongoView? reactionSummary = null)
         {
 
             var result = new PostDto
@@ -71,21 +80,41 @@ namespace Vogel.Content.Application.Posts.Factories
             }
 
 
-            if (post.ReactionSummary != null)
+
+            if (reactionSummary != null)
             {
                 result.ReactionSummary = new PostReactionSummaryDto
                 {
                     Id = post.Id,
-                    TotalLike = post.ReactionSummary.TotalLike,
-                    TotalLove = post.ReactionSummary.TotalLove,
-                    TotalAngry = post.ReactionSummary.TotalAngry,
-                    TotalLaugh = post.ReactionSummary.TotalLaugh,
-                    TotalSad = post.ReactionSummary.TotalSad
+                    TotalLike = reactionSummary.TotalLike,
+                    TotalLove = reactionSummary.TotalLove,
+                    TotalAngry = reactionSummary.TotalAngry,
+                    TotalLaugh = reactionSummary.TotalLaugh,
+                    TotalSad = reactionSummary.TotalSad
                 };
             }
 
             return result;
         }
 
+        private async Task<Dictionary<string , UserDto>> PrepareDictionaryOfUsers(List<PostMongoView> posts)
+        {
+            var ids = posts.Select(x => x.UserId).ToList();
+
+            var result = await _userService.ListUsersByIds(ids, limit: ids.Count);
+
+            result.ThrowIfFailure();
+
+            return result.Value!.Data.ToDictionary((k) => k.Id, v => v);
+        }
+
+        private async Task<Dictionary<string , PostReactionSummaryMongoView>> PrepareDictionaryOfPostReactionSummary(List<PostMongoView> posts)
+        {
+            var ids = posts.Select(x => x.Id).ToList();
+
+            var summaries = await _postReactionMongoRepository.ListPostsReactionsSummary(ids, limit: ids.Count);
+
+            return summaries.Data.ToDictionary(k=> k.Id , v=> v);
+        }
     }
 }

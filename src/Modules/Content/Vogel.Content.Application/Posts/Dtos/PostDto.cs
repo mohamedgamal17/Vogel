@@ -9,9 +9,9 @@ namespace Vogel.Content.Application.Posts.Dtos
         public string Caption { get; set; }
         public string? UserId { get; set; }
         public string? MediaId { get; set; }
-        public UserDto User { get; set; }
-        public MediaDto Media { get; set; }
-        public PostReactionSummaryDto ReactionSummary { get; set; }
+        public UserDto? User { get; set; }
+        public MediaDto? Media { get; set; }
+        public PostReactionSummaryDto? ReactionSummary { get; set; }
     }
 
 }

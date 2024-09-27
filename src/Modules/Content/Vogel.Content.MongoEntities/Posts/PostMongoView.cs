@@ -9,6 +9,5 @@ namespace Vogel.Content.MongoEntities.Posts
         public string? MediaId { get; set; }
         public string UserId { get; set; }
         public MediaMongoEntity? Media { get; set; }
-        public PostReactionSummaryMongoView? ReactionSummary { get; set; }
     }
 }

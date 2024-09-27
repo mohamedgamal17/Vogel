@@ -1,38 +1,29 @@
 ﻿using MongoDB.Driver;
 using Vogel.BuildingBlocks.MongoDb;
 using Vogel.Content.MongoEntities.Medias;
-using Vogel.Content.MongoEntities.PostReactions;
 using MongoDB.Driver.Linq;
 namespace Vogel.Content.MongoEntities.Posts
 {
     public class PostMongoRepository : MongoRepository<PostMongoEntity>
     {
-        private readonly PostReactionMongoRepository _postReactionRepository;
         private readonly IMongoRepository<MediaMongoEntity> _mediaRepository;
-        public PostMongoRepository(IMongoDatabase mongoDatabase, PostReactionMongoRepository postReactionRepository, IMongoRepository<MediaMongoEntity> mediaRepository) : base(mongoDatabase)
+        public PostMongoRepository(IMongoDatabase mongoDatabase, IMongoRepository<MediaMongoEntity> mediaRepository) : base(mongoDatabase)
         {
-            _postReactionRepository = postReactionRepository;
             _mediaRepository = mediaRepository;
         }
 
+
         public async Task<PostMongoView?> GetPostViewById(string postId)
         {
-            var query = PreparePostMongoViewQuery()
+            var query = PreparePostViewQuery()
                 .Match(Builders<PostMongoView>.Filter.Eq(x => x.Id, postId));
 
             var view  = await query.SingleOrDefaultAsync();
 
-            if(view != null)
-            {
-                var reactionSummary = await _postReactionRepository.GetPostReactionSummary(postId);
-
-                view.ReactionSummary = reactionSummary;
-            }       
-
             return view;
         }
 
-        private IAggregateFluent<PostMongoView> PreparePostMongoViewQuery()
+        public IAggregateFluent<PostMongoView> PreparePostViewQuery()
         {
             return AsMongoCollection()
                 .Aggregate()
