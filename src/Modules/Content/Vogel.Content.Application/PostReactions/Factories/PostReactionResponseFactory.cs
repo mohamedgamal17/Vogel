@@ -15,7 +15,7 @@ namespace Vogel.Content.Application.PostReactions.Factories
             _userService = userService;
         }
 
-        public async Task<List<PostReactionDto>> PreparePostReactionDto(List<PostReactionMongoEntity> data)
+        public async Task<List<PostReactionDto>> PrepareListPostReactionDto(List<PostReactionMongoEntity> data)
         {
             var usersIds = data.Select(x => x.UserId).ToList();
 

@@ -5,7 +5,7 @@ namespace Vogel.Content.Application.PostReactions.Factories
 {
     public interface IPostReactionResponseFactory : IResponseFactory
     {
-        Task<List<PostReactionDto>> PreparePostReactionDto(List<PostReactionMongoEntity> data);
+        Task<List<PostReactionDto>> PrepareListPostReactionDto(List<PostReactionMongoEntity> data);
         Task<PostReactionDto> PreparePostReactionDto(PostReactionMongoEntity reaction);
     }
 }
