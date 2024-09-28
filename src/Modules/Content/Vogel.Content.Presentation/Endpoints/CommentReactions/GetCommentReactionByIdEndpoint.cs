@@ -1,17 +1,17 @@
-﻿
-using FastEndpoints;
+﻿using FastEndpoints;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Vogel.BuildingBlocks.Infrastructure.Extensions;
+using Vogel.Content.Application.CommentReactions.Dtos;
 using Vogel.Content.Application.Comments.Dtos;
+using Vogel.Content.Application.Comments.Queries.GetCommentById;
 using Vogel.Content.Application.PostReactions.Dtos;
-using Vogel.Content.Application.PostReactions.Queries.GetPostReactionById;
 using Vogel.Content.Presentation.Endpoints.Posts;
 
-namespace Vogel.Content.Presentation.Endpoints.PostReactions
+namespace Vogel.Content.Presentation.Endpoints.CommentsReactions
 {
-    public class GetCommentReactionByIdEndpoint : Endpoint<GetPostReactionByIdQuery, PostReactionDto>
+    public class GetCommentReactionByIdEndpoint : Endpoint<GetCommentByIdQuery, CommentReactionDto>
     {
         private readonly IMediator _mediator;
 
@@ -22,16 +22,16 @@ namespace Vogel.Content.Presentation.Endpoints.PostReactions
 
         public override void Configure()
         {
-            Get("{postId}/reactions/{reactionId}");
-            Description(x => x.Produces(StatusCodes.Status200OK, typeof(CommentDto))
+            Get("{postId}/comments/{commentId}/reactions/{reactionId}");
+            Description(x => x.Produces(StatusCodes.Status200OK, typeof(CommentReactionDto))
                 .Produces(StatusCodes.Status400BadRequest, typeof(ProblemDetails))
                 .Produces(StatusCodes.Status404NotFound, typeof(ProblemDetails))
             );
-            Options(x => x.WithName("GetPostReactionById"));
+            Options(x => x.WithName("GetCommentReactionById"));
             Group<PostRoutingGroup>();
         }
 
-        public override async Task HandleAsync(GetPostReactionByIdQuery req, CancellationToken ct)
+        public override async Task HandleAsync(GetCommentByIdQuery req, CancellationToken ct)
         {
             var result = await _mediator.Send(req);
 
