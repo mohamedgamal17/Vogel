@@ -6,6 +6,7 @@ namespace Vogel.Content.Presentation.Endpoints.Posts
     {
         public PostRoutingGroup()
         {
+            
             Configure("posts", ep =>
             {
                 ep.Description(x => x.Produces(StatusCodes.Status500InternalServerError, typeof(ProblemDetails))
@@ -14,6 +15,8 @@ namespace Vogel.Content.Presentation.Endpoints.Posts
                     .WithSummary("posts routing")
                 );
             });
+
+
         }
     }
 }
