@@ -10,6 +10,10 @@
 		<PackageReference Include="FastEndpoints" Version="5.28.0" />
 		<PackageReference Include="MimeMapping" Version="3.0.1" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Vogel.Content.Application\Vogel.Content.Application.csproj" />
+	</ItemGroup>
 	<ItemGroup>
 		<Compile Update="AssemblyReference.cs">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
