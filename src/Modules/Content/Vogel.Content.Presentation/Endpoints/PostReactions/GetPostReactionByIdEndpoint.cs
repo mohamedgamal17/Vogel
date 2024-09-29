@@ -23,7 +23,7 @@ namespace Vogel.Content.Presentation.Endpoints.PostReactions
         public override void Configure()
         {
             Get("{postId}/reactions/{reactionId}");
-            Description(x => x.Produces(StatusCodes.Status200OK, typeof(CommentDto))
+            Description(x => x.Produces(StatusCodes.Status200OK, typeof(PostReactionDto))
                 .Produces(StatusCodes.Status400BadRequest, typeof(ProblemDetails))
                 .Produces(StatusCodes.Status404NotFound, typeof(ProblemDetails))
             );
