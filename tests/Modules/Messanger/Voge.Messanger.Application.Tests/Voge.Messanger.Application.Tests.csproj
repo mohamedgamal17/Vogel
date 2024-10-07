@@ -10,6 +10,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Include="NUnit" Version="3.14.0" />
@@ -20,6 +32,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\src\Modules\Messanger\Vogel.Messanger.Application\Vogel.Messanger.Application.csproj" />
     <ProjectReference Include="..\..\..\..\src\Modules\Messanger\Vogel.Messanger.Domain\Vogel.Messanger.Domain.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Modules\Messanger\Vogel.Messanger.Infrastructure\Vogel.Messanger.Infrastructure.csproj" />
     <ProjectReference Include="..\..\..\..\src\Modules\Messanger\Vogel.Messanger.MongoEntities\Vogel.Messanger.MongoEntities.csproj" />
     <ProjectReference Include="..\..\..\Vogel.Application.Tests\Vogel.Application.Tests.csproj" />
   </ItemGroup>
