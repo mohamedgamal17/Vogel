@@ -67,6 +67,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Messanger", "Messanger", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vogel.Messanger.Domain", "src\Modules\Messanger\Vogel.Messanger.Domain\Vogel.Messanger.Domain.csproj", "{05181774-B7AE-4522-9D13-85944A143AC1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vogel.Messanger.Application", "src\Modules\Messanger\Vogel.Messanger.Application\Vogel.Messanger.Application.csproj", "{FAD0529E-0F54-4F63-9F82-B4845BB834DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -161,6 +163,10 @@ Global
 		{05181774-B7AE-4522-9D13-85944A143AC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05181774-B7AE-4522-9D13-85944A143AC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05181774-B7AE-4522-9D13-85944A143AC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAD0529E-0F54-4F63-9F82-B4845BB834DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAD0529E-0F54-4F63-9F82-B4845BB834DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAD0529E-0F54-4F63-9F82-B4845BB834DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAD0529E-0F54-4F63-9F82-B4845BB834DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -196,6 +202,7 @@ Global
 		{CE30B094-E195-47BD-8007-868BE8A01A96} = {CBB0DDF6-4219-497F-A6EB-290903043F7D}
 		{4E68749D-0F8E-41E1-9428-CDFFF65A973F} = {1E88F137-5504-44DD-A53A-2782D7BAB1D5}
 		{05181774-B7AE-4522-9D13-85944A143AC1} = {4E68749D-0F8E-41E1-9428-CDFFF65A973F}
+		{FAD0529E-0F54-4F63-9F82-B4845BB834DA} = {4E68749D-0F8E-41E1-9428-CDFFF65A973F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A7AC3C50-99B3-48CD-965D-64A3D2BDD554}
