@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Libraries\Vogel.BuildingBlocks.Application\Vogel.BuildingBlocks.Application.csproj" />
+    <ProjectReference Include="..\..\..\Libraries\Vogel.BuildingBlocks.Shared\Vogel.BuildingBlocks.Shared.csproj" />
+    <ProjectReference Include="..\..\Social\Vogel.Social.Shared\Vogel.Social.Shared.csproj" />
+  </ItemGroup>
+
 </Project>
