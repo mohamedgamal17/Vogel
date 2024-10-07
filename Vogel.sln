@@ -63,6 +63,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Content", "Content", "{CBB0
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Content.Application.Tests", "tests\Modules\Content\Vogel.Content.Application.Tests\Vogel.Content.Application.Tests.csproj", "{CE30B094-E195-47BD-8007-868BE8A01A96}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Messanger", "Messanger", "{4E68749D-0F8E-41E1-9428-CDFFF65A973F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vogel.Messanger.Domain", "src\Modules\Messanger\Vogel.Messanger.Domain\Vogel.Messanger.Domain.csproj", "{05181774-B7AE-4522-9D13-85944A143AC1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -153,6 +157,10 @@ Global
 		{CE30B094-E195-47BD-8007-868BE8A01A96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE30B094-E195-47BD-8007-868BE8A01A96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE30B094-E195-47BD-8007-868BE8A01A96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05181774-B7AE-4522-9D13-85944A143AC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05181774-B7AE-4522-9D13-85944A143AC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05181774-B7AE-4522-9D13-85944A143AC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05181774-B7AE-4522-9D13-85944A143AC1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -186,6 +194,8 @@ Global
 		{CED1ADBF-77AB-4618-8F33-8BB74EF547C1} = {7CF93ABF-C711-4E1A-A6D9-BEFD281B4B58}
 		{CBB0DDF6-4219-497F-A6EB-290903043F7D} = {E7612343-9637-4B91-97D6-12F6702DC01E}
 		{CE30B094-E195-47BD-8007-868BE8A01A96} = {CBB0DDF6-4219-497F-A6EB-290903043F7D}
+		{4E68749D-0F8E-41E1-9428-CDFFF65A973F} = {1E88F137-5504-44DD-A53A-2782D7BAB1D5}
+		{05181774-B7AE-4522-9D13-85944A143AC1} = {4E68749D-0F8E-41E1-9428-CDFFF65A973F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A7AC3C50-99B3-48CD-965D-64A3D2BDD554}
