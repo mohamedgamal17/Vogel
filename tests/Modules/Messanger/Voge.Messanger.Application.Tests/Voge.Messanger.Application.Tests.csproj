@@ -18,6 +18,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\src\Modules\Messanger\Vogel.Messanger.Application\Vogel.Messanger.Application.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Modules\Messanger\Vogel.Messanger.Domain\Vogel.Messanger.Domain.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Modules\Messanger\Vogel.Messanger.MongoEntities\Vogel.Messanger.MongoEntities.csproj" />
+    <ProjectReference Include="..\..\..\Vogel.Application.Tests\Vogel.Application.Tests.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Using Include="NUnit.Framework" />
   </ItemGroup>
 
