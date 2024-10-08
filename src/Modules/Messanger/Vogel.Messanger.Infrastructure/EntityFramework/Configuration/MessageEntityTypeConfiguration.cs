@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Vogel.BuildingBlocks.EntityFramework.Extensions;
 using Vogel.Messanger.Domain.Messages;
 namespace Vogel.Messanger.Infrastructure.EntityFramework.Configuration
 {
@@ -16,6 +17,7 @@ namespace Vogel.Messanger.Infrastructure.EntityFramework.Configuration
             builder.Property(x => x.IsSeen);
             builder.HasIndex(x => x.SenderId);
             builder.HasIndex(x => x.ReciverId);
+            builder.AutoMapAuditing();
         }
     }
 }
