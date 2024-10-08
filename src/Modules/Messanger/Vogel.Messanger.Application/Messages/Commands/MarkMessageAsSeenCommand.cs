@@ -4,6 +4,6 @@ namespace Vogel.Messanger.Application.Messages.Commands
 {
     public class MarkMessageAsSeenCommand : ICommand<MessageDto>
     {
-
+        public string MessageId { get; set; }
     }
 }
