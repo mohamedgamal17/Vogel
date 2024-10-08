@@ -6,7 +6,7 @@ using Vogel.BuildingBlocks.Infrastructure.Extensions;
 using Vogel.BuildingBlocks.Infrastructure.Modularity;
 using Vogel.BuildingBlocks.MongoDb.Extensions;
 using Vogel.Messanger.Infrastructure;
-namespace Voge.Messanger.Application.Tests
+namespace Vogel.Messanger.Application.Tests
 {
     public class MessangerApplicationTestModuleInstaller : IModuleInstaller
     {

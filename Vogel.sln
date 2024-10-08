@@ -73,9 +73,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Messanger.MongoEntiti
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Messanger", "Messanger", "{2CBD3CA6-AB9A-4A1B-AFD8-EFB5EEC16933}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Voge.Messanger.Application.Tests", "tests\Modules\Messanger\Voge.Messanger.Application.Tests\Voge.Messanger.Application.Tests.csproj", "{B63B5294-910A-4988-9006-05E294EFE0A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Messanger.Application.Tests", "tests\Modules\Messanger\Vogel.Messanger.Application.Tests\Vogel.Messanger.Application.Tests.csproj", "{B63B5294-910A-4988-9006-05E294EFE0A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vogel.Messanger.Infrastructure", "src\Modules\Messanger\Vogel.Messanger.Infrastructure\Vogel.Messanger.Infrastructure.csproj", "{0BA01382-8880-40DA-AFFA-7D0493CB8251}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Messanger.Infrastructure", "src\Modules\Messanger\Vogel.Messanger.Infrastructure\Vogel.Messanger.Infrastructure.csproj", "{0BA01382-8880-40DA-AFFA-7D0493CB8251}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

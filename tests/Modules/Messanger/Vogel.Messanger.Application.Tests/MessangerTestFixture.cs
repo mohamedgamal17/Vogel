@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Vogel.Application.Tests;
 using Vogel.BuildingBlocks.Infrastructure.Extensions;
-namespace Voge.Messanger.Application.Tests
+namespace Vogel.Messanger.Application.Tests
 {
     public class MessangerTestFixture : TestFixture
     {

@@ -5,7 +5,7 @@ using Vogel.Messanger.Application.Messages.Dtos;
 using Vogel.Messanger.Domain.Messages;
 using Vogel.Messanger.MongoEntities.Messages;
 
-namespace Voge.Messanger.Application.Tests.Extensions
+namespace Vogel.Messanger.Application.Tests.Extensions
 {
     public static class MessageAssertionExtensions
     {
