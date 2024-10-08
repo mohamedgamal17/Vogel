@@ -7,9 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\..\Libraries\Vogel.BuildingBlocks.Application\Vogel.BuildingBlocks.Application.csproj" />
+    <ProjectReference Include="..\..\..\Libraries\Vogel.BuildingBlocks.MongoDb\Vogel.BuildingBlocks.MongoDb.csproj" />
     <ProjectReference Include="..\..\..\Libraries\Vogel.BuildingBlocks.Shared\Vogel.BuildingBlocks.Shared.csproj" />
     <ProjectReference Include="..\..\Social\Vogel.Social.Shared\Vogel.Social.Shared.csproj" />
+    <ProjectReference Include="..\Vogel.Messanger.Domain\Vogel.Messanger.Domain.csproj" />
+    <ProjectReference Include="..\Vogel.Messanger.MongoEntities\Vogel.Messanger.MongoEntities.csproj" />
   </ItemGroup>
 
   <ItemGroup>
