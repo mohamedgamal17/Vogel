@@ -29,7 +29,8 @@ namespace Vogel.Host
                     environment,
                      BuildingBlocks.Infrastructure.AssemblyReference.Assembly,
                      Social.Infrastructure.AssemblyReference.Assembly,
-                     Content.Infrastructure.AssemblyReference.Assembly
+                     Content.Infrastructure.AssemblyReference.Assembly,
+                     Messanger.Infrastructure.AssemblyReference.Assembly
                 );
 
             services.AddTransient<IModuleBootstrapper, HostModuleBootstrapper>();

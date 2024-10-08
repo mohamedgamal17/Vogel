@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Modules\Content\Vogel.Content.Infrastructure\Vogel.Content.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Messanger\Vogel.Messanger.Infrastructure\Vogel.Messanger.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Social\Vogel.Social.Infrastructure\Vogel.Social.Infrastructure.csproj" />
   </ItemGroup>
 
