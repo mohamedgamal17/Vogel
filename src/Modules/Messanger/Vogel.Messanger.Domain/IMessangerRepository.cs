@@ -2,7 +2,7 @@
 
 namespace Vogel.Messanger.Domain
 {
-    internal interface IMessangerRepository<T> : IRepository<T> where T: class 
+    public interface IMessangerRepository<T> : IRepository<T> where T: class 
     {
     }
 }
