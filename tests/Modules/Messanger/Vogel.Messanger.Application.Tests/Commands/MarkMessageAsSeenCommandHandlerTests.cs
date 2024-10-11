@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Vogel.Application.Tests.Extensions;
 using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.BuildingBlocks.MongoDb;
-using Vogel.Messanger.Application.Messages.Commands;
+using Vogel.Messanger.Application.Messages.Commands.MarkMessageAsSeen;
 using Vogel.Messanger.Application.Tests.Extensions;
 using Vogel.Messanger.Domain;
 using Vogel.Messanger.Domain.Messages;
