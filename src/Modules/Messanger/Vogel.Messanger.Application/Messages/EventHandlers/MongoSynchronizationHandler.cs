@@ -28,14 +28,15 @@ namespace Vogel.Messanger.Application.Messages.EventHandlers
             await _messageMongoRepository.InsertAsync(mongoEntity);
         }
 
-        public Task Handle(EntityUpdatedEvent<Message> notification, CancellationToken cancellationToken)
+        public async Task Handle(EntityUpdatedEvent<Message> notification, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var mongoEntity = _mapper.Map<Message, MessageMongoEntity>(notification.Entity);
+            await _messageMongoRepository.InsertAsync(mongoEntity);
         }
 
-        public Task Handle(EntityDeletedEvent<Message> notification, CancellationToken cancellationToken)
+        public async Task Handle(EntityDeletedEvent<Message> notification, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await _messageMongoRepository.DeleteAsync(notification.Entity.Id); 
         }
     }
 }
