@@ -31,7 +31,7 @@ namespace Vogel.Messanger.Application.Messages.EventHandlers
         public async Task Handle(EntityUpdatedEvent<Message> notification, CancellationToken cancellationToken)
         {
             var mongoEntity = _mapper.Map<Message, MessageMongoEntity>(notification.Entity);
-            await _messageMongoRepository.InsertAsync(mongoEntity);
+            await _messageMongoRepository.UpdateAsync(mongoEntity);
         }
 
         public async Task Handle(EntityDeletedEvent<Message> notification, CancellationToken cancellationToken)
