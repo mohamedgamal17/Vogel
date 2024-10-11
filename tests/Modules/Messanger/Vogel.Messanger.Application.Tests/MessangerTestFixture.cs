@@ -5,6 +5,7 @@ using Vogel.Application.Tests;
 using Vogel.BuildingBlocks.Infrastructure.Extensions;
 namespace Vogel.Messanger.Application.Tests
 {
+    [TestFixture]
     public class MessangerTestFixture : TestFixture
     {
         protected override Task SetupAsync(IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment)
