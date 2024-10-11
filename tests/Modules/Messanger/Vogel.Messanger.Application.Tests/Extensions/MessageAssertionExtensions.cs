@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Vogel.Application.Tests.Extensions;
-using Vogel.Messanger.Application.Messages.Commands;
+using Vogel.Messanger.Application.Messages.Commands.SendMessage;
 using Vogel.Messanger.Application.Messages.Dtos;
 using Vogel.Messanger.Domain.Messages;
 using Vogel.Messanger.MongoEntities.Messages;

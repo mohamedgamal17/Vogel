@@ -3,10 +3,10 @@ using Vogel.Messanger.MongoEntities.Messages;
 using Vogel.Messanger.Domain.Messages;
 using Microsoft.Extensions.DependencyInjection;
 using Vogel.Messanger.Domain;
-using Vogel.Messanger.Application.Messages.Commands;
 using Vogel.Application.Tests.Extensions;
 using FluentAssertions;
 using Vogel.Messanger.Application.Tests.Extensions;
+using Vogel.Messanger.Application.Messages.Commands.SendMessage;
 namespace Vogel.Messanger.Application.Tests.Commands
 {
     public class SendMessageCommandHanderTests : MessangerTestFixture
@@ -28,7 +28,7 @@ namespace Vogel.Messanger.Application.Tests.Commands
             var command = new SendMessageCommand
             {
                 Content = Guid.NewGuid().ToString(),
-                ReciverId = UserService.GetCurrentUser()!.Id
+                ReciverId = Guid.NewGuid().ToString()
             };
 
             var result = await Mediator.Send(command);
@@ -43,7 +43,7 @@ namespace Vogel.Messanger.Application.Tests.Commands
 
             var mongoEntity = await  MessageMongoRepository.FindByIdAsync(result.Value!.Id);
 
-            mongoEntity.Should().BeNull();
+            mongoEntity.Should().NotBeNull();
 
             message!.AssertMessageMongoEntity(mongoEntity!);
 
@@ -56,7 +56,7 @@ namespace Vogel.Messanger.Application.Tests.Commands
             var command = new SendMessageCommand
             {
                 Content = Guid.NewGuid().ToString(),
-                ReciverId = UserService.GetCurrentUser()!.Id
+                ReciverId = Guid.NewGuid().ToString()
             };
 
             var result = await Mediator.Send(command);
