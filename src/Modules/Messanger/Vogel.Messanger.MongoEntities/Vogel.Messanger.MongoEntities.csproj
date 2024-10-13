@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Libraries\Vogel.BuildingBlocks.MongoDb\Vogel.BuildingBlocks.MongoDb.csproj" />
+    <ProjectReference Include="..\..\Social\Vogel.Social.Shared\Vogel.Social.Shared.csproj" />
   </ItemGroup>
 
 </Project>
