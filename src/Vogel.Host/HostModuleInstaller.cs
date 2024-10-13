@@ -1,4 +1,5 @@
 ﻿using FastEndpoints.Swagger;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Vogel.BuildingBlocks.Application;
 using Vogel.BuildingBlocks.EntityFramework;
@@ -16,6 +17,8 @@ namespace Vogel.Host
             ConfigureAuthorization(services);
 
             ConfigureMongoDb(services, configuration);
+
+            ConfigureMassTransit(services, configuration);
 
             ConfigureSwagger(services);
 
@@ -60,6 +63,27 @@ namespace Vogel.Host
             {
                 opt.ConnectionString = configuration.GetValue<string>("MongoDb:ConnectionString")!;
                 opt.Database = configuration.GetValue<string>("MongoDb:Database")!;
+            });
+        }
+
+        private void ConfigureMassTransit(IServiceCollection services , IConfiguration configuration)
+        {
+            services.AddMassTransit(busRegisterConfig =>
+            {
+                busRegisterConfig.UsingRabbitMq((ctx, rabbitMqConfig) =>
+                {
+                    string rabbitMqHost = configuration.GetValue<string>("RabbitMq:Host")!;
+                    string userName = configuration.GetValue<string>("RabbitMq:UserName")!;
+                    string password = configuration.GetValue<string>("RabbitMq:Password")!;
+                    rabbitMqConfig.Host(rabbitMqHost, hostConfig =>
+                    {
+                        hostConfig.Username(userName);
+                        hostConfig.Password(password);
+                    });
+
+                    rabbitMqConfig.ConfigureEndpoints(ctx);
+                });
+
             });
         }
 
