@@ -27,6 +27,28 @@ namespace Vogel.BuildingBlocks.MongoDb.Extensions
             };
         }
 
+        public static Paging<T> ToPaged<T>(this IEnumerable<T> data , string? cursor = null , int limit =10, bool ascending = false)
+             where T : IMongoEntity
+        {
+            var orderedData = ascending ? data.OrderBy(x => x.Id) : data.OrderByDescending(x => x.Id);
+
+            var filterdData = orderedData.AsEnumerable();
+
+            if(cursor != null)
+            {
+
+                filterdData = ascending ? filterdData.Where(x => x.Id.CompareTo(cursor) >= 0) : filterdData.Where(x => x.Id.CompareTo(cursor) <= 0);
+            }
+
+            var pagingInfo = PreparePagingInfo(filterdData, cursor, limit, ascending);
+
+            return new Paging<T>
+            {
+                Data = filterdData.ToList(),
+                Info = pagingInfo
+            };
+        }
+
         private static async Task<PagingInfo> PreparePagingInfo<T>(IAggregateFluent<T> query, string? cursor = null, int limit = 10, bool ascending = false)
             where T : IMongoEntity
         {
@@ -49,6 +71,25 @@ namespace Vogel.BuildingBlocks.MongoDb.Extensions
             else
             {
                 var next = await query.Skip(limit - 1).FirstOrDefaultAsync();
+
+                return new PagingInfo(next?.Id, null, ascending);
+            }
+        }
+
+        private static PagingInfo PreparePagingInfo<T> (this IEnumerable<T> data, string? cursor = null
+            , int limit= 10 , bool ascending = false)
+            where T  : IMongoEntity
+        {
+            if(cursor != null)
+            {
+                var previous = ascending ? data.Where(x => x.Id.CompareTo(cursor) < 0).FirstOrDefault() : data.Where(x => x.Id.CompareTo(cursor) > 0).FirstOrDefault();
+                var next = ascending ? data.Where(x => x.Id.CompareTo(cursor) > 0).FirstOrDefault() : data.Where(x => x.Id.CompareTo(cursor) < 0).FirstOrDefault();
+
+                return new PagingInfo(next?.Id, previous?.Id, ascending);
+            }
+            else
+            {
+                var next = data.Skip(limit - 1).FirstOrDefault();
 
                 return new PagingInfo(next?.Id, null, ascending);
             }
