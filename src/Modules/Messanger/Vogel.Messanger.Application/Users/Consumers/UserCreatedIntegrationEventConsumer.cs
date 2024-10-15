@@ -28,6 +28,16 @@ namespace Vogel.Messanger.Application.Users.Consumers
                 ModificationTime = DateTime.UtcNow
             };
 
+            if(context.Message.Avatar != null)
+            {
+                mongoEntity.Avatar = new Avatar
+                {
+                    Id = context.Message.Avatar.Id,
+                    File = context.Message.Avatar.File,
+                    UserId = context.Message.Avatar.UserId
+                };
+            }
+
             await _userMongoRepository.InsertAsync(mongoEntity);
         }
     }

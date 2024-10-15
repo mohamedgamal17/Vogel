@@ -10,5 +10,6 @@ namespace Vogel.Messanger.MongoEntities.Users
         public DateTime BirthDate { get; set; }
         public Gender Gender { get; set; }
         public string? AvatarId { get; set; }
+        public Avatar? Avatar { get; set; }
     }
 }
