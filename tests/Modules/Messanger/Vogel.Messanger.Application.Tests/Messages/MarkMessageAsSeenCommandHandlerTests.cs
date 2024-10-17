@@ -8,7 +8,7 @@ using Vogel.Messanger.Application.Tests.Extensions;
 using Vogel.Messanger.Domain;
 using Vogel.Messanger.Domain.Messages;
 using Vogel.Messanger.MongoEntities.Messages;
-namespace Vogel.Messanger.Application.Tests.Commands
+namespace Vogel.Messanger.Application.Tests.Messages
 {
     public class MarkMessageAsSeenCommandHandlerTests : MessangerTestFixture
     {

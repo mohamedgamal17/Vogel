@@ -7,11 +7,11 @@ using Vogel.Application.Tests.Extensions;
 using FluentAssertions;
 using Vogel.Messanger.Application.Tests.Extensions;
 using Vogel.Messanger.Application.Messages.Commands.SendMessage;
-namespace Vogel.Messanger.Application.Tests.Commands
+namespace Vogel.Messanger.Application.Tests.Messages
 {
     public class SendMessageCommandHanderTests : MessangerTestFixture
     {
-        public IMessangerRepository<Message> MessageRepository { get;private set; }
+        public IMessangerRepository<Message> MessageRepository { get; private set; }
         public IMongoRepository<MessageMongoEntity> MessageMongoRepository { get; private set; }
 
         public SendMessageCommandHanderTests()
@@ -35,13 +35,13 @@ namespace Vogel.Messanger.Application.Tests.Commands
 
             result.ShouldBeSuccess();
 
-            var message = await  MessageRepository.FindByIdAsync(result.Value!.Id);
+            var message = await MessageRepository.FindByIdAsync(result.Value!.Id);
 
             message.Should().NotBeNull();
 
             message!.AssertSendMessageCommand(command, UserService.GetCurrentUser()!.Id);
 
-            var mongoEntity = await  MessageMongoRepository.FindByIdAsync(result.Value!.Id);
+            var mongoEntity = await MessageMongoRepository.FindByIdAsync(result.Value!.Id);
 
             mongoEntity.Should().NotBeNull();
 
