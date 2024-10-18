@@ -8,7 +8,7 @@ namespace Vogel.Messanger.Application.Tests.Extensions
 {
     public static class ConversationAssertionExtensions
     {
-        public static void AssertCreateConversationCommand(this CreateConversationCommand command ,string currentUserId , Conversation conversation , List<Participant> participants)
+        public static void AssertCreateConversationCommand(this Conversation conversation, CreateConversationCommand command , string currentUserId ,  List<Participant> participants)
         {
             conversation.Name.Should().Be(command.Name);
 
