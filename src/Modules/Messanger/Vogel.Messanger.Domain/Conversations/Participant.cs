@@ -6,5 +6,10 @@ namespace Vogel.Messanger.Domain.Conversations
     {
         public string UserId { get; set; }
         public string ConversationId { get; set; }
+
+        public Participant()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
     }
 }
