@@ -13,7 +13,6 @@ namespace Vogel.Messanger.Application.Tests.Extensions
         {
             message.Content.Should().Be(command.Content);
             message.SenderId.Should().Be(userId);
-            message.ReciverId.Should().Be(command.ReciverId);
             message.IsSeen.Should().BeFalse();
         }
 
@@ -22,7 +21,6 @@ namespace Vogel.Messanger.Application.Tests.Extensions
             mongoEntity.Id.Should().Be(message.Id);
             mongoEntity.Content.Should().Be(message.Content);
             mongoEntity.SenderId.Should().Be(message.SenderId);
-            mongoEntity.ReciverId.Should().Be(message.ReciverId);
             mongoEntity.AssertAuditingProperties(message);
         }
         public static void AssertMessageDto(this Message message, MessageDto dto)
@@ -30,7 +28,6 @@ namespace Vogel.Messanger.Application.Tests.Extensions
             dto.Id.Should().Be(message.Id);
             dto.Content.Should().Be(message.Content);
             dto.SenderId.Should().Be(message.SenderId);
-            dto.ReciverId.Should().Be(message.ReciverId);
             dto.IsSeen.Should().Be(message.IsSeen);
             dto.Sender.Should().NotBeNull();
             dto.Reciver.Should().NotBeNull();
