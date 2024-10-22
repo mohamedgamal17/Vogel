@@ -1,4 +1,4 @@
-﻿namespace Vogel.Social.MongoEntities.Users
+﻿namespace Vogel.Messanger.MongoEntities.Users
 {
     public class UserMongoConsts
     {

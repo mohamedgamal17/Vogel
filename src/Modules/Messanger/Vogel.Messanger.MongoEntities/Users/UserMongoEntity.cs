@@ -3,6 +3,7 @@ using Vogel.Social.Shared.Common;
 
 namespace Vogel.Messanger.MongoEntities.Users
 {
+    [MongoCollection(UserMongoConsts.CollectionName)]
     public class UserMongoEntity : FullAuditedMongoEntity<string>
     {
         public string FirstName { get; set; }

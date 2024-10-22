@@ -3,7 +3,7 @@
     public class ConversationConsts
     {
         public const string ConversationCollection = "conversation";
-        public const string ParticipantCollection = "conversation";
+        public const string ParticipantCollection = "participants";
 
 
     }
