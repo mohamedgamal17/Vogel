@@ -4,6 +4,7 @@ using Vogel.BuildingBlocks.MongoDb.Extensions;
 using Vogel.BuildingBlocks.Shared.Models;
 using Vogel.Messanger.MongoEntities.Users;
 using MongoDB.Driver.Linq;
+using MongoDB.Driver.Core.Operations;
 namespace Vogel.Messanger.MongoEntities.Conversations
 {
     public class ConversationMongoRepository : MongoRepository<ConversationMongoEntity>
@@ -34,19 +35,32 @@ namespace Vogel.Messanger.MongoEntities.Conversations
         {
             var aggregate = AsMongoCollection()
                 .Aggregate()
-                .Lookup<ConversationMongoEntity, ParticipantMongoView, ConversationMongoView>(
+                .Lookup<ConversationMongoEntity, ParticipantMongoView, ConversationUngroupedMongoView>(
                     GetCollection<ParticipantMongoView>(ConversationConsts.ParticipantCollection),
                     l => l.Id,
                     f => f.ConversationId,
-                    @as => @as.Participants
+                    @as => @as.Participant
                 )
-                .Lookup<ConversationMongoView, UserMongoEntity, ConversationMongoView>(
-                   _userMongoRepository.AsMongoCollection(),
-                   l => l.Participants.First().UserId,
+                .Unwind(x => x.Participant, new AggregateUnwindOptions<ConversationUngroupedMongoView>() { PreserveNullAndEmptyArrays = true })
+                .Lookup<ConversationUngroupedMongoView, UserMongoEntity, ConversationUngroupedMongoView>(
+                    _userMongoRepository.AsMongoCollection(),
+                    l => l.Participant.UserId,
                    f => f.Id,
-                   @as => @as.Participants.First().User
-                );
-
+                   @as => @as.Participant.User
+                )
+                .Unwind(x=> x.Participant.User, new AggregateUnwindOptions<ConversationUngroupedMongoView>() {  PreserveNullAndEmptyArrays = true})
+                .Group(x => x.Id, grouped => new ConversationMongoView
+                {
+                    Id = grouped.Key,
+                    Name = grouped.First().Name,
+                    Participants = grouped.Select(x => x.Participant).ToList(),
+                    CreatorId = grouped.First().CreatorId,
+                    CreationTime = grouped.First().CreationTime,
+                    ModifierId = grouped.First().ModifierId,
+                    ModificationTime = grouped.First().ModificationTime,
+                    DeletionTime = grouped.First().DeletionTime,
+                    DeletorId = grouped.First().DeletorId
+                });
             return aggregate;
         }
     }
