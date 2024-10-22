@@ -27,8 +27,12 @@ namespace Vogel.Messanger.Application.Conversations.Factories
                 Id = participant.Id,
                 ConversationId = participant.ConversationId,
                 UserId = participant.UserId,
-                User = await _userResponseFactory.PreapreUserDto(participant.User)
             };
+
+            if(participant.User != null)
+            {
+                dto.User = await _userResponseFactory.PreapreUserDto(participant.User);
+            }
 
             return dto;
         }
