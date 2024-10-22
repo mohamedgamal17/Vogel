@@ -8,9 +8,9 @@
 
         public static int ContentLength = 500;
 
-        public static int SenderId = 256;
+        public static int ConversationIdLength = 256;
 
-        public static int ReciverId = 256;
+        public static int SenderId = 256;
 
     }
 }
