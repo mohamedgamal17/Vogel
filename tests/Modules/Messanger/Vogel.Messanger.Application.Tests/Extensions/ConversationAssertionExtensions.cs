@@ -48,7 +48,7 @@ namespace Vogel.Messanger.Application.Tests.Extensions
             mongoEntity.Id.Should().Be(participant.Id);
             mongoEntity.UserId.Should().Be(participant.UserId);
             mongoEntity.ConversationId.Should().Be(participant.ConversationId);
-            mongoEntity.AssertParticipantMongoEntity(participant);
+            mongoEntity.AssertAuditingProperties(participant);
         }
 
         public static void AssertConversationDto(this ConversationDto dto , Conversation conversation , List<Participant> participants)
@@ -64,7 +64,7 @@ namespace Vogel.Messanger.Application.Tests.Extensions
             {
                 var participant = orderedParticipants[i];
                 var participantDto = orderedParticipantsDto[i];
-                participantDto.Should().Be(participant);
+                participantDto.AssertParticipantDto(participant);
             }
         }
 
