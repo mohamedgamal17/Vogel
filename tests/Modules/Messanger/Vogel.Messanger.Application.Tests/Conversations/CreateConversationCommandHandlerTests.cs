@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Vogel.Application.Tests.Extensions;
+using Microsoft.EntityFrameworkCore;
 using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.BuildingBlocks.MongoDb;
 using Vogel.Messanger.Application.Conversations.Commands.CreateConversation;
@@ -9,6 +9,9 @@ using Vogel.Messanger.Application.Tests.Extensions;
 using Vogel.Messanger.Domain;
 using Vogel.Messanger.Domain.Conversations;
 using Vogel.Messanger.MongoEntities.Conversations;
+using MongoDB.Driver;
+using Vogel.BuildingBlocks.Domain.Repositories;
+using Vogel.Messanger.MongoEntities.Users;
 namespace Vogel.Messanger.Application.Tests.Conversations
 {
     public class CreateConversationCommandHandlerTests : MessangerTestFixture
@@ -17,12 +20,14 @@ namespace Vogel.Messanger.Application.Tests.Conversations
         public IMessangerRepository<Participant> ParticipantRepository { get; }
         public IMongoRepository<ConversationMongoEntity> ConversationMongoRepository { get; }
         public IMongoRepository<ParticipantMongoEntity> ParticipantMongoRepository { get; }
+        public IMongoRepository<UserMongoEntity> UserMongoRepository { get; }
         public CreateConversationCommandHandlerTests()
         {
             ConversationRepository = ServiceProvider.GetRequiredService<IMessangerRepository<Conversation>>();
             ParticipantRepository = ServiceProvider.GetRequiredService<IMessangerRepository<Participant>>();
             ConversationMongoRepository = ServiceProvider.GetRequiredService<IMongoRepository<ConversationMongoEntity>>();
             ParticipantMongoRepository = ServiceProvider.GetRequiredService<IMongoRepository<ParticipantMongoEntity>>();
+            UserMongoRepository = ServiceProvider.GetRequiredService<IMongoRepository<UserMongoEntity>>();
         }
 
         [Test]
@@ -32,13 +37,15 @@ namespace Vogel.Messanger.Application.Tests.Conversations
 
             string currentUserId = UserService.GetCurrentUser()!.Id;
 
-            var userFriend = Guid.NewGuid().ToString();
+            await InsertUser(currentUserId);
+
+            var userFriend = await InsertUser(Guid.NewGuid().ToString());
 
             var commmand = new CreateConversationCommand
             {
                 Participants = new List<string>
                 {
-                    userFriend
+                    userFriend.Id
                 }
             };
 
@@ -59,8 +66,7 @@ namespace Vogel.Messanger.Application.Tests.Conversations
             var conversationMongoEntity = await ConversationMongoRepository.FindByIdAsync(result.Value!.Id);
 
             var participantsMongoEntity = await ParticipantMongoRepository
-                .AsQuerable()
-                .Where(x => x.ConversationId == result.Value!.Id).ToListAsync();
+                .ApplyFilterAsync(Builders<ParticipantMongoEntity>.Filter.Eq(x => x.ConversationId, result.Value!.Id));
 
             conversationMongoEntity.Should().NotBeNull();
 
@@ -86,9 +92,26 @@ namespace Vogel.Messanger.Application.Tests.Conversations
 
             var results = await Mediator.Send(command);
 
-            results.ShoulBeFailure(typeof(ForbiddenAccessException));
+            results.ShoulBeFailure(typeof(UnauthorizedAccessException));
 
         }
 
+
+        private async Task<UserMongoEntity> InsertUser(string userId)
+        {
+            var entity = new UserMongoEntity
+            {
+                Id = userId,
+                FirstName = Guid.NewGuid().ToString(),
+                LastName = Guid.NewGuid().ToString(),
+                BirthDate = DateTime.Now.AddYears(-18),
+                Gender = Social.Shared.Common.Gender.Male,
+
+            };
+
+            return await UserMongoRepository.InsertAsync(entity);
+        }
     }
+
+   
 }
