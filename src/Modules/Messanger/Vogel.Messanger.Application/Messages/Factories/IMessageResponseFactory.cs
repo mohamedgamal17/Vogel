@@ -5,7 +5,7 @@ namespace Vogel.Messanger.Application.Messages.Factories
 {
     public interface IMessageResponseFactory : IResponseFactory
     {
-        Task<List<MessageDto>> PrepareListMessageDto(List<MessageMongoEntity> messages);
-        Task<MessageDto> PrepareMessageDto(MessageMongoEntity message);
+        Task<List<MessageDto>> PrepareListMessageDto(List<MessageMongoView> messages);
+        Task<MessageDto> PrepareMessageDto(MessageMongoView message);
     }
 }

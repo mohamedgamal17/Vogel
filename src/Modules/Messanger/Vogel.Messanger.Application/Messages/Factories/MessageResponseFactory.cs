@@ -1,78 +1,48 @@
-﻿using Vogel.BuildingBlocks.Shared.Extensions;
+﻿using Vogel.Messanger.Application.Conversations.Factories;
 using Vogel.Messanger.Application.Messages.Dtos;
 using Vogel.Messanger.MongoEntities.Messages;
-using Vogel.Social.Shared.Dtos;
-using Vogel.Social.Shared.Services;
 namespace Vogel.Messanger.Application.Messages.Factories
 {
     public class MessageResponseFactory : IMessageResponseFactory
-
     {
-        private readonly IUserService _userService;
+        private readonly IUserResponseFactory _userResponseFactory;
 
-        public MessageResponseFactory(IUserService userService)
+        public MessageResponseFactory(IUserResponseFactory userResponseFactory)
         {
-            _userService = userService;
+            _userResponseFactory = userResponseFactory;
         }
 
-        public async Task<List<MessageDto>> PrepareListMessageDto(List<MessageMongoEntity> messages)
+        public async Task<List<MessageDto>> PrepareListMessageDto(List<MessageMongoView> messages)
         {
             if(messages == null || messages.Count <= 0)
             {
                 return new List<MessageDto>();
             }
 
-            var message = messages.First();
+            var tasks = messages.Select(PrepareMessageDto);
 
-            var users = new List<string> { message.SenderId, message.ReciverId };
+            var results = await Task.WhenAll(tasks);
 
-            var usersDict = await PrepareDictionaryOfUsers(users);
-
-            return messages.Select(msg => PrepareMessageDto(msg, usersDict[msg.SenderId], usersDict[msg.ReciverId])).ToList();
+            return results.ToList();
         }
 
-        public async Task<MessageDto> PrepareMessageDto(MessageMongoEntity message)
-        {
-            var users = new List<string> { message.SenderId, message.ReciverId };
-
-            var usersDict = await PrepareDictionaryOfUsers(users);
-
-            return PrepareMessageDto(message, usersDict[message.SenderId], usersDict[message.ReciverId]);
-        }
-
-        private MessageDto PrepareMessageDto(MessageMongoEntity message , UserDto sender , UserDto reciver)
+        public async Task<MessageDto> PrepareMessageDto(MessageMongoView message)
         {
             var dto = new MessageDto
             {
                 Id = message.Id,
+                ConversationId = message.ConversationId,
                 SenderId = message.SenderId,
-                Sender = sender,
-                Reciver = reciver,
-                ReciverId = message.ReciverId,
-                IsSeen = message.IsSeen,
-                Content = message.Content,
+                Content = message.Content
             };
+
+            if (message.Sender != null)
+            {
+                dto.Sender = await _userResponseFactory.PreapreUserDto(message.Sender);
+            }
 
             return dto;
         }
 
-        private async Task<Dictionary<string, UserDto>> PrepareDictionaryOfUsers(List<string> ids)
-        {
-
-            var result = await _userService.ListUsersByIds(ids, limit: ids.Count);
-
-            result.ThrowIfFailure();
-
-            return result.Value!.Data.ToDictionary((k) => k.Id, v => v);
-        }
-
-        public async Task<UserDto> GetUserById(string id)
-        {
-            var userResult = await _userService.GetUserById(id);
-
-            userResult.ThrowIfFailure();
-
-            return userResult.Value!;
-        }
     }
 }
