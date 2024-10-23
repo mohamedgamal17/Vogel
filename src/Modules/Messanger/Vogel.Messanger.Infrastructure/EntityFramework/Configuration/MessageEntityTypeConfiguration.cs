@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Vogel.BuildingBlocks.EntityFramework.Extensions;
+using Vogel.Messanger.Domain.Conversations;
 using Vogel.Messanger.Domain.Messages;
 namespace Vogel.Messanger.Infrastructure.EntityFramework.Configuration
 {
@@ -12,11 +13,10 @@ namespace Vogel.Messanger.Infrastructure.EntityFramework.Configuration
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).HasMaxLength(MessageTableConst.IdLength);
             builder.Property(x => x.Content).HasMaxLength(MessageTableConst.ContentLength);
+            builder.Property(x => x.ConversationId).HasMaxLength(MessageTableConst.ConversationIdLength);
             builder.Property(x => x.SenderId).HasMaxLength(MessageTableConst.SenderId);
-            builder.Property(x => x.ReciverId).HasMaxLength(MessageTableConst.ReciverId);
-            builder.Property(x => x.IsSeen);
             builder.HasIndex(x => x.SenderId);
-            builder.HasIndex(x => x.ReciverId);
+            builder.HasOne<Conversation>().WithMany().HasForeignKey(x => x.ConversationId);
             builder.AutoMapAuditing();
         }
     }

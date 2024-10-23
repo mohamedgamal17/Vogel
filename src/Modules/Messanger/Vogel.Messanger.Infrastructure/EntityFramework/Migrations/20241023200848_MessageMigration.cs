@@ -6,14 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Vogel.Messanger.Infrastructure.EntityFramework.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class MessageMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.EnsureSchema(
-                name: "Messanger");
-
             migrationBuilder.CreateTable(
                 name: "Messages",
                 schema: "Messanger",
@@ -21,9 +18,8 @@ namespace Vogel.Messanger.Infrastructure.EntityFramework.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     Content = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    ConversationId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     SenderId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    ReciverId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    IsSeen = table.Column<bool>(type: "bit", nullable: false),
                     CreatorId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModificationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -34,7 +30,20 @@ namespace Vogel.Messanger.Infrastructure.EntityFramework.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Messages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Messages_Conversations_ConversationId",
+                        column: x => x.ConversationId,
+                        principalSchema: "Messanger",
+                        principalTable: "Conversations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_ConversationId",
+                schema: "Messanger",
+                table: "Messages",
+                column: "ConversationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Messages_CreatorId",
@@ -53,12 +62,6 @@ namespace Vogel.Messanger.Infrastructure.EntityFramework.Migrations
                 schema: "Messanger",
                 table: "Messages",
                 column: "ModifierId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Messages_ReciverId",
-                schema: "Messanger",
-                table: "Messages",
-                column: "ReciverId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Messages_SenderId",
