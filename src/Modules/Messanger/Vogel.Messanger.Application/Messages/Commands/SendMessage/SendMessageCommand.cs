@@ -6,7 +6,8 @@ namespace Vogel.Messanger.Application.Messages.Commands.SendMessage
     [Authorize]
     public class SendMessageCommand : ICommand<MessageDto>
     {
+        public string ConversationId { get; set; }
         public string Content { get; set; }
-        public string ReciverId { get; set; }
+
     }
 }
