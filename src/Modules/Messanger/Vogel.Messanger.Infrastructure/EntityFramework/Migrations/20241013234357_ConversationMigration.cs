@@ -11,6 +11,9 @@ namespace Vogel.Messanger.Infrastructure.EntityFramework.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "Messanger");
+
             migrationBuilder.CreateTable(
                 name: "Conversations",
                 schema: "Messanger",
