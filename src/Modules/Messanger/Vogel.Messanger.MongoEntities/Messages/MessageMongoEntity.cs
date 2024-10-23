@@ -7,6 +7,5 @@ namespace Vogel.Messanger.MongoEntities.Messages
         public string Content { get; set; }
         public string ConversationId { get; set; }
         public string SenderId { get; set; }
-        public bool IsSeen { get; set; }
     }
 }
