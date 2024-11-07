@@ -4,7 +4,8 @@ using Vogel.BuildingBlocks.MongoDb.Extensions;
 using Vogel.BuildingBlocks.Shared.Models;
 using Vogel.Messanger.MongoEntities.Users;
 using MongoDB.Driver.Linq;
-using MongoDB.Driver.Core.Operations;
+using MongoDB.Bson;
+using Vogel.Messanger.MongoEntities.Messages;
 namespace Vogel.Messanger.MongoEntities.Conversations
 {
     public class ConversationMongoRepository : MongoRepository<ConversationMongoEntity>
@@ -17,50 +18,90 @@ namespace Vogel.Messanger.MongoEntities.Conversations
 
         public async Task<Paging<ConversationMongoView>> GetUserPagedConversationView(string userId , string? cursor = null , bool ascending = false, int limit = 10)
         {
-            var query = await GetConversationViewAsAggregate()
-                .Match(Builders<ConversationMongoView>.Filter.Eq(x => x.Participants.First().UserId, userId))
-                .ToPaged(cursor, limit, ascending);
+            var query =  GetConversationViewAsAggregate()
+                .Match(Builders<ConversationQueryMongoView>.Filter.Eq(x => x.Participants.First().UserId, userId))
+                .SubPaged<ConversationQueryMongoView, ConversationMongoView>(x => x.Participants)
+                .SubPaged<ConversationMongoView, ConversationMongoView>(x => x.Messages);
 
-            return query;
+            return await query.ToPaged(cursor, limit, ascending);
         }
 
         public async Task<ConversationMongoView> GetConversationViewById(string id)
         {
             return await GetConversationViewAsAggregate()
                 .Match(x => x.Id == id)
+                .SubPaged<ConversationQueryMongoView, ConversationMongoView>(x => x.Participants)
+                .SubPaged<ConversationMongoView, ConversationMongoView>(x => x.Messages)
                 .SingleOrDefaultAsync();
         }
 
-        public IAggregateFluent<ConversationMongoView> GetConversationViewAsAggregate()
+        public IAggregateFluent<ConversationQueryMongoView> GetConversationViewAsAggregate()
         {
             var aggregate = AsMongoCollection()
                 .Aggregate()
-                .Lookup<ConversationMongoEntity, ParticipantMongoView, ConversationUngroupedMongoView>(
-                    GetCollection<ParticipantMongoView>(ConversationConsts.ParticipantCollection),
-                    l => l.Id,
-                    f => f.ConversationId,
-                    @as => @as.Participant
-                )
-                .Unwind(x => x.Participant, new AggregateUnwindOptions<ConversationUngroupedMongoView>() { PreserveNullAndEmptyArrays = true })
-                .Lookup<ConversationUngroupedMongoView, UserMongoEntity, ConversationUngroupedMongoView>(
-                    _userMongoRepository.AsMongoCollection(),
-                    l => l.Participant.UserId,
-                   f => f.Id,
-                   @as => @as.Participant.User
-                )
-                .Unwind(x=> x.Participant.User, new AggregateUnwindOptions<ConversationUngroupedMongoView>() {  PreserveNullAndEmptyArrays = true})
-                .Group(x => x.Id, grouped => new ConversationMongoView
+                .AppendStage<ConversationQueryMongoView>(new BsonDocument("$lookup", new BsonDocument()
                 {
-                    Id = grouped.Key,
-                    Name = grouped.First().Name,
-                    Participants = grouped.Select(x => x.Participant).ToList(),
-                    CreatorId = grouped.First().CreatorId,
-                    CreationTime = grouped.First().CreationTime,
-                    ModifierId = grouped.First().ModifierId,
-                    ModificationTime = grouped.First().ModificationTime,
-                    DeletionTime = grouped.First().DeletionTime,
-                    DeletorId = grouped.First().DeletorId
-                });
+                    {"from", ConversationConsts.ParticipantCollection },
+                    {"localField", "_id" },
+                    {"foreignField" , "conversationId" },
+                    {"pipeline", new BsonArray()
+                        {
+                          {
+                            new BsonDocument("$lookup" , new BsonDocument()
+                            {
+                                {"from" , UserMongoConsts.CollectionName },
+                                {"localField", "userId" },
+                                {"foreignField", "_id" },
+                                {"as" , "user" }
+                            })
+
+                          },
+                          {
+                            new BsonDocument("$unwind", new BsonDocument()
+                            {
+                                {"path" , "$user" },
+                                {"preserveNullAndEmptyArrays" , true }
+                            })
+                          }
+
+                        }
+                    },
+                    {"as", "_participants" }
+
+                }))
+                .AppendStage<ConversationQueryMongoView>(new BsonDocument("$lookup", new BsonDocument()
+                {
+                    { "from", MessageMongoConsts.CollectionName },
+                    {"localField", "_id" },
+                    {"foreignField" , "conversationId" },
+                    {"pipeline", new BsonArray()
+                        {
+                          {
+                            new BsonDocument("$lookup" , new BsonDocument()
+                            {
+                                {"from" , UserMongoConsts.CollectionName },
+                                {"localField", "userId" },
+                                {"foreignField", "_id" },
+                                {"as" , "user" }
+                            })
+
+                          },
+                          {
+                            new BsonDocument("$unwind", new BsonDocument()
+                            {
+                                {"path" , "$user" },
+                                {"preserveNullAndEmptyArrays" , true }
+                            })
+                          }
+
+                        }
+                    },
+                    {"as", "_messages" }
+
+                }));
+
+
+
             return aggregate;
         }
     }

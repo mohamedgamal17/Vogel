@@ -2,6 +2,6 @@
 {
     public class MessageMongoConsts
     {
-        public string CollectionName = "messages";
+        public const string CollectionName = "messages";
     }
 }

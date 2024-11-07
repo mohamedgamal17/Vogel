@@ -56,7 +56,7 @@ namespace Vogel.Messanger.Application.Tests.Extensions
             dto.Id.Should().Be(conversation.Id);
             dto.Name.Should().Be(conversation.Name);
             var orderedParticipants = participants.OrderBy(x => x.Id).ToList();
-            var orderedParticipantsDto = dto.Participants.OrderBy(x => x.Id).ToList();
+            var orderedParticipantsDto = dto.Participants.Data.OrderBy(x => x.Id).ToList();
 
             orderedParticipants.Count.Should().Be(orderedParticipantsDto.Count);
 

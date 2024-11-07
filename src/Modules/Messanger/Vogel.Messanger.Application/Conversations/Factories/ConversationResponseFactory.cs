@@ -26,7 +26,11 @@ namespace Vogel.Messanger.Application.Conversations.Factories
             {
                 Id = conversation.Id,
                 Name = conversation.Name,
-                Participants = await _participantResponseFactory.PrepareListParticipantDto(conversation.Participants)
+                Participants = new BuildingBlocks.Shared.Models.Paging<ParticipantDto>
+                {
+                    Data = await _participantResponseFactory.PrepareListParticipantDto(conversation.Participants.Data),
+                    Info =  conversation.Participants.Info
+                }
             };
 
             return dto;
