@@ -52,7 +52,7 @@ namespace Vogel.Messanger.Application.Messages.Queries.ListUserConversationMessa
                 Info = result.Info
             };
 
-            throw paged;
+            return  paged;
         }
     }
 }
