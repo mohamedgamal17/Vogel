@@ -16,7 +16,7 @@ namespace Vogel.Messanger.MongoEntities.Conversations
             _userMongoRepository = userMongoRepository;
         }
 
-        public async Task<Paging<ConversationMongoView>> GetUserPagedConversationView(string userId , string? cursor = null , bool ascending = false, int limit = 10)
+        public async Task<Paging<ConversationMongoView>> ListUserPagedConversationView(string userId , string? cursor = null , bool ascending = false, int limit = 10)
         {
             var query =  GetConversationViewAsAggregate()
                 .Match(Builders<ConversationQueryMongoView>.Filter.Eq(x => x.Participants.First().UserId, userId))

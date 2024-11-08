@@ -2,6 +2,5 @@
 {
     public class ConversationOperationalRequirments
     {
-        public static IsParticipantInConversationRequirment IsParticipant = new IsParticipantInConversationRequirment();
     }
 }
