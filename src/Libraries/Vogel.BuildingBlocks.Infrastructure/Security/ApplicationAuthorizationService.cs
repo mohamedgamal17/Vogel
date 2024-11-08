@@ -14,6 +14,25 @@ namespace Vogel.BuildingBlocks.Infrastructure.Security
             _securityContext = securityContext;
         }
 
+        public async Task<Result<Unit>> AuthorizeAsync(IAuthorizationRequirement requirement)
+        {
+            if (!_securityContext.IsUserAuthenticated)
+            {
+                return new Result<Unit>(new UnauthorizedAccessException());
+            }
+
+            var currentUser = _securityContext.UserClaimsPrincipal!;
+
+            var authorizationResult = await _authorizationService.AuthorizeAsync(currentUser,null, requirement);
+
+            if (!authorizationResult.Succeeded)
+            {
+                return PrepareFailureAuthroizationResult(authorizationResult.Failure!);
+            }
+
+            return Unit.Value;
+        }
+
         public async Task<Result<Unit>> AuthorizeAsync(object resource, IAuthorizationRequirement requirements)
         {
             if (!_securityContext.IsUserAuthenticated)
@@ -73,6 +92,7 @@ namespace Vogel.BuildingBlocks.Infrastructure.Security
             return Unit.Value;
         }
 
+      
         private Result<Unit> PrepareFailureAuthroizationResult(AuthorizationFailure authorizationFailure)
         {
             var failureMessages = authorizationFailure
