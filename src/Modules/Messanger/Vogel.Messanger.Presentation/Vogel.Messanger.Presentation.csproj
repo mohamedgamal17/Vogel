@@ -6,4 +6,11 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+	<ItemGroup>
+		<PackageReference Include="FastEndpoints" Version="5.28.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Vogel.Messanger.Application\Vogel.Messanger.Application.csproj" />
+	</ItemGroup>
 </Project>
