@@ -39,7 +39,7 @@ namespace Vogel.Messanger.Application.Messages.Commands.SendMessage
                 return new Result<MessageDto>(new EntityNotFoundException(typeof(Conversation), request.ConversationId));
             }
 
-            var authorizationResult = await _applicationAuthorizationService.AuthorizeAsync(conversation, ConversationOperationalRequirments.IsParticipant);
+            var authorizationResult = await _applicationAuthorizationService.AuthorizeAsync(conversation, new IsParticipantInConversationRequirment { ConversationId = conversation.Id});
 
             if (authorizationResult.IsFailure)
             {
