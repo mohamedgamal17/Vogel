@@ -11,6 +11,7 @@
 		<ProjectReference Include="..\..\..\Libraries\Vogel.BuildingBlocks.Infrastructure\Vogel.BuildingBlocks.Infrastructure.csproj" />
 		<ProjectReference Include="..\Vogel.Messanger.Application\Vogel.Messanger.Application.csproj" />
 		<ProjectReference Include="..\Vogel.Messanger.Domain\Vogel.Messanger.Domain.csproj" />
+		<ProjectReference Include="..\Vogel.Messanger.Presentation\Vogel.Messanger.Presentation.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.5" />

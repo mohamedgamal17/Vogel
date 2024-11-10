@@ -13,4 +13,10 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\Vogel.Messanger.Application\Vogel.Messanger.Application.csproj" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="AssemblyReference.cs">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Compile>
+	</ItemGroup>
 </Project>
