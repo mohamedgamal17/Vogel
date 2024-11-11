@@ -22,6 +22,8 @@ namespace Vogel.Host
 
             ConfigureSwagger(services);
 
+            ConfigureSignalRHubs(services);
+
             RegisterControllers(services);
 
             services.RegisterMediatRCommonPibelineBehaviors()
@@ -94,6 +96,11 @@ namespace Vogel.Host
         private void ConfigureSwagger(IServiceCollection services)
         {
             services.SwaggerDocument();
+        }
+
+        private void ConfigureSignalRHubs(IServiceCollection services)
+        {
+            services.AddSignalR();
         }
     }
 }
