@@ -31,7 +31,7 @@ namespace Vogel.Host.Extensions
         {
             var routeAttribute = hubType.GetCustomAttribute<RouteAttribute>();
 
-            var hubRoute = $"/hubs/{routeAttribute?.Name ?? hubType.Name.ToCamelCase()}";
+            var hubRoute = $"/hubs/{routeAttribute?.Template ?? hubType.Name.ToCamelCase()}";
 
             return hubRoute;
         }
