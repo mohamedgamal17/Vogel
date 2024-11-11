@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Vogel.BuildingBlocks.Infrastructure.Modularity;
+using Vogel.BuildingBlocks.Infrastructure.SignalR;
 namespace Vogel.BuildingBlocks.Infrastructure.Extensions
 {
     public static class ServiceCollectionExtensions
@@ -114,6 +115,34 @@ namespace Vogel.BuildingBlocks.Infrastructure.Extensions
             var serviceDescriptor = new ServiceDescriptor(service, implementaion, oldService.Lifetime);
 
             services.Add(serviceDescriptor);
+
+            return services;
+        }
+
+        public static T? GetSinglatonOrNull<T>(this IServiceCollection services)
+        {
+            return (T)services.GetSinglatonOrNull(typeof(T));
+        }
+        public static object? GetSinglatonOrNull(this IServiceCollection services , Type targetType)
+        {
+            var descriptor = services.FirstOrDefault(
+                d => d.ServiceType == targetType && d.Lifetime == ServiceLifetime.Singleton);
+
+            return descriptor?.ImplementationInstance;
+        }
+
+        public static IServiceCollection ConfigureSignalRRegistery(this IServiceCollection services , Action<SignalRRegistery> options) 
+        {
+            var registery = services.GetSinglatonOrNull<SignalRRegistery>();
+            
+            if(registery == null)
+            {
+                registery = new SignalRRegistery();
+
+                services.AddSingleton(registery);
+            }
+
+            options.Invoke(registery);
 
             return services;
         }
