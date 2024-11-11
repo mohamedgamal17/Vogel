@@ -12,6 +12,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Vogel.Messanger.Application\Vogel.Messanger.Application.csproj" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>

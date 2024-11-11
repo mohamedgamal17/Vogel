@@ -1,6 +1,8 @@
 ﻿using Vogel.Messanger.Application.Conversations.Factories;
 using Vogel.Messanger.Application.Messages.Dtos;
+using Vogel.Messanger.Domain.Messages;
 using Vogel.Messanger.MongoEntities.Messages;
+using Vogel.Messanger.MongoEntities.Users;
 namespace Vogel.Messanger.Application.Messages.Factories
 {
     public class MessageResponseFactory : IMessageResponseFactory
@@ -44,5 +46,22 @@ namespace Vogel.Messanger.Application.Messages.Factories
             return dto;
         }
 
+        public async Task<MessageDto> PrepareMessageDto(Message message, UserMongoEntity? sender)
+        {
+            var dto = new MessageDto
+            {
+                Id = message.Id,
+                ConversationId = message.ConversationId,
+                SenderId = message.SenderId,
+                Content = message.Content
+            };
+
+            if (sender != null)
+            {
+                dto.Sender = await _userResponseFactory.PreapreUserDto(sender);
+            }
+
+            return dto;
+        }
     }
 }
