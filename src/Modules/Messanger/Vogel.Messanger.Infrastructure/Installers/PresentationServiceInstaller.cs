@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Reflection;
 using Vogel.BuildingBlocks.Infrastructure.Modularity;
+using Vogel.BuildingBlocks.Infrastructure.Extensions;
 namespace Vogel.Messanger.Infrastructure.Installers
 {
     public class PresentationServiceInstaller : IServiceInstaller
@@ -14,6 +15,8 @@ namespace Vogel.Messanger.Infrastructure.Installers
             {
                 opt.Assemblies = new Assembly[] { Presentation.AssemblyReference.Assembly };
             });
+
+            services.RegisterMassTransitConsumers(Presentation.AssemblyReference.Assembly);
         }
     }
 }
