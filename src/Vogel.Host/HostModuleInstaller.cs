@@ -1,8 +1,10 @@
-﻿using FastEndpoints.Swagger;
+﻿using FastEndpoints;
+using FastEndpoints.Swagger;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Vogel.BuildingBlocks.Application;
 using Vogel.BuildingBlocks.EntityFramework;
+using Vogel.BuildingBlocks.Infrastructure.Endpoints;
 using Vogel.BuildingBlocks.Infrastructure.Extensions;
 using Vogel.BuildingBlocks.Infrastructure.Modularity;
 using Vogel.BuildingBlocks.MongoDb.Extensions;
@@ -37,6 +39,8 @@ namespace Vogel.Host
                      Content.Infrastructure.AssemblyReference.Assembly,
                      Messanger.Infrastructure.AssemblyReference.Assembly
                 );
+
+            ConfigureFastEndpoint(services);
 
             services.AddTransient<IModuleBootstrapper, HostModuleBootstrapper>();
         }
@@ -101,6 +105,20 @@ namespace Vogel.Host
         private void ConfigureSignalRHubs(IServiceCollection services)
         {
             services.AddSignalR();
+        }
+
+        private void ConfigureFastEndpoint(IServiceCollection services)
+        {
+            var registery = services.GetSinglatonOrNull<EndpointAssemblyRegistery>() 
+                ?? new EndpointAssemblyRegistery();
+
+            var assemblies = registery.Assemblies;
+
+            services.AddFastEndpoints(opt =>
+            {
+                opt.Assemblies = assemblies;
+                opt.IncludeAbstractValidators = true;
+            });
         }
     }
 }

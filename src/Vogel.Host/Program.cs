@@ -26,9 +26,9 @@ app.UseHttpsRedirection()
         .AllowAnyMethod()
         .AllowAnyHeader()
     )
-    .UseAuthentication()
-    .UseAuthorization()
+    .UseAuthentication() 
     .UseRouting()
+    .UseAuthorization()
     .UseEndpoints(endpoint =>
     {
         endpoint.MapFastEndpoints();

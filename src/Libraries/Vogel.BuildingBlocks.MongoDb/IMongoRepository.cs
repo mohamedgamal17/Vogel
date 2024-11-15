@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using System.Linq.Expressions;
 
 namespace Vogel.BuildingBlocks.MongoDb
 {
@@ -21,6 +22,7 @@ namespace Vogel.BuildingBlocks.MongoDb
         Task<TEntity?> FindByIdAsync(string id);
         Task<TEntity?> FindAsync(FilterDefinition<TEntity> filter);
         Task<TEntity> SingleAsync(FilterDefinition<TEntity> filter);
+        Task<bool> AnyAsync(Expression<Func<TEntity, bool>> expression);
         Task<List<TEntity>> ApplyFilterAsync(FilterDefinition<TEntity> filter);
     
     }

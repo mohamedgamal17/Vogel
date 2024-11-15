@@ -1,6 +1,7 @@
 ﻿using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System.Globalization;
+using System.Linq.Expressions;
 using Vogel.BuildingBlocks.MongoDb.Extensions;
 
 namespace Vogel.BuildingBlocks.MongoDb
@@ -98,6 +99,11 @@ namespace Vogel.BuildingBlocks.MongoDb
         {
             return MongoDatabase.GetCollection<T>(name);
         }
- 
+
+        public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> expression)
+        {
+            return await MongoDbCollection.AsQueryable()
+                .AnyAsync(expression);
+        }
     }
 }

@@ -5,6 +5,7 @@ using Vogel.BuildingBlocks.Application.Extensions;
 using Vogel.BuildingBlocks.Infrastructure.Modularity;
 using Vogel.BuildingBlocks.MongoDb.Extensions;
 using Vogel.Social.MongoEntities;
+using FluentValidation;
 namespace Vogel.Social.Infrastructure.Installers
 {
     public class ApplicationServiceInstaller : IServiceInstaller
@@ -14,7 +15,8 @@ namespace Vogel.Social.Infrastructure.Installers
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Application.AssemblyReference.Assembly))
                 .RegisterFactoriesFromAssembly(Application.AssemblyReference.Assembly)
                 .RegisterPoliciesHandlerFromAssembly(Application.AssemblyReference.Assembly)
-                .AddAutoMapper(Application.AssemblyReference.Assembly);
+                .AddAutoMapper(Application.AssemblyReference.Assembly)
+                .AddValidatorsFromAssembly(Application.AssemblyReference.Assembly);
         
         }
     }
