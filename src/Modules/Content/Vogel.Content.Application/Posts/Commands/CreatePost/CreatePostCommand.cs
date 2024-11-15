@@ -22,7 +22,6 @@ namespace Vogel.Content.Application.Posts.Commands.CreatePost
             _mediaRepository = mediaRepository;
 
             RuleFor(x => x.Caption)
-                .MinimumLength(5)
                 .MaximumLength(PostTableConsts.CaptionLength)
                 .NotNull()
                 .NotEmpty()
