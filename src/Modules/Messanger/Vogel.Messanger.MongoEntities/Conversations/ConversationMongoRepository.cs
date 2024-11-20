@@ -71,7 +71,7 @@ namespace Vogel.Messanger.MongoEntities.Conversations
                 }))
                 .AppendStage<ConversationQueryMongoView>(new BsonDocument("$lookup", new BsonDocument()
                 {
-                    { "from", MessageMongoConsts.CollectionName },
+                    { "from", MessageMongoConsts.MessageCollection },
                     {"localField", "_id" },
                     {"foreignField" , "conversationId" },
                     {"pipeline", new BsonArray()
