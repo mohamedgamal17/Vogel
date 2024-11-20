@@ -7,6 +7,7 @@ namespace Vogel.Messanger.Application.Conversations.Policies
     public class IsParticipantInConversationRequirment : IAuthorizationRequirement
     {
         public string ConversationId { get; set; }
+        public string UserId { get; set; }
     }
     public class IsParticipantInConversationRequirmentHandler : AuthorizationHandler<IsParticipantInConversationRequirment>
     {
@@ -21,7 +22,17 @@ namespace Vogel.Messanger.Application.Conversations.Policies
 
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, IsParticipantInConversationRequirment requirement)
         {
-            var currentUserId = _securityContext.User!.Id;
+            var currentUserId =  requirement.UserId;
+
+            if(currentUserId == null)
+            {
+                currentUserId = _securityContext.User?.Id;
+            }
+
+            if(currentUserId == null)
+            {
+                throw new InvalidOperationException($"Current user id in ({typeof(IsParticipantInConversationRequirmentHandler).AssemblyQualifiedName}) , cannot be null user must be authenticated , or UserId Property in $({typeof(IsParticipantInConversationRequirment).AssemblyQualifiedName}) should be assigned");
+            }
 
             var participant = await _participantRepository.SingleOrDefaultAsync(x => x.ConversationId == requirement.ConversationId && x.UserId == currentUserId);
 
