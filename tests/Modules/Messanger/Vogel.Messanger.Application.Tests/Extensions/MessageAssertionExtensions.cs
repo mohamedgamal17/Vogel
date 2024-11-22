@@ -32,5 +32,14 @@ namespace Vogel.Messanger.Application.Tests.Extensions
             dto.SenderId.Should().Be(message.SenderId);
             dto.Sender.Should().NotBeNull();
         }
+
+        public static void AssertMessageActivityMongoEntity(this MessageActivityMongoEntity mongoEntity , MessageActivity messageActivity)
+        {
+            mongoEntity.Id.Should().Be(messageActivity.Id);
+            mongoEntity.SeenById.Should().Be(messageActivity.SeenById);
+            mongoEntity.SeenAt.Should().BeCloseTo(messageActivity.SeenAt, TimeSpan.FromMilliseconds(1));
+            mongoEntity.MessageId.Should().Be(messageActivity.MessageId);
+            mongoEntity.AssertAuditingProperties(messageActivity);
+        }
     }
 }

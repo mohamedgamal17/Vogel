@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using FluentAssertions.Common;
+using MassTransit;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Vogel.Application.Tests;
@@ -24,6 +26,17 @@ namespace Vogel.Messanger.Application.Tests
             });
 
             services.AddTransient<IUserService, FakeUserService>();
+
+            services.AddMassTransitTestHarness(busRegisterConfig =>
+            {
+
+                busRegisterConfig.AddConsumers(Messanger.Application.AssemblyReference.Assembly);
+
+                busRegisterConfig.UsingInMemory((context, inMemoryBusConfig) =>
+                {
+                    inMemoryBusConfig.ConfigureEndpoints(context);
+                });
+            });
         }
     }
 }
