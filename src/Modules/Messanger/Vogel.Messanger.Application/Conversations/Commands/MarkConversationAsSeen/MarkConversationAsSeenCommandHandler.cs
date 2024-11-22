@@ -1,6 +1,7 @@
 ﻿using MassTransit;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using Vogel.BuildingBlocks.Application.Requests;
 using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.BuildingBlocks.Domain.Repositories;
@@ -8,6 +9,7 @@ using Vogel.BuildingBlocks.Infrastructure.Security;
 using Vogel.BuildingBlocks.Shared.Results;
 using Vogel.Messanger.Application.Conversations.Policies;
 using Vogel.Messanger.Application.Messages.Events;
+using Vogel.Messanger.Domain;
 using Vogel.Messanger.Domain.Conversations;
 using Vogel.Messanger.Domain.Messages;
 
@@ -15,19 +17,21 @@ namespace Vogel.Messanger.Application.Conversations.Commands.MarkConversationAsS
 {
     public class MarkConversationAsSeenCommandHandler : IApplicationRequestHandler<MarkConversationAsSeenCommand, Unit>
     {
-        private readonly IRepository<Conversation> _conversationRepository;
-        private readonly IRepository<Message> _messageRepository;
-        private readonly IRepository<MessageActivity> _messageActivityRepository;
-        private readonly IApplicationAuthorizationService _applicationAuthorizationService;
+        const int BATCH_SIZE = 100;
+
+
+        private readonly IMessangerRepository<Conversation> _conversationRepository;
+        private readonly IMessangerRepository<Message> _messageRepository;
+        private readonly IMessangerRepository<MessageActivity> _messageActivityRepository;
+        private readonly IMessangerRepository<Participant> _participantRepository;
         private readonly IPublishEndpoint _publishEndpoint;
 
-        const int BATCH_SIZE = 100;
-        public MarkConversationAsSeenCommandHandler(IRepository<Conversation> conversationRepository, IRepository<Message> messageRepository, IRepository<MessageActivity> messageActivityRepository, IApplicationAuthorizationService applicationAuthorizationService, IPublishEndpoint publishEndpoint)
+        public MarkConversationAsSeenCommandHandler(IMessangerRepository<Conversation> conversationRepository, IMessangerRepository<Message> messageRepository, IMessangerRepository<MessageActivity> messageActivityRepository, IMessangerRepository<Participant> participantRepository, IPublishEndpoint publishEndpoint)
         {
             _conversationRepository = conversationRepository;
             _messageRepository = messageRepository;
             _messageActivityRepository = messageActivityRepository;
-            _applicationAuthorizationService = applicationAuthorizationService;
+            _participantRepository = participantRepository;
             _publishEndpoint = publishEndpoint;
         }
 
@@ -40,22 +44,16 @@ namespace Vogel.Messanger.Application.Conversations.Commands.MarkConversationAsS
                 return new Result<Unit>(new EntityNotFoundException(typeof(Conversation), request.ConversationId));
             }
 
-            var authorizationRequirment = new IsParticipantInConversationRequirment
-            {
-                ConversationId = request.ConversationId,
-                UserId = request.UserId
-            };
-
-            var authorizationResult = await _applicationAuthorizationService.AuthorizeAsync(authorizationRequirment);
+            var authorizationResult = await CheckIfUserParticipantInConversation(conversation.Id, request.UserId);
 
             if (authorizationResult.IsFailure)
             {
-                return new Result<Unit>(authorizationResult.Exception!);
+                return authorizationResult;
             }
 
             var query = from message in _messageRepository.AsQuerable().Where(x => x.ConversationId == request.ConversationId && x.SenderId != request.UserId)
                         join messageActivity in _messageActivityRepository.AsQuerable()
-                        on message.Id equals messageActivity.Id into joined
+                        on message.Id equals messageActivity.MessageId into joined
                         from activity in joined.DefaultIfEmpty()
                         select new { Message = message, Activity = activity };
 
@@ -63,8 +61,6 @@ namespace Vogel.Messanger.Application.Conversations.Commands.MarkConversationAsS
             var result = from pr in query
                                 where pr.Activity == null
                                 select pr.Message;
-
-
             var unReadedMessages = await result.ToListAsync();
 
             int counter = 0;
@@ -100,6 +96,18 @@ namespace Vogel.Messanger.Application.Conversations.Commands.MarkConversationAsS
                 await _publishEndpoint.Publish(@event);
 
                 counter += BATCH_SIZE;
+            }
+
+            return Unit.Value;
+        }
+
+        private async Task<Result<Unit>> CheckIfUserParticipantInConversation(string conversationtId , string userId)
+        {
+            var participant = await _participantRepository.SingleOrDefaultAsync(x => x.ConversationId == conversationtId && x.UserId == userId);
+
+            if (participant == null)
+            {
+                return new Result<Unit>(new ForbiddenAccessException($"Current user is not participant in conversation : ({conversationtId})"));
             }
 
             return Unit.Value;
