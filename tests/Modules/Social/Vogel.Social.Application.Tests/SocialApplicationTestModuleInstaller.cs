@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using MassTransit;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Vogel.Application.Tests;
@@ -19,6 +20,17 @@ namespace Vogel.Social.Application.Tests
             {
                 opt.ConnectionString = configuration.GetValue<string>("MongoDb:ConnectionString")!;
                 opt.Database = configuration.GetValue<string>("MongoDb:Database")!;
+            });
+
+            services.AddMassTransitTestHarness(busRegisterConfig =>
+            {
+
+                busRegisterConfig.AddConsumers(Application.AssemblyReference.Assembly);
+
+                busRegisterConfig.UsingInMemory((context, inMemoryBusConfig) =>
+                {
+                    inMemoryBusConfig.ConfigureEndpoints(context);
+                });
             });
         }
     }
