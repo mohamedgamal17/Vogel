@@ -8,7 +8,7 @@ namespace Vogel.Messanger.Application.Messages.Mappers
         public MessageProfile()
         {
             CreateMap<Message, MessageMongoEntity>();
-            CreateMap<MessageActivity, MessageActivityMongoEntity>();
+            CreateMap<MessageActivity, MessageLogMongoEntity>();
         }
     }
 }

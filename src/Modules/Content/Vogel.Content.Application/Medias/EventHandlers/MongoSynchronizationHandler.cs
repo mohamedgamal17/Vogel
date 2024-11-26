@@ -25,7 +25,7 @@ namespace Vogel.Content.Application.Medias.EventHandlers
         {
             var mongoEntity = _mapper.Map<Media, MediaMongoEntity>(notification.Entity);
 
-            await _mediaMongoRepository.InsertAsync(mongoEntity);
+            await _mediaMongoRepository.ReplaceOrInsertAsync(mongoEntity);
 
         }
 
@@ -33,7 +33,7 @@ namespace Vogel.Content.Application.Medias.EventHandlers
         {
             var mongoEntity = _mapper.Map<Media, MediaMongoEntity>(notification.Entity);
 
-            await _mediaMongoRepository.UpdateAsync(mongoEntity);
+            await _mediaMongoRepository.ReplaceOrInsertAsync(mongoEntity);
 
         }
 

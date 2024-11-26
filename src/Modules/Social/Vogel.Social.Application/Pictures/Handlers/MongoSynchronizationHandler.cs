@@ -25,14 +25,14 @@ namespace Vogel.Social.Application.Pictures.Handlers
         {
             var mongoEntity = _mapper.Map<Picture, PictureMongoEntity>(notification.Entity);
 
-            await _pictureMongoRepository.InsertAsync(mongoEntity);
+            await _pictureMongoRepository.ReplaceOrInsertAsync(mongoEntity);
         }
 
         public async Task Handle(EntityUpdatedEvent<Picture> notification, CancellationToken cancellationToken)
         {
             var mongoEntity = _mapper.Map<Picture, PictureMongoEntity>(notification.Entity);
 
-            await _pictureMongoRepository.UpdateAsync(mongoEntity);
+            await _pictureMongoRepository.ReplaceOrInsertAsync(mongoEntity);
         }
 
         public async Task Handle(EntityDeletedEvent<Picture> notification, CancellationToken cancellationToken)

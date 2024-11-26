@@ -24,14 +24,14 @@ namespace Vogel.Content.Application.Posts.EventHandlers
         {
             var mongoEntity = _mapper.Map<Post, PostMongoEntity>(notification.Entity);
 
-            await _postMongoRepository.InsertAsync(mongoEntity);
+            await _postMongoRepository.ReplaceOrInsertAsync(mongoEntity);
         }
 
         public async Task Handle(EntityUpdatedEvent<Post> notification, CancellationToken cancellationToken)
         {
             var mongoEntity = _mapper.Map<Post, PostMongoEntity>(notification.Entity);
 
-            await _postMongoRepository.UpdateAsync(mongoEntity);
+            await _postMongoRepository.ReplaceOrInsertAsync(mongoEntity);
         }
 
         public async Task Handle(EntityDeletedEvent<Post> notification, CancellationToken cancellationToken)

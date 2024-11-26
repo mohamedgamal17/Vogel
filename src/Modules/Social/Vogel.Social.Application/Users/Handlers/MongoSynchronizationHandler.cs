@@ -25,14 +25,14 @@ namespace Vogel.Social.Application.Users.Handlers
         {
             var mongoEntity = _mapper.Map<User, UserMongoEntity>(notification.Entity);
 
-            await _userMongoRepository.InsertAsync(mongoEntity);
+            await _userMongoRepository.ReplaceOrInsertAsync(mongoEntity);
         }
 
         public async Task Handle(EntityUpdatedEvent<User> notification, CancellationToken cancellationToken)
         {
             var mongoEntity = _mapper.Map<User, UserMongoEntity>(notification.Entity);
 
-            await _userMongoRepository.UpdateAsync(mongoEntity);
+            await _userMongoRepository.ReplaceOrInsertAsync(mongoEntity);
         }
 
         public async Task Handle(EntityDeletedEvent<User> notification, CancellationToken cancellationToken)

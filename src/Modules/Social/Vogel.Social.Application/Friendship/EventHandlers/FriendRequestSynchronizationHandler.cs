@@ -25,14 +25,14 @@ namespace Vogel.Social.Application.Friendship.EventHandlers
         {
             var mongoEntity = _mapper.Map<FriendRequest, FriendRequestMongoEntity>(notification.Entity);
 
-            await _friendRequestMongoRepository.InsertAsync(mongoEntity);
+            await _friendRequestMongoRepository.ReplaceOrInsertAsync(mongoEntity);
         }
 
         public async Task Handle(EntityUpdatedEvent<FriendRequest> notification, CancellationToken cancellationToken)
         {
             var mongoEntity = _mapper.Map<FriendRequest, FriendRequestMongoEntity>(notification.Entity);
 
-            await _friendRequestMongoRepository.UpdateAsync(mongoEntity);
+            await _friendRequestMongoRepository.ReplaceOrInsertAsync(mongoEntity);
 
         }
 

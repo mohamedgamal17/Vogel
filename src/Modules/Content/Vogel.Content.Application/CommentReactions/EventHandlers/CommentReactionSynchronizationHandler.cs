@@ -26,14 +26,14 @@ namespace Vogel.Content.Application.CommentReactions.EventHandlers
         {
             var mongoEntity = _mapper.Map<CommentReaction, CommentReactionMongoEntity>(notification.Entity);
 
-            await _commentReactionMongoRepository.InsertAsync(mongoEntity);
+            await _commentReactionMongoRepository.ReplaceOrInsertAsync(mongoEntity);
         }
 
         public async Task Handle(EntityUpdatedEvent<CommentReaction> notification, CancellationToken cancellationToken)
         {
             var mongoEntity = _mapper.Map<CommentReaction, CommentReactionMongoEntity>(notification.Entity);
 
-            await _commentReactionMongoRepository.UpdateAsync(mongoEntity);
+            await _commentReactionMongoRepository.ReplaceOrInsertAsync(mongoEntity);
         }
 
         public async Task Handle(EntityDeletedEvent<CommentReaction> notification, CancellationToken cancellationToken)

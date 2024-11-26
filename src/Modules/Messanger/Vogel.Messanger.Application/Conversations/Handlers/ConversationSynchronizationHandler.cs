@@ -22,14 +22,14 @@ namespace Vogel.Messanger.Application.Conversations.Handlers
         {
             var mongoEntity = _mapper.Map<Conversation, ConversationMongoEntity>(notification.Entity);
 
-            await _conversationMongoRepository.InsertAsync(mongoEntity);
+            await _conversationMongoRepository.ReplaceOrInsertAsync(mongoEntity);
         }
 
         public async Task Handle(EntityUpdatedEvent<Conversation> notification, CancellationToken cancellationToken)
         {
             var mongoEntity = _mapper.Map<Conversation, ConversationMongoEntity>(notification.Entity);
 
-            await _conversationMongoRepository.UpdateAsync(mongoEntity);
+            await _conversationMongoRepository.ReplaceOrInsertAsync(mongoEntity);
         }
     }
 }

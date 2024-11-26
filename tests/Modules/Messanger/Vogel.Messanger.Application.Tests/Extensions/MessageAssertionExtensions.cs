@@ -33,7 +33,7 @@ namespace Vogel.Messanger.Application.Tests.Extensions
             dto.Sender.Should().NotBeNull();
         }
 
-        public static void AssertMessageActivityMongoEntity(this MessageActivityMongoEntity mongoEntity , MessageActivity messageActivity)
+        public static void AssertMessageActivityMongoEntity(this MessageLogMongoEntity mongoEntity , MessageActivity messageActivity)
         {
             mongoEntity.Id.Should().Be(messageActivity.Id);
             mongoEntity.SeenById.Should().Be(messageActivity.SeenById);

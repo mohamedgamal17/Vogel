@@ -66,7 +66,7 @@ namespace Vogel.Messanger.Application.Tests.Conversations
             var conversationMongoEntity = await ConversationMongoRepository.FindByIdAsync(result.Value!.Id);
 
             var participantsMongoEntity = await ParticipantMongoRepository
-                .ApplyFilterAsync(Builders<ParticipantMongoEntity>.Filter.Eq(x => x.ConversationId, result.Value!.Id));
+                .QueryAsync(Builders<ParticipantMongoEntity>.Filter.Eq(x => x.ConversationId, result.Value!.Id));
 
             conversationMongoEntity.Should().NotBeNull();
 
@@ -109,7 +109,7 @@ namespace Vogel.Messanger.Application.Tests.Conversations
 
             };
 
-            return await UserMongoRepository.InsertAsync(entity);
+            return await UserMongoRepository.ReplaceOrInsertAsync(entity);
         }
     }
 

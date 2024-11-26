@@ -24,7 +24,7 @@ namespace Vogel.Messanger.Application.Tests.Conversations
         public IRepository<Participant> ParticipantRepository { get; set; }
         public IRepository<Message> MessageRepository { get; set; }
         public IRepository<MessageActivity> MessageActivityRepository { get; set; }
-        public IMongoRepository<MessageActivityMongoEntity> MessageActivityMongoRepository { get; set; }
+        public IMongoRepository<MessageLogMongoEntity> MessageActivityMongoRepository { get; set; }
         public IMapper Mapper { get; set; }
         public ITestHarness TestHarness { get; }
         public MarkConversationAsSeenCommandHandlerTests()
@@ -33,7 +33,7 @@ namespace Vogel.Messanger.Application.Tests.Conversations
             ParticipantRepository = ServiceProvider.GetRequiredService<IMessangerRepository<Participant>>();
             MessageRepository = ServiceProvider.GetRequiredService<IMessangerRepository<Message>>();
             MessageActivityRepository = ServiceProvider.GetRequiredService<IMessangerRepository<MessageActivity>>();
-            MessageActivityMongoRepository = ServiceProvider.GetRequiredService<IMongoRepository<MessageActivityMongoEntity>>();
+            MessageActivityMongoRepository = ServiceProvider.GetRequiredService<IMongoRepository<MessageLogMongoEntity>>();
             Mapper = ServiceProvider.GetRequiredService<IMapper>();
             TestHarness = ServiceProvider.GetRequiredService<ITestHarness>();
         }
@@ -152,9 +152,9 @@ namespace Vogel.Messanger.Application.Tests.Conversations
 
             await MessageActivityRepository.InsertManyAsync(activites);
 
-            var mongoActivites = Mapper.Map<List< MessageActivity> ,List<MessageActivityMongoEntity>>(activites);
+            var mongoActivites = Mapper.Map<List< MessageActivity> ,List<MessageLogMongoEntity>>(activites);
 
-            await MessageActivityMongoRepository.InsertManyAsync(mongoActivites);
+            await MessageActivityMongoRepository.ReplaceOrInsertManyAsync(mongoActivites);
 
             return activites;
         }

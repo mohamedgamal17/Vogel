@@ -131,7 +131,7 @@ namespace Vogel.Messanger.Application.Tests.Messages
 
             };
 
-            await UserMongoRepository.InsertAsync(user);
+            await UserMongoRepository.ReplaceOrInsertAsync(user);
 
             return user;
         }

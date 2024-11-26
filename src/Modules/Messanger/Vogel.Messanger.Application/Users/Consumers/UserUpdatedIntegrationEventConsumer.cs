@@ -40,7 +40,7 @@ namespace Vogel.Messanger.Application.Users.Consumers
                 };
             }
 
-            await _userMongoRepository.UpdateAsync(mongoEntity);
+            await _userMongoRepository.ReplaceOrInsertAsync(mongoEntity);
         }
     }
 }

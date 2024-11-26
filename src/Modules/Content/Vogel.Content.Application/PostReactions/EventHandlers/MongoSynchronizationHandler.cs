@@ -25,7 +25,7 @@ namespace Vogel.Content.Application.PostReactions.EventHandlers
         {
             var mongoEntity = _mapper.Map<PostReaction, PostReactionMongoEntity>(notification.Entity);
 
-            await _reactionMongoRepository.InsertAsync(mongoEntity);
+            await _reactionMongoRepository.ReplaceOrInsertAsync(mongoEntity);
 
         }
 
@@ -33,7 +33,7 @@ namespace Vogel.Content.Application.PostReactions.EventHandlers
         {
             var mongoEntity = _mapper.Map<PostReaction, PostReactionMongoEntity>(notification.Entity);
 
-            await _reactionMongoRepository.UpdateAsync(mongoEntity);
+            await _reactionMongoRepository.ReplaceOrInsertAsync(mongoEntity);
         }
 
         public async Task Handle(EntityDeletedEvent<PostReaction> notification, CancellationToken cancellationToken)

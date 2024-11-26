@@ -9,22 +9,28 @@ namespace Vogel.BuildingBlocks.MongoDb
     {
 
     }
-    public interface IMongoRepository<TEntity > : IMongoRepository
+    public interface IMongoRepository<TEntity> : IMongoRepository
         where TEntity : IMongoEntity
     {
-        Task<TEntity> InsertAsync(TEntity entity);
-        Task<List<TEntity>> InsertManyAsync(List<TEntity> entities);
-        Task<TEntity> UpdateAsync(TEntity entity);
-        Task DeleteAsync(string id);
-        Task DeleteAsync(TEntity entity);
+        Task<TEntity> ReplaceOrInsertAsync(TEntity entity);
+        Task<IEnumerable<TEntity>> ReplaceOrInsertManyAsync(IEnumerable<TEntity> entities);
+        Task<UpdateResult> UpdateAsync(FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update );
+        Task<UpdateResult> UpdateManyAsync(FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update );
+        Task<DeleteResult> DeleteAsync(string id);
+        Task<DeleteResult> DeleteAsync(FilterDefinition<TEntity> filter);
+        Task<DeleteResult> DeleteAsync(TEntity entity);
+        Task<DeleteResult> DeleteManyAsync(FilterDefinition<TEntity> filter);
         IMongoQueryable<TEntity> AsQuerable();
         IMongoCollection<TEntity> AsMongoCollection();
         Task<TEntity?> FindByIdAsync(string id);
         Task<TEntity?> FindAsync(FilterDefinition<TEntity> filter);
         Task<TEntity> SingleAsync(FilterDefinition<TEntity> filter);
+        Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> filter);
+        Task<TEntity?> SingleOrDefaultAsync(FilterDefinition<TEntity> filter);
+        Task<TEntity?> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> filter);
         Task<bool> AnyAsync(Expression<Func<TEntity, bool>> expression);
-        Task<List<TEntity>> ApplyFilterAsync(FilterDefinition<TEntity> filter);
-    
+        Task<List<TEntity>> QueryAsync(FilterDefinition<TEntity> filter);
+        IAsyncEnumerable<TEntity> StreamAsync(FilterDefinition<TEntity> filter);
     }
- 
+
 }
