@@ -14,6 +14,7 @@ namespace Vogel.BuildingBlocks.MongoDb
     {
         Task<TEntity> ReplaceOrInsertAsync(TEntity entity);
         Task<IEnumerable<TEntity>> ReplaceOrInsertManyAsync(IEnumerable<TEntity> entities);
+        Task<UpdateResult> UpdateAsync(string id, UpdateDefinition<TEntity> update);
         Task<UpdateResult> UpdateAsync(FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update );
         Task<UpdateResult> UpdateManyAsync(FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update );
         Task<DeleteResult> DeleteAsync(string id);

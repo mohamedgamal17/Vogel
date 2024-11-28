@@ -57,7 +57,10 @@ namespace Vogel.BuildingBlocks.MongoDb
 
             return entities;
         }
-
+        public async Task<UpdateResult> UpdateAsync(string id, UpdateDefinition<TEntity> update)
+        {
+            return await UpdateAsync(Filter.Eq(x=> x.Id, id), update);
+        }
         public async Task<UpdateResult> UpdateAsync(FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update)
         {
             return await MongoDbCollection.UpdateOneAsync(filter, update, Upsert);
