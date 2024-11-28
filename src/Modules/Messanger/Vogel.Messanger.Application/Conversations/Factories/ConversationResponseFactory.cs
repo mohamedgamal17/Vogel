@@ -1,45 +1,43 @@
-﻿using Vogel.Messanger.Application.Conversations.Dtos;
-using Vogel.Messanger.Application.Messages.Factories;
+﻿using Vogel.BuildingBlocks.Infrastructure.S3Storage;
+using Vogel.Messanger.Application.Conversations.Dtos;
 using Vogel.Messanger.MongoEntities.Conversations;
 namespace Vogel.Messanger.Application.Conversations.Factories
 {
     public class ConversationResponseFactory : IConversationResponseFactory
     {
+        private readonly IS3ObjectStorageService _s3ObjectStorageService;
         private readonly IParticipantResponseFactory _participantResponseFactory;
-        private readonly IMessageResponseFactory _messageResponseFactory;
 
-        public ConversationResponseFactory(IParticipantResponseFactory participantResponseFactory, IMessageResponseFactory messageResponseFactory)
+        public ConversationResponseFactory(IS3ObjectStorageService s3ObjectStorageService, IParticipantResponseFactory participantResponseFactory)
         {
+            _s3ObjectStorageService = s3ObjectStorageService;
             _participantResponseFactory = participantResponseFactory;
-            _messageResponseFactory = messageResponseFactory;
         }
 
-        public async Task<List<ConversationDto>> PrepareListConversationDto(List<ConversationMongoView> conversations)
+        public async Task<List<ConversationDto>> PrepareListConversationDto(List<ConversationMongoView> views)
         {
-            var tasks = conversations.Select(PrepareConversationDto);
+            var tasks = views.Select(PrepareConversationDto);
 
             var results = await Task.WhenAll(tasks);
 
             return results.ToList();
         }
 
-        public async Task<ConversationDto> PrepareConversationDto(ConversationMongoView conversation)
+        public async Task<ConversationDto> PrepareConversationDto(ConversationMongoView view)
         {
             var dto = new ConversationDto
             {
-                Id = conversation.Id,
-                Name = conversation.Name,
-                Participants = new BuildingBlocks.Shared.Models.Paging<ParticipantDto>
-                {
-                    Data = await _participantResponseFactory.PrepareListParticipantDto(conversation.Participants.Data),
-                    Info =  conversation.Participants.Info
-                },
-                Messages = new BuildingBlocks.Shared.Models.Paging<Messages.Dtos.MessageDto>
-                {
-                    Data = await _messageResponseFactory.PrepareListMessageDto(conversation.Messages.Data),
-                    Info  = conversation.Messages.Info
-                }
+                Id = view.Id,
+                Name = view.Name,
+                Avatar = view.Avatar,
+                TotalParticpants = view.TotalParticpants,
+                Participants = await _participantResponseFactory.PrepareListParticipantDto(view.Participants)         
             };
+
+            if(view.Avatar != null)
+            {
+                dto.Avatar = await _s3ObjectStorageService.GeneratePresignedDownloadUrlAsync(view.Avatar);
+            }
 
             return dto;
         }

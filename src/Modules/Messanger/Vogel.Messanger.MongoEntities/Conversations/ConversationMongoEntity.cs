@@ -5,5 +5,10 @@ namespace Vogel.Messanger.MongoEntities.Conversations
     public class ConversationMongoEntity : FullAuditedMongoEntity<string>
     {
         public string? Name { get; set; }
+        public List<ParticipantMongoEntity> Participants { get; set; }
+        public ConversationMongoEntity()
+        {
+            Participants = new List<ParticipantMongoEntity>();
+        }
     }
 }

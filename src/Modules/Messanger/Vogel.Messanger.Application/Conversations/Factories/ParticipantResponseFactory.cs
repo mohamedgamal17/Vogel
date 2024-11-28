@@ -11,7 +11,7 @@ namespace Vogel.Messanger.Application.Conversations.Factories
             _userResponseFactory = userResponseFactory;
         }
 
-        public async Task<List<ParticipantDto>> PrepareListParticipantDto(List<ParticipantMongoView> participants)
+        public async Task<List<ParticipantDto>> PrepareListParticipantDto(List<ParticipantMongoEntity> participants)
         {
             var tasks = participants.Select(PrepareParticipantDto);
 
@@ -20,7 +20,7 @@ namespace Vogel.Messanger.Application.Conversations.Factories
             return results.ToList();
         }
 
-        public async Task<ParticipantDto> PrepareParticipantDto(ParticipantMongoView participant)
+        public async Task<ParticipantDto> PrepareParticipantDto(ParticipantMongoEntity participant)
         {
             var dto = new ParticipantDto
             {

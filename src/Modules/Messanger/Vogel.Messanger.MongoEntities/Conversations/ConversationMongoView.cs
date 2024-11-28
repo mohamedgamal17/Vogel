@@ -1,27 +1,19 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using Vogel.BuildingBlocks.MongoDb;
-using Vogel.BuildingBlocks.Shared.Models;
-using Vogel.Messanger.MongoEntities.Messages;
-
+﻿using Vogel.BuildingBlocks.MongoDb;
 namespace Vogel.Messanger.MongoEntities.Conversations
 {
     public class ConversationMongoView : FullAuditedMongoEntity<string>
     {
         public string? Name { get; set; }
-        public Paging<ParticipantMongoView> Participants { get; set; }
-
-        public Paging<MessageMongoView> Messages { get; set; }
+        public string? Avatar { get; set; }
+        public int TotalParticpants { get; set; }
+        public List<ParticipantMongoEntity> Participants{get; set;}
     }
 
-    public class ConversationQueryMongoView : FullAuditedMongoEntity<string>
+    internal class ConversationJoinedView : FullAuditedMongoEntity<string>
     {
         public string? Name { get; set; }
-
-        [BsonElement("_participants")]
-        public List<ParticipantMongoView> Participants { get; set; }
-
-        [BsonElement("_messages")]
-        public List<MessageMongoView> Messages { get; set; }
-    } 
+        public string? Avatar { get; set; }
+        public ParticipantMongoEntity Participants { get; set; }
+    }
 
 }

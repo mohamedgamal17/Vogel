@@ -14,14 +14,12 @@ namespace Vogel.Messanger.Application.Conversations.Queries.GetUserConversationB
     {
         private readonly ConversationMongoRepository _conversationMongoRepository;
         private readonly ISecurityContext _securityContext;
-        private readonly IApplicationAuthorizationService _applicationAuthorizationService;
         private readonly IConversationResponseFactory _conversationResponseFactory;
 
-        public GetConversationByIdQueryHandler(ConversationMongoRepository conversationMongoRepository, ISecurityContext securityContext, IApplicationAuthorizationService applicationAuthorizationService, IConversationResponseFactory conversationResponseFactory)
+        public GetConversationByIdQueryHandler(ConversationMongoRepository conversationMongoRepository, ISecurityContext securityContext,  IConversationResponseFactory conversationResponseFactory)
         {
             _conversationMongoRepository = conversationMongoRepository;
             _securityContext = securityContext;
-            _applicationAuthorizationService = applicationAuthorizationService;
             _conversationResponseFactory = conversationResponseFactory;
         }
 
@@ -29,19 +27,11 @@ namespace Vogel.Messanger.Application.Conversations.Queries.GetUserConversationB
         {
             var currentUserId = _securityContext.User!.Id;
 
-            var conversation = await _conversationMongoRepository.GetConversationViewById(currentUserId);
+            var conversation = await _conversationMongoRepository.FindViewAsync(currentUserId, request.ConversationId);
 
-            if(conversation == null)
+            if (conversation == null)
             {
                 return new Result<ConversationDto>(new EntityNotFoundException(typeof(Conversation), request.ConversationId));
-            }
-
-            var authorizationResult = await _applicationAuthorizationService
-                .AuthorizeAsync(new IsParticipantInConversationRequirment() { ConversationId = request.ConversationId});
-
-            if (authorizationResult.IsFailure)
-            {
-                return new Result<ConversationDto>(authorizationResult.Exception!);
             }
 
             return await _conversationResponseFactory.PrepareConversationDto(conversation);

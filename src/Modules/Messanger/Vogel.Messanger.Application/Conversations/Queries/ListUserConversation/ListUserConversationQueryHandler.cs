@@ -25,7 +25,7 @@ namespace Vogel.Messanger.Application.Conversations.Queries.ListUserConversation
         {
             var currentUserId = _securityContext.User!.Id;
 
-            var result = await _conversationMongoRepository.ListUserPagedConversationView(currentUserId, request.Cursor, request.Asending, request.Limit);
+            var result = await _conversationMongoRepository.QueryViewAsync(currentUserId, request.Cursor, request.Limit , request.Asending);
 
             var paged = new Paging<ConversationDto>
             {

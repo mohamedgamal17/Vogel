@@ -26,6 +26,8 @@ namespace Vogel.Messanger.Application.Conversations.Commands.CreateConversation
 
         public async Task<Result<ConversationDto>> Handle(CreateConversationCommand request, CancellationToken cancellationToken)
         {
+            string currentUserId = _securityContext.User!.Id;
+
             var conversation = new Conversation
             {
                 Name = request.Name,
@@ -51,9 +53,9 @@ namespace Vogel.Messanger.Application.Conversations.Commands.CreateConversation
 
             await _participantRepository.InsertManyAsync(participants);
 
-            var conversationMongoEntity = await _conversationMongoRepository.GetConversationViewById(conversation.Id);
+            var conversationMongoEntity = await _conversationMongoRepository.FindViewAsync(currentUserId, conversation.Id);
 
-            return await _conversationResponseFactory.PrepareConversationDto(conversationMongoEntity);
+            return await _conversationResponseFactory.PrepareConversationDto(conversationMongoEntity!);
         }
 
 

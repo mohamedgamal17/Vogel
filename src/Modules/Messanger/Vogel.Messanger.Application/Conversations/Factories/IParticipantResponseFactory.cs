@@ -5,8 +5,8 @@ namespace Vogel.Messanger.Application.Conversations.Factories
 {
     public interface IParticipantResponseFactory : IResponseFactory
     {
-        Task<List<ParticipantDto>> PrepareListParticipantDto(List<ParticipantMongoView> participants);
+        Task<List<ParticipantDto>> PrepareListParticipantDto(List<ParticipantMongoEntity> participants);
 
-        Task<ParticipantDto> PrepareParticipantDto(ParticipantMongoView participant);
+        Task<ParticipantDto> PrepareParticipantDto(ParticipantMongoEntity participant);
     }
 }

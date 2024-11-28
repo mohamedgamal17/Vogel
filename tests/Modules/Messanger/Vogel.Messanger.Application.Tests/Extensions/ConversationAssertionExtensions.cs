@@ -21,7 +21,7 @@ namespace Vogel.Messanger.Application.Tests.Extensions
             userIds.Should().BeEquivalentTo(commandUsers.Order());
         }
 
-        public static void AssertConversationMongoEntity(this ConversationMongoEntity mongoEntity , List<ParticipantMongoEntity> participantMongoEntities,  Conversation conversation , List<Participant> participants)
+        public static void AssertConversationMongoEntity(this ConversationMongoEntity mongoEntity ,   Conversation conversation , List<Participant> participants)
         {
             mongoEntity.Id.Should().Be(conversation.Id);
             mongoEntity.Name.Should().Be(conversation.Name);
@@ -29,7 +29,7 @@ namespace Vogel.Messanger.Application.Tests.Extensions
 
             var orderedParticipants = participants.OrderBy(x => x.Id).ToList();
 
-            var orderedParticipantMongoEntities = participantMongoEntities.OrderBy(x => x.Id).ToList();
+            var orderedParticipantMongoEntities = mongoEntity.Participants.OrderBy(x => x.Id).ToList();
 
             orderedParticipants.Count.Should().Be(orderedParticipantMongoEntities.Count);
 
@@ -49,23 +49,6 @@ namespace Vogel.Messanger.Application.Tests.Extensions
             mongoEntity.UserId.Should().Be(participant.UserId);
             mongoEntity.ConversationId.Should().Be(participant.ConversationId);
             mongoEntity.AssertAuditingProperties(participant);
-        }
-
-        public static void AssertConversationDto(this ConversationDto dto , Conversation conversation , List<Participant> participants)
-        {
-            dto.Id.Should().Be(conversation.Id);
-            dto.Name.Should().Be(conversation.Name);
-            var orderedParticipants = participants.OrderBy(x => x.Id).ToList();
-            var orderedParticipantsDto = dto.Participants.Data.OrderBy(x => x.Id).ToList();
-
-            orderedParticipants.Count.Should().Be(orderedParticipantsDto.Count);
-
-            for(int i = 0; i < orderedParticipants.Count; i++)
-            {
-                var participant = orderedParticipants[i];
-                var participantDto = orderedParticipantsDto[i];
-                participantDto.AssertParticipantDto(participant);
-            }
         }
 
         public static void AssertParticipantDto(this ParticipantDto dto , Participant participant)

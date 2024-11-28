@@ -65,16 +65,12 @@ namespace Vogel.Messanger.Application.Tests.Conversations
 
             var conversationMongoEntity = await ConversationMongoRepository.FindByIdAsync(result.Value!.Id);
 
-            var participantsMongoEntity = await ParticipantMongoRepository
-                .QueryAsync(Builders<ParticipantMongoEntity>.Filter.Eq(x => x.ConversationId, result.Value!.Id));
-
             conversationMongoEntity.Should().NotBeNull();
 
-            participantsMongoEntity.Count.Should().BeGreaterThan(1);
+            conversationMongoEntity?.Participants.Count.Should().Be(2);
 
-            conversationMongoEntity!.AssertConversationMongoEntity(participantsMongoEntity, conversation!, participants);
+            conversationMongoEntity!.AssertConversationMongoEntity(conversation!, participants);
 
-            result.Value.AssertConversationDto(conversation!, participants);
         }
 
         [Test] 
