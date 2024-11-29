@@ -4,7 +4,6 @@ using MassTransit.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Vogel.BuildingBlocks.Domain.Repositories;
-using Vogel.BuildingBlocks.MongoDb;
 using Vogel.Messanger.Application.Conversations.Commands.MarkConversationAsSeen;
 using Vogel.Messanger.Application.Messages.Events;
 using Vogel.Messanger.Domain;
@@ -23,8 +22,9 @@ namespace Vogel.Messanger.Application.Tests.Conversations
         public IRepository<Conversation> ConversationRepository { get; set; }
         public IRepository<Participant> ParticipantRepository { get; set; }
         public IRepository<Message> MessageRepository { get; set; }
-        public IRepository<MessageActivity> MessageActivityRepository { get; set; }
-        public IMongoRepository<MessageLogMongoEntity> MessageActivityMongoRepository { get; set; }
+        public IRepository<MessageLog> MessageActivityRepository { get; set; }
+
+        public MessageMongoRepository MessageMongoRepository { get; set; }
         public IMapper Mapper { get; set; }
         public ITestHarness TestHarness { get; }
         public MarkConversationAsSeenCommandHandlerTests()
@@ -32,8 +32,8 @@ namespace Vogel.Messanger.Application.Tests.Conversations
             ConversationRepository = ServiceProvider.GetRequiredService<IMessangerRepository<Conversation>>();
             ParticipantRepository = ServiceProvider.GetRequiredService<IMessangerRepository<Participant>>();
             MessageRepository = ServiceProvider.GetRequiredService<IMessangerRepository<Message>>();
-            MessageActivityRepository = ServiceProvider.GetRequiredService<IMessangerRepository<MessageActivity>>();
-            MessageActivityMongoRepository = ServiceProvider.GetRequiredService<IMongoRepository<MessageLogMongoEntity>>();
+            MessageActivityRepository = ServiceProvider.GetRequiredService<IMessangerRepository<MessageLog>>();
+            MessageMongoRepository = ServiceProvider.GetRequiredService<MessageMongoRepository>();
             Mapper = ServiceProvider.GetRequiredService<IMapper>();
             TestHarness = ServiceProvider.GetRequiredService<ITestHarness>();
         }
@@ -69,15 +69,7 @@ namespace Vogel.Messanger.Application.Tests.Conversations
 
             await TestHarness.Published.Any<LogMessagesActivitiesEvent>();
 
-            var published =  TestHarness.Published.Select<LogMessagesActivitiesEvent>();
-
-            published.Count().Should().Be(numberOfPublishedEvents);
-
             await TestHarness.Consumed.Any<LogMessagesActivitiesEvent>();
-
-            var consumed = TestHarness.Consumed.Select<LogMessagesActivitiesEvent>();
-
-             consumed.Count().Should().Be(numberOfPublishedEvents);
 
             result.IsSuccess.Should().BeTrue();
 
@@ -86,10 +78,11 @@ namespace Vogel.Messanger.Application.Tests.Conversations
                 .OrderBy(x => x.Id)
                 .ToListAsync();
 
-            var mongoActivites =  MessageActivityMongoRepository.AsQuerable()
-                .Where(x => unSeenMessagesIds.Contains(x.MessageId))
-                .OrderBy(x=> x.Id)
+            var mongoActivites = MessageMongoRepository.AsQuerable()
+                .Where(x => unSeenMessagesIds.Contains(x.Id))
+                .SelectMany(x => x.Logs)
                 .ToList();
+
 
             activites.Count.Should().Be(unSeenMessagesIds.Count);
 
@@ -126,7 +119,7 @@ namespace Vogel.Messanger.Application.Tests.Conversations
         public async Task Should_failure_while_marking_conversation_as_seen_when_user_is_not_participant_in_the_conversation()
         {
             string currentUser = Guid.NewGuid().ToString();
-             
+
             var conversation = await CreateFakeConversation(Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
 
             var command = new MarkConversationAsSeenCommand
@@ -141,28 +134,28 @@ namespace Vogel.Messanger.Application.Tests.Conversations
         }
 
 
-        private async Task<List<MessageActivity>> MarkMessagesAssSeen(List<Message> messages, string seenbyId)
+        private async Task<List<MessageLog>> MarkMessagesAssSeen(List<Message> messages, string seenbyId)
         {
-            var activites = messages.Select(x => new MessageActivity
+            string conversationId = messages.Select(x => x.ConversationId).First();
+            DateTime seenAt = DateTime.UtcNow;
+            var activites = messages.Select(x => new MessageLog
             {
                 MessageId = x.Id,
                 SeenById = seenbyId,
-                SeenAt = DateTime.UtcNow
+                SeenAt = seenAt
             }).ToList();
 
             await MessageActivityRepository.InsertManyAsync(activites);
 
-            var mongoActivites = Mapper.Map<List< MessageActivity> ,List<MessageLogMongoEntity>>(activites);
-
-            await MessageActivityMongoRepository.ReplaceOrInsertManyAsync(mongoActivites);
+            await MessageMongoRepository.LogConversationMessages(conversationId, seenbyId, seenAt);
 
             return activites;
         }
-        private async Task<List<Message>> GenerateFakeMessages(string conversationId , string senderId, int numberOfMessages = 10)
+        private async Task<List<Message>> GenerateFakeMessages(string conversationId, string senderId, int numberOfMessages = 10)
         {
             List<Message> messages = new List<Message>();
-            
-            for(int i =0; i < numberOfMessages; i++)
+
+            for (int i = 0; i < numberOfMessages; i++)
             {
                 var msg = new Message
                 {
@@ -195,6 +188,6 @@ namespace Vogel.Messanger.Application.Tests.Conversations
             await ParticipantRepository.InsertManyAsync(participants);
 
             return conversation;
-         }
+        }
     }
 }

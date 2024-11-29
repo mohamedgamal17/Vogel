@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Vogel.Messanger.Infrastructure.EntityFramework.Migrations
 {
     /// <inheritdoc />
-    public partial class MessageActivityMigration : Migration
+    public partial class MessageLogMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "MessagesActivites",
+                name: "MessagesLogs",
                 schema: "Messanger",
                 columns: table => new
                 {
@@ -29,9 +29,9 @@ namespace Vogel.Messanger.Infrastructure.EntityFramework.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MessagesActivites", x => x.Id);
+                    table.PrimaryKey("PK_MessagesLogs", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MessagesActivites_Messages_MessageId",
+                        name: "FK_MessagesLogs_Messages_MessageId",
                         column: x => x.MessageId,
                         principalSchema: "Messanger",
                         principalTable: "Messages",
@@ -40,33 +40,33 @@ namespace Vogel.Messanger.Infrastructure.EntityFramework.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_MessagesActivites_CreatorId",
+                name: "IX_MessagesLogs_CreatorId",
                 schema: "Messanger",
-                table: "MessagesActivites",
+                table: "MessagesLogs",
                 column: "CreatorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MessagesActivites_DeletorId",
+                name: "IX_MessagesLogs_DeletorId",
                 schema: "Messanger",
-                table: "MessagesActivites",
+                table: "MessagesLogs",
                 column: "DeletorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MessagesActivites_MessageId",
+                name: "IX_MessagesLogs_MessageId",
                 schema: "Messanger",
-                table: "MessagesActivites",
+                table: "MessagesLogs",
                 column: "MessageId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MessagesActivites_ModifierId",
+                name: "IX_MessagesLogs_ModifierId",
                 schema: "Messanger",
-                table: "MessagesActivites",
+                table: "MessagesLogs",
                 column: "ModifierId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MessagesActivites_SeenById",
+                name: "IX_MessagesLogs_SeenById",
                 schema: "Messanger",
-                table: "MessagesActivites",
+                table: "MessagesLogs",
                 column: "SeenById");
         }
 
@@ -74,7 +74,7 @@ namespace Vogel.Messanger.Infrastructure.EntityFramework.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "MessagesActivites",
+                name: "MessagesLogs",
                 schema: "Messanger");
         }
     }

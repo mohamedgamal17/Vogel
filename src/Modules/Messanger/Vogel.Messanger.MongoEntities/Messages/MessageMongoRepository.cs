@@ -2,6 +2,7 @@
 using Vogel.BuildingBlocks.MongoDb;
 using Vogel.BuildingBlocks.MongoDb.Extensions;
 using Vogel.BuildingBlocks.Shared.Models;
+using Vogel.Messanger.MongoEntities.Conversations;
 using Vogel.Messanger.MongoEntities.Users;
 namespace Vogel.Messanger.MongoEntities.Messages
 {
@@ -13,25 +14,38 @@ namespace Vogel.Messanger.MongoEntities.Messages
             _userMongoRepository = userMongoRepository;
         }
 
-        public async Task<Paging<MessageMongoView>> GetPagedMessagesView(string conversationId , string? cursor = null, bool ascending = false, int limit = 10)
+        public async Task<Paging<MessageMongoView>> QueryViewAsync(string conversationId , string? cursor = null, bool ascending = false, int limit = 10)
         {
-            var query = GetMessageViewAsAggregate()
-                .Match(
-                    Builders<MessageMongoView>.Filter.Eq(x => x.ConversationId, conversationId)
-                );
+            var query = await BuildViewQuery(conversationId);
 
             return await query.ToPaged(cursor, limit, ascending);
         }
 
-        public async Task<MessageMongoView> GetMessageViewbyId(string conversationId,  string messageId)
+        public async Task<MessageMongoView?> FindViewAsync(string conversationId,  string messageId)
         {
-            return await GetMessageViewAsAggregate()
-                .Match(
-                    Builders<MessageMongoView>.Filter.And(
-                            Builders<MessageMongoView>.Filter.Eq(x => x.ConversationId, conversationId),
-                            Builders<MessageMongoView>.Filter.Eq(x => x.Id, messageId)
-                        )
-                ).SingleOrDefaultAsync();
+            var query = await BuildViewQuery(conversationId);
+
+            return await query.Match(x => x.Id == messageId).SingleOrDefaultAsync();
+        }
+
+        public async Task<UpdateResult> LogConversationMessages(string conversationId ,string userId , DateTime seenAt )
+        {
+            var filter = Filter.Where(x => x.ConversationId == conversationId
+                && x.SenderId != userId
+                && !x.Logs.Any(x => x.SeenById == userId));
+
+            var log = new MessageLogMongoEntity
+            {
+                Id = Guid.NewGuid().ToString(),
+                SeenById = userId,
+                SeenAt = seenAt,
+                CreationTime = DateTime.UtcNow,
+                ModificationTime = DateTime.UtcNow
+            };
+
+            var update = Update.Push(x => x.Logs, log);
+
+           return await MongoDbCollection.UpdateManyAsync(filter, update);
         }
 
         public IAggregateFluent<MessageMongoView> GetMessageViewAsAggregate()
@@ -48,5 +62,44 @@ namespace Vogel.Messanger.MongoEntities.Messages
 
             return query;
         }
+
+
+        private async Task<IAggregateFluent<MessageMongoView>> BuildViewQuery(string conversationId)
+        {
+            var query = MongoDbCollection.Aggregate()
+                .Match(x=> x.ConversationId == conversationId)
+                .Lookup<MessageMongoEntity, ConversationMongoEntity, MessageJoinedView>(
+                    GetCollection<ConversationMongoEntity>(ConversationConsts.ConversationCollection),
+                    x => x.ConversationId,
+                    f => f.Id,
+                    x => x.Conversation
+                )
+                .Unwind<MessageJoinedView, MessageJoinedView>(x => x.Conversation)
+                .Lookup<MessageJoinedView, UserMongoEntity, MessageJoinedView>(
+                    GetCollection<UserMongoEntity>(UserMongoConsts.CollectionName),
+                    l => l.SenderId,
+                    f => f.Id,
+                    x => x.Sender
+                )
+                .Unwind<MessageJoinedView, MessageJoinedView>(x => x.Sender)
+                .Project(x => new MessageMongoView
+                {
+                    Id = x.Id,
+                    SenderId = x.SenderId,
+                    Sender = x.Sender,
+                    Content = x.Content,
+                    ConversationId = x.ConversationId,
+                    IsSeen = x.Logs.Count == x.Conversation.Participants.Count - 1,
+                    CreatorId = x.CreatorId,
+                    CreationTime = x.CreationTime,
+                    ModifierId = x.ModifierId,
+                    ModificationTime = x.ModificationTime,
+                    DeletorId = x.DeletorId,
+                    DeletionTime = x.DeletionTime
+                });
+
+
+            return query;
+        } 
     }
 }

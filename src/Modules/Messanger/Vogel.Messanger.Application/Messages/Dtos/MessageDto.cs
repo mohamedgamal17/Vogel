@@ -9,5 +9,6 @@ namespace Vogel.Messanger.Application.Messages.Dtos
         public string ConversationId { get; set; }
         public string SenderId { get; set; }
         public UserDto Sender { get; set; }
+        public bool IsSeen { get; set; }
     }
 }

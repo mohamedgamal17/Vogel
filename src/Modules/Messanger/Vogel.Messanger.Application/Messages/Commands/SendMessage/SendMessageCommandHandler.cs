@@ -55,7 +55,7 @@ namespace Vogel.Messanger.Application.Messages.Commands.SendMessage
 
             await _messageRepository.InsertAsync(message);
 
-            var mongoEntity = await _messageMongoRepository.GetMessageViewbyId(conversation.Id, message.Id);
+            var mongoEntity = await _messageMongoRepository.FindViewAsync(conversation.Id, message.Id);
 
             return await _messageResponseFactory.PrepareMessageDto(mongoEntity!);
         }

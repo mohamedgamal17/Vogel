@@ -44,7 +44,7 @@ namespace Vogel.Messanger.Application.Messages.Queries.ListUserConversationMessa
                 return new Result<Paging<MessageDto>>(authorizationResult.Exception!);
             }
 
-            var result = await _messageMongoRepository.GetPagedMessagesView(request.ConversationId, request.Cursor, request.Asending, request.Limit);
+            var result = await _messageMongoRepository.QueryViewAsync(request.ConversationId, request.Cursor, request.Asending, request.Limit);
 
             var paged = new Paging<MessageDto>
             {

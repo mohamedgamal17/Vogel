@@ -4,10 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using Vogel.BuildingBlocks.Application.Requests;
 using Vogel.BuildingBlocks.Domain.Exceptions;
-using Vogel.BuildingBlocks.Domain.Repositories;
-using Vogel.BuildingBlocks.Infrastructure.Security;
 using Vogel.BuildingBlocks.Shared.Results;
-using Vogel.Messanger.Application.Conversations.Policies;
 using Vogel.Messanger.Application.Messages.Events;
 using Vogel.Messanger.Domain;
 using Vogel.Messanger.Domain.Conversations;
@@ -18,15 +15,13 @@ namespace Vogel.Messanger.Application.Conversations.Commands.MarkConversationAsS
     public class MarkConversationAsSeenCommandHandler : IApplicationRequestHandler<MarkConversationAsSeenCommand, Unit>
     {
         const int BATCH_SIZE = 100;
-
-
         private readonly IMessangerRepository<Conversation> _conversationRepository;
         private readonly IMessangerRepository<Message> _messageRepository;
-        private readonly IMessangerRepository<MessageActivity> _messageActivityRepository;
+        private readonly IMessangerRepository<MessageLog> _messageActivityRepository;
         private readonly IMessangerRepository<Participant> _participantRepository;
         private readonly IPublishEndpoint _publishEndpoint;
 
-        public MarkConversationAsSeenCommandHandler(IMessangerRepository<Conversation> conversationRepository, IMessangerRepository<Message> messageRepository, IMessangerRepository<MessageActivity> messageActivityRepository, IMessangerRepository<Participant> participantRepository, IPublishEndpoint publishEndpoint)
+        public MarkConversationAsSeenCommandHandler(IMessangerRepository<Conversation> conversationRepository, IMessangerRepository<Message> messageRepository, IMessangerRepository<MessageLog> messageActivityRepository, IMessangerRepository<Participant> participantRepository, IPublishEndpoint publishEndpoint)
         {
             _conversationRepository = conversationRepository;
             _messageRepository = messageRepository;
@@ -59,23 +54,23 @@ namespace Vogel.Messanger.Application.Conversations.Commands.MarkConversationAsS
 
 
             var result = from pr in query
-                                where pr.Activity == null
-                                select pr.Message;
+                         where pr.Activity == null
+                         select pr.Message;
             var unReadedMessages = await result.ToListAsync();
 
             int counter = 0;
 
             var seenAt = DateTime.UtcNow;
 
-            while(counter < unReadedMessages.Count)
+            while (counter < unReadedMessages.Count)
             {
                 var batch = unReadedMessages.Skip(counter).Take(BATCH_SIZE).ToList();
 
-                List<MessageActivity> messageActivities = new List<MessageActivity>();
+                List<MessageLog> messageActivities = new List<MessageLog>();
 
                 foreach (var item in batch)
                 {
-                    var activity = new MessageActivity
+                    var activity = new MessageLog
                     {
                         MessageId = item.Id,
                         SeenById = request.UserId,
@@ -87,21 +82,17 @@ namespace Vogel.Messanger.Application.Conversations.Commands.MarkConversationAsS
 
                 await _messageActivityRepository.InsertManyAsync(messageActivities);
 
-                var @event = new LogMessagesActivitiesEvent
-                {
-                    Activities = messageActivities,
-                    SeenById = request.UserId
-                };
-
-                await _publishEndpoint.Publish(@event);
-
                 counter += BATCH_SIZE;
             }
+
+            var @event = new LogMessagesActivitiesEvent(request.ConversationId, request.UserId, seenAt);
+
+            await _publishEndpoint.Publish(@event);
 
             return Unit.Value;
         }
 
-        private async Task<Result<Unit>> CheckIfUserParticipantInConversation(string conversationtId , string userId)
+        private async Task<Result<Unit>> CheckIfUserParticipantInConversation(string conversationtId, string userId)
         {
             var participant = await _participantRepository.SingleOrDefaultAsync(x => x.ConversationId == conversationtId && x.UserId == userId);
 

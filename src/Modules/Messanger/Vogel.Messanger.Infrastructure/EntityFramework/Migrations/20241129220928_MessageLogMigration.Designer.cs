@@ -12,8 +12,8 @@ using Vogel.Messanger.Infrastructure.EntityFramework;
 namespace Vogel.Messanger.Infrastructure.EntityFramework.Migrations
 {
     [DbContext(typeof(MessangerDbContext))]
-    [Migration("20241120185844_MessageActivityMigration")]
-    partial class MessageActivityMigration
+    [Migration("20241129220928_MessageLogMigration")]
+    partial class MessageLogMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -171,7 +171,7 @@ namespace Vogel.Messanger.Infrastructure.EntityFramework.Migrations
                     b.ToTable("Messages", "Messanger");
                 });
 
-            modelBuilder.Entity("Vogel.Messanger.Domain.Messages.MessageActivity", b =>
+            modelBuilder.Entity("Vogel.Messanger.Domain.Messages.MessageLog", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(256)
@@ -223,7 +223,7 @@ namespace Vogel.Messanger.Infrastructure.EntityFramework.Migrations
 
                     b.HasIndex("SeenById");
 
-                    b.ToTable("MessagesActivites", "Messanger");
+                    b.ToTable("MessagesLogs", "Messanger");
                 });
 
             modelBuilder.Entity("Vogel.Messanger.Domain.Messages.Message", b =>
@@ -235,7 +235,7 @@ namespace Vogel.Messanger.Infrastructure.EntityFramework.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Vogel.Messanger.Domain.Messages.MessageActivity", b =>
+            modelBuilder.Entity("Vogel.Messanger.Domain.Messages.MessageLog", b =>
                 {
                     b.HasOne("Vogel.Messanger.Domain.Messages.Message", null)
                         .WithMany()

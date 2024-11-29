@@ -1,8 +1,8 @@
 ﻿namespace Vogel.Messanger.Domain.Messages
 {
-    public class MessageActivityTableConsts
+    public class MessageLogTableConsts
     {
-        public const string TableName = "MessagesActivites";
+        public const string TableName = "MessagesLogs";
         public const int IdLength = 256;
 
         public const int MessageIdLength = 256;

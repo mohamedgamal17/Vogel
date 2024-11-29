@@ -35,7 +35,8 @@ namespace Vogel.Messanger.Application.Messages.Factories
                 Id = message.Id,
                 ConversationId = message.ConversationId,
                 SenderId = message.SenderId,
-                Content = message.Content
+                Content = message.Content,
+                IsSeen = message.IsSeen
             };
 
             if (message.Sender != null)

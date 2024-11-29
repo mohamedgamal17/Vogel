@@ -4,6 +4,5 @@
     {
         public const string MessageCollection = "messages";
 
-        public const string MessageActivityCollection = "messages_activites";
     }
 }

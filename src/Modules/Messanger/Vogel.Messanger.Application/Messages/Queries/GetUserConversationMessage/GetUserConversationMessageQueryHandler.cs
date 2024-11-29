@@ -45,7 +45,7 @@ namespace Vogel.Messanger.Application.Messages.Queries.GetUserConversationMessag
                 return new Result<MessageDto>(authorizationResult.Exception!);
             }
 
-            var result = await _messageMongoRepository.GetMessageViewbyId(request.ConversationId, request.MessageId);
+            var result = await _messageMongoRepository.FindViewAsync(request.ConversationId, request.MessageId);
 
             if(result == null)
             {

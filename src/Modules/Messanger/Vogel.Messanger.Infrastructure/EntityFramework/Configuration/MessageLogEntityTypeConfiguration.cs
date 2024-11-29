@@ -5,15 +5,15 @@ using Vogel.Messanger.Domain.Messages;
 
 namespace Vogel.Messanger.Infrastructure.EntityFramework.Configuration
 {
-    public class MessageActivityEntityTypeConfiguration : IEntityTypeConfiguration<MessageActivity>
+    public class MessageLogEntityTypeConfiguration : IEntityTypeConfiguration<MessageLog>
     {
-        public void Configure(EntityTypeBuilder<MessageActivity> builder)
+        public void Configure(EntityTypeBuilder<MessageLog> builder)
         {
-            builder.ToTable(MessageActivityTableConsts.TableName);
+            builder.ToTable(MessageLogTableConsts.TableName);
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.Id).HasMaxLength(MessageActivityTableConsts.IdLength);
-            builder.Property(x => x.SeenById).HasMaxLength(MessageActivityTableConsts.SeenByIdLength);
-            builder.Property(x => x.MessageId).HasMaxLength(MessageActivityTableConsts.MessageIdLength);
+            builder.Property(x => x.Id).HasMaxLength(MessageLogTableConsts.IdLength);
+            builder.Property(x => x.SeenById).HasMaxLength(MessageLogTableConsts.SeenByIdLength);
+            builder.Property(x => x.MessageId).HasMaxLength(MessageLogTableConsts.MessageIdLength);
             builder.Property(x => x.SeenAt).IsRequired();
             builder.AutoMapAuditing();
             builder.HasOne<Message>().WithMany().HasForeignKey(x => x.MessageId);
