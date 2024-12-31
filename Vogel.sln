@@ -77,7 +77,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Messanger.Application
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Messanger.Infrastructure", "src\Modules\Messanger\Vogel.Messanger.Infrastructure\Vogel.Messanger.Infrastructure.csproj", "{0BA01382-8880-40DA-AFFA-7D0493CB8251}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vogel.Messanger.Presentation", "src\Modules\Messanger\Vogel.Messanger.Presentation\Vogel.Messanger.Presentation.csproj", "{6C96BCE2-0AA4-4503-82E3-9E57A2EBAE78}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vogel.Messanger.Presentation", "src\Modules\Messanger\Vogel.Messanger.Presentation\Vogel.Messanger.Presentation.csproj", "{6C96BCE2-0AA4-4503-82E3-9E57A2EBAE78}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vogel.Module.IntegrationTests", "tests\Vogel.Module.IntegrationTests\Vogel.Module.IntegrationTests.csproj", "{EE963A6B-2BE0-451C-AA8C-0DE91F4947B5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -193,6 +195,10 @@ Global
 		{6C96BCE2-0AA4-4503-82E3-9E57A2EBAE78}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C96BCE2-0AA4-4503-82E3-9E57A2EBAE78}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C96BCE2-0AA4-4503-82E3-9E57A2EBAE78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE963A6B-2BE0-451C-AA8C-0DE91F4947B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE963A6B-2BE0-451C-AA8C-0DE91F4947B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE963A6B-2BE0-451C-AA8C-0DE91F4947B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE963A6B-2BE0-451C-AA8C-0DE91F4947B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -234,6 +240,7 @@ Global
 		{B63B5294-910A-4988-9006-05E294EFE0A0} = {2CBD3CA6-AB9A-4A1B-AFD8-EFB5EEC16933}
 		{0BA01382-8880-40DA-AFFA-7D0493CB8251} = {4E68749D-0F8E-41E1-9428-CDFFF65A973F}
 		{6C96BCE2-0AA4-4503-82E3-9E57A2EBAE78} = {4E68749D-0F8E-41E1-9428-CDFFF65A973F}
+		{EE963A6B-2BE0-451C-AA8C-0DE91F4947B5} = {3586116B-B295-4BE5-B9CF-995158B9C038}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A7AC3C50-99B3-48CD-965D-64A3D2BDD554}
