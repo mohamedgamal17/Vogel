@@ -10,11 +10,11 @@ using Vogel.Social.Domain;
 using Vogel.Social.Domain.Pictures;
 using Vogel.Social.Domain.Users;
 using Vogel.Social.MongoEntities.Users;
-namespace Vogel.Social.Application.Tests.Users
+namespace Vogel.Social.Application.Tests.Users.Commands
 {
     public class CreateUserCommandHandlerTests : SocialTestFixture
     {
-        protected ISocialRepository<User> UserRepository { get;}
+        protected ISocialRepository<User> UserRepository { get; }
         protected IMongoRepository<UserMongoEntity> UserMongoRepository { get; }
         protected ISocialRepository<Picture> PictureRepository { get; }
 

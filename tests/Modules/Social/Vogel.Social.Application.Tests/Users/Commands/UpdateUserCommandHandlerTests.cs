@@ -10,7 +10,7 @@ using Vogel.Social.Application.Users.Commands.UpdateUser;
 using Vogel.Application.Tests.Extensions;
 using FluentAssertions;
 using Vogel.Social.Application.Tests.Extensions;
-namespace Vogel.Social.Application.Tests.Users
+namespace Vogel.Social.Application.Tests.Users.Commands
 {
     public class UpdateUserCommandHandlerTests : SocialTestFixture
     {
@@ -49,12 +49,12 @@ namespace Vogel.Social.Application.Tests.Users
 
             result.ShouldBeSuccess();
 
-            var user = await UserRepository.SingleOrDefaultAsync(x=> x.Id == result.Value!.Id);
+            var user = await UserRepository.SingleOrDefaultAsync(x => x.Id == result.Value!.Id);
 
             var mongoEntity = await UserMongoRepository.FindByIdAsync(user!.Id);
 
             user.Should().NotBeNull();
-      
+
             mongoEntity.Should().NotBeNull();
 
             user.AssertUser(command);
