@@ -18,7 +18,7 @@ namespace Vogel.Application.Tests.Services
 
             var princibal = new ClaimsPrincipal();
 
-            var identity = new ClaimsIdentity();
+            var identity = new ClaimsIdentity("TEST_AUTHENTICATION") ;
 
             identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, id));
             identity.AddClaim(new Claim(ClaimTypes.Name, username));
