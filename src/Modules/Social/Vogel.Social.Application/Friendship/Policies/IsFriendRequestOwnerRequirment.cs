@@ -31,7 +31,7 @@ namespace Vogel.Social.Application.Friendship.Policies
         }
     }
 
-    public class IsFriendRequestMongoViewOwnerRequeirmentHandler : AuthorizationHandler<IsFriendOwnerRequirment, FriendRequestMongoView>
+    public class IsFriendRequestMongoViewOwnerRequeirmentHandler : AuthorizationHandler<IsFriendRequestOwnerRequirment, FriendRequestMongoView>
     {
         public ISecurityContext _securityContext;
 
@@ -39,7 +39,7 @@ namespace Vogel.Social.Application.Friendship.Policies
         {
             _securityContext = securityContext;
         }
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IsFriendOwnerRequirment requirement, FriendRequestMongoView resource)
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IsFriendRequestOwnerRequirment requirement, FriendRequestMongoView resource)
         {
             string currentUserId = _securityContext.User!.Id;
 
