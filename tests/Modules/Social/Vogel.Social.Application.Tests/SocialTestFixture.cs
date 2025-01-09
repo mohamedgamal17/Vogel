@@ -98,8 +98,8 @@ namespace Vogel.Social.Application.Tests
 
                     var userFriendRequests = randomUserFriends?.Select(x => new FriendRequest
                     {
-                        SenderId = user.Id,
-                        ReciverId = x.Id
+                        SenderId = x.Id,
+                        ReciverId = user.Id
                     });
 
                     await dbContext.AddRangeAsync(userFriendRequests!);
