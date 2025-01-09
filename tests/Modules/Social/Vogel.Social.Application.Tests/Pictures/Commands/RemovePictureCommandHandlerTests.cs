@@ -8,7 +8,7 @@ using Vogel.Social.Application.Pictures.Commands.RemovePicture;
 using Vogel.Social.Domain;
 using Vogel.Social.Domain.Pictures;
 using Vogel.Social.MongoEntities.Pictures;
-namespace Vogel.Social.Application.Tests.Pictures
+namespace Vogel.Social.Application.Tests.Pictures.Commands
 {
     public class RemovePictureCommandHandlerTests : SocialTestFixture
     {
@@ -67,7 +67,7 @@ namespace Vogel.Social.Application.Tests.Pictures
 
             var command = new RemovePictureCommand
             {
-                Id =fakePicture.Id
+                Id = fakePicture.Id
             };
 
             var result = await Mediator.Send(command);
@@ -89,7 +89,7 @@ namespace Vogel.Social.Application.Tests.Pictures
             result.ShoulBeFailure(typeof(EntityNotFoundException));
         }
 
-        private async Task<Picture> CreatePicture(string userId )
+        private async Task<Picture> CreatePicture(string userId)
         {
             var picture = new Picture
             {

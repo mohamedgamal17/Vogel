@@ -11,7 +11,7 @@ namespace Vogel.Social.Application.Tests.Pictures.Queries
     {
         public ISocialRepository<Picture> PictureRepository { get; }
         public ISocialRepository<User> UserRepository { get; }
-        public GetPictureByIdQueryHandlerTests()
+        public ListPictureQueryHandlerTests()
         {
             PictureRepository = ServiceProvider.GetRequiredService<ISocialRepository<Picture>>();
             UserRepository = ServiceProvider.GetRequiredService<ISocialRepository<User>>();

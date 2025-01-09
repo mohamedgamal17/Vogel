@@ -8,7 +8,7 @@ using Vogel.Social.Application.Tests.Extensions;
 using Vogel.Social.Domain;
 using Vogel.Social.Domain.Pictures;
 using Vogel.Social.MongoEntities.Pictures;
-namespace Vogel.Social.Application.Tests.Pictures
+namespace Vogel.Social.Application.Tests.Pictures.Commands
 {
     public class CreatePictureCommandHandlerTests : SocialTestFixture
     {
