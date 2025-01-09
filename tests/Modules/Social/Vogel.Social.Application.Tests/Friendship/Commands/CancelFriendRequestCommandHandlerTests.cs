@@ -1,19 +1,19 @@
-﻿using Bogus;
-using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
-using Vogel.Application.Tests.Extensions;
-using Vogel.BuildingBlocks.Domain.Exceptions;
-using Vogel.Social.Application.Friendship.Commands.AcceptFriendRequest;
-using Vogel.Social.Application.Tests.Extensions;
-using Vogel.Social.Domain;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Vogel.Social.Domain.Friendship;
 using Vogel.Social.Domain.Users;
+using Vogel.Social.Domain;
 using Vogel.Social.MongoEntities.Friendship;
+using Bogus;
 using Vogel.Social.Shared.Common;
+using Vogel.Social.Application.Friendship.Commands.CancelFriendRequest;
+using Vogel.Application.Tests.Extensions;
+using FluentAssertions;
+using Vogel.Social.Application.Tests.Extensions;
+using Vogel.BuildingBlocks.Domain.Exceptions;
 
-namespace Vogel.Social.Application.Tests.Friendship
+namespace Vogel.Social.Application.Tests.Friendship.Commands
 {
-    public class AcceptFriendRequestCommandHandlerTests : SocialTestFixture
+    public class CancelFriendRequestCommandHandlerTests : SocialTestFixture
     {
         public ISocialRepository<FriendRequest> FriendRequestRepository { get; }
         public FriendRequestMongoRepository FriendRequestMongoRepository { get; }
@@ -21,7 +21,7 @@ namespace Vogel.Social.Application.Tests.Friendship
         public ISocialRepository<Friend> FriendRepository { get; }
         public FriendMongoRepository FriendMongoRepository { get; }
 
-        public AcceptFriendRequestCommandHandlerTests()
+        public CancelFriendRequestCommandHandlerTests()
         {
             FriendRequestRepository = ServiceProvider.GetRequiredService<ISocialRepository<FriendRequest>>();
             FriendRequestMongoRepository = ServiceProvider.GetRequiredService<FriendRequestMongoRepository>();
@@ -29,73 +29,8 @@ namespace Vogel.Social.Application.Tests.Friendship
             FriendRepository = ServiceProvider.GetRequiredService<ISocialRepository<Friend>>();
             FriendMongoRepository = ServiceProvider.GetRequiredService<FriendMongoRepository>();
         }
-
         [Test]
-        public async Task Should_accept_friend_request_and_create_new_friend()
-        {
-            UserService.Login();
-
-            string userId = UserService.GetCurrentUser()!.Id;
-
-            var currentUser = await CreateFakeUser(userId);
-            var senderUser = await CreateFakeUser()!;
-
-            var fakeFriendRequest = await CreateFakeFriendRequest(senderUser, currentUser);
-
-            var command = new AcceptFriendRequestCommand
-            {
-                FriendRequestId = fakeFriendRequest.Id
-            };
-
-            var result = await Mediator.Send(command);
-
-            result.ShouldBeSuccess();
-
-            result.Value.Should().NotBeNull();
-
-            var friendRequest = await FriendRequestRepository.FindByIdAsync(fakeFriendRequest.Id);
-
-            friendRequest!.State.Should().Be(FriendRequestState.Accepted);
-
-            var friend = await FriendRepository.FindByIdAsync(result.Value!.Id);
-
-            friend.Should().NotBeNull();
-
-            friend!.AssertFriend(senderUser.Id, currentUser.Id);
-
-            var friendMongoEntity = await FriendMongoRepository.FindByIdAsync(friend!.Id);
-
-            friendMongoEntity.Should().NotBeNull();
-
-            friendMongoEntity!.AssertFriendMongoEntity(friend);
-
-            result.Value.AssertFriendDto(friend, senderUser, currentUser);
-        }
-
-
-        [Test]
-        public async Task Should_failure_when_accepting_friend_request_while_user_is_not_authorized()
-        {
-
-            var sender = await CreateFakeUser();
-            var reciver = await CreateFakeUser();
-
-            var fakeFriendRequest = await CreateFakeFriendRequest(sender, reciver);
-
-
-            var command = new AcceptFriendRequestCommand
-            {
-                FriendRequestId = fakeFriendRequest.Id
-            };
-
-            var result = await Mediator.Send(command);
-
-            result.ShoulBeFailure(typeof(UnauthorizedAccessException));
-        }
-
-
-        [Test]
-        public async Task Should_failure_when_accepting_friend_request_while_user_is_not_the_reciver_of_request()
+        public async Task Should_sender_cancel_friend_request()
         {
             UserService.Login();
 
@@ -106,15 +41,64 @@ namespace Vogel.Social.Application.Tests.Friendship
 
             var fakeFriendRequest = await CreateFakeFriendRequest(sender, reciver);
 
-            var command = new AcceptFriendRequestCommand
-            {
-                FriendRequestId = fakeFriendRequest.Id
-            };
+            var command = new CancelFriendRequestCommand { FriendRequestId = fakeFriendRequest.Id };
+
+            var result = await Mediator.Send(command);
+
+            result.ShouldBeSuccess();
+
+            var friendRequest = await FriendRequestRepository.FindByIdAsync(result.Value!.Id);
+
+            friendRequest!.State.Should().Be(FriendRequestState.Cancelled);
+
+            var monogEntity = await FriendRequestMongoRepository.FindByIdAsync(friendRequest!.Id);
+
+            monogEntity.Should().NotBeNull();
+
+            monogEntity!.AssertFriendRequestMongoEntity(friendRequest);
+
+            result.Value.AssertFriendRequestDto(friendRequest, sender, reciver);
+        }
+
+        [Test]
+        public async Task Should_failure_when_cancelling_friend_request_when_user_is_not_authorized()
+        {
+            var sender = await CreateFakeUser();
+
+            var reciver = await CreateFakeUser();
+
+            var fakeFriendRequest = await CreateFakeFriendRequest(sender, reciver);
+
+            var command = new CancelFriendRequestCommand { FriendRequestId = fakeFriendRequest.Id };
+
+            var result = await Mediator.Send(command);
+
+            result.ShoulBeFailure(typeof(UnauthorizedAccessException));
+
+        }
+
+
+        [Test]
+        public async Task Should_failure_when_cancelling_friend_request_when_user_is_not_the_real_sender()
+        {
+            UserService.Login();
+
+            string userId = UserService.GetCurrentUser()!.Id;
+
+            var sender = await CreateFakeUser();
+
+            var reciver = await CreateFakeUser(userId);
+
+            var fakeFriendRequest = await CreateFakeFriendRequest(sender, reciver);
+
+            var command = new CancelFriendRequestCommand { FriendRequestId = fakeFriendRequest.Id };
 
             var result = await Mediator.Send(command);
 
             result.ShoulBeFailure(typeof(ForbiddenAccessException));
         }
+
+
         private async Task<User> CreateFakeUser(string? userId = null)
         {
             Faker faker = new Faker();

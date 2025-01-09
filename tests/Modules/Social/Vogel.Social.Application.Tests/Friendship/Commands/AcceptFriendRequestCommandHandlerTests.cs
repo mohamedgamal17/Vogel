@@ -3,7 +3,7 @@ using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Vogel.Application.Tests.Extensions;
 using Vogel.BuildingBlocks.Domain.Exceptions;
-using Vogel.Social.Application.Friendship.Commands.RejectFriendRequest;
+using Vogel.Social.Application.Friendship.Commands.AcceptFriendRequest;
 using Vogel.Social.Application.Tests.Extensions;
 using Vogel.Social.Domain;
 using Vogel.Social.Domain.Friendship;
@@ -11,84 +11,110 @@ using Vogel.Social.Domain.Users;
 using Vogel.Social.MongoEntities.Friendship;
 using Vogel.Social.Shared.Common;
 
-namespace Vogel.Social.Application.Tests.Friendship
+namespace Vogel.Social.Application.Tests.Friendship.Commands
 {
-    public class RejectFriendRequestCommandHandlerTests : SocialTestFixture
+    public class AcceptFriendRequestCommandHandlerTests : SocialTestFixture
     {
         public ISocialRepository<FriendRequest> FriendRequestRepository { get; }
         public FriendRequestMongoRepository FriendRequestMongoRepository { get; }
         public ISocialRepository<User> UserRepository { get; }
+        public ISocialRepository<Friend> FriendRepository { get; }
+        public FriendMongoRepository FriendMongoRepository { get; }
 
-        public RejectFriendRequestCommandHandlerTests()
+        public AcceptFriendRequestCommandHandlerTests()
         {
             FriendRequestRepository = ServiceProvider.GetRequiredService<ISocialRepository<FriendRequest>>();
             FriendRequestMongoRepository = ServiceProvider.GetRequiredService<FriendRequestMongoRepository>();
             UserRepository = ServiceProvider.GetRequiredService<ISocialRepository<User>>();
+            FriendRepository = ServiceProvider.GetRequiredService<ISocialRepository<Friend>>();
+            FriendMongoRepository = ServiceProvider.GetRequiredService<FriendMongoRepository>();
         }
 
         [Test]
-        public async Task Should_reciver_reject_friend_request()
+        public async Task Should_accept_friend_request_and_create_new_friend()
         {
             UserService.Login();
 
             string userId = UserService.GetCurrentUser()!.Id;
-            var reciver = await CreateFakeUser(userId);
-            var sender = await CreateFakeUser();
 
-            var fakeFriendRequest = await CreateFakeFriendRequest(sender, reciver);
+            var currentUser = await CreateFakeUser(userId);
+            var senderUser = await CreateFakeUser()!;
 
-            var command = new RejectFriendRequestCommand { FriendRequestId = fakeFriendRequest.Id };
+            var fakeFriendRequest = await CreateFakeFriendRequest(senderUser, currentUser);
+
+            var command = new AcceptFriendRequestCommand
+            {
+                FriendRequestId = fakeFriendRequest.Id
+            };
 
             var result = await Mediator.Send(command);
 
             result.ShouldBeSuccess();
 
-            var friendRequest = await FriendRequestRepository.FindByIdAsync(result.Value!.Id);
+            result.Value.Should().NotBeNull();
 
-            friendRequest!.State.Should().Be(FriendRequestState.Rejected);
+            var friendRequest = await FriendRequestRepository.FindByIdAsync(fakeFriendRequest.Id);
 
-            var monogEntity = await FriendRequestMongoRepository.FindByIdAsync(friendRequest!.Id);
+            friendRequest!.State.Should().Be(FriendRequestState.Accepted);
 
-            monogEntity.Should().NotBeNull();
+            var friend = await FriendRepository.FindByIdAsync(result.Value!.Id);
 
-            monogEntity!.AssertFriendRequestMongoEntity(friendRequest);
+            friend.Should().NotBeNull();
 
-            result.Value.AssertFriendRequestDto(friendRequest, sender, reciver);
+            friend!.AssertFriend(senderUser.Id, currentUser.Id);
+
+            var friendMongoEntity = await FriendMongoRepository.FindByIdAsync(friend!.Id);
+
+            friendMongoEntity.Should().NotBeNull();
+
+            friendMongoEntity!.AssertFriendMongoEntity(friend);
+
+            result.Value.AssertFriendDto(friend, senderUser, currentUser);
         }
 
+
         [Test]
-        public async Task Should_failure_when_rejecting_friend_request_while_user_is_not_authorized()
+        public async Task Should_failure_when_accepting_friend_request_while_user_is_not_authorized()
         {
+
             var sender = await CreateFakeUser();
             var reciver = await CreateFakeUser();
 
             var fakeFriendRequest = await CreateFakeFriendRequest(sender, reciver);
 
-            var command = new RejectFriendRequestCommand { FriendRequestId = fakeFriendRequest.Id };
+
+            var command = new AcceptFriendRequestCommand
+            {
+                FriendRequestId = fakeFriendRequest.Id
+            };
 
             var result = await Mediator.Send(command);
 
             result.ShoulBeFailure(typeof(UnauthorizedAccessException));
-
         }
 
+
         [Test]
-        public async Task Should_failure_when_rejecting_friend_request_while_user_is_not_the_real_reciver()
+        public async Task Should_failure_when_accepting_friend_request_while_user_is_not_the_reciver_of_request()
         {
             UserService.Login();
+
             string userId = UserService.GetCurrentUser()!.Id;
+
             var sender = await CreateFakeUser(userId);
             var reciver = await CreateFakeUser();
 
             var fakeFriendRequest = await CreateFakeFriendRequest(sender, reciver);
 
-            var command = new RejectFriendRequestCommand { FriendRequestId = fakeFriendRequest.Id };
+            var command = new AcceptFriendRequestCommand
+            {
+                FriendRequestId = fakeFriendRequest.Id
+            };
 
             var result = await Mediator.Send(command);
 
             result.ShoulBeFailure(typeof(ForbiddenAccessException));
         }
-
         private async Task<User> CreateFakeUser(string? userId = null)
         {
             Faker faker = new Faker();
@@ -117,5 +143,4 @@ namespace Vogel.Social.Application.Tests.Friendship
             return await FriendRequestRepository.InsertAsync(reqeust);
         }
     }
-
 }

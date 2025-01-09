@@ -9,7 +9,7 @@ using Vogel.Social.Domain.Friendship;
 using Vogel.Social.Domain.Users;
 using Vogel.Social.MongoEntities.Friendship;
 using Vogel.Social.Shared.Common;
-namespace Vogel.Social.Application.Tests.Friendship
+namespace Vogel.Social.Application.Tests.Friendship.Commands
 {
     public class RemoveFriendRequestCommandHandlerTests : SocialTestFixture
     {

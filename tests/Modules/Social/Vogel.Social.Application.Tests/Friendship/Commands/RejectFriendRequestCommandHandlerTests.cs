@@ -3,22 +3,23 @@ using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Vogel.Application.Tests.Extensions;
 using Vogel.BuildingBlocks.Domain.Exceptions;
-using Vogel.Social.Application.Friendship.Commands.SendFriendRequest;
+using Vogel.Social.Application.Friendship.Commands.RejectFriendRequest;
 using Vogel.Social.Application.Tests.Extensions;
 using Vogel.Social.Domain;
 using Vogel.Social.Domain.Friendship;
 using Vogel.Social.Domain.Users;
 using Vogel.Social.MongoEntities.Friendship;
 using Vogel.Social.Shared.Common;
-namespace Vogel.Social.Application.Tests.Friendship
+
+namespace Vogel.Social.Application.Tests.Friendship.Commands
 {
-    public class SendFriendRequestCommandHandlerTests : SocialTestFixture
+    public class RejectFriendRequestCommandHandlerTests : SocialTestFixture
     {
-        public ISocialRepository<FriendRequest> FriendRequestRepository { get;  }
+        public ISocialRepository<FriendRequest> FriendRequestRepository { get; }
         public FriendRequestMongoRepository FriendRequestMongoRepository { get; }
         public ISocialRepository<User> UserRepository { get; }
 
-        public SendFriendRequestCommandHandlerTests()
+        public RejectFriendRequestCommandHandlerTests()
         {
             FriendRequestRepository = ServiceProvider.GetRequiredService<ISocialRepository<FriendRequest>>();
             FriendRequestMongoRepository = ServiceProvider.GetRequiredService<FriendRequestMongoRepository>();
@@ -26,20 +27,17 @@ namespace Vogel.Social.Application.Tests.Friendship
         }
 
         [Test]
-        public async Task Should_create_friend_request()
+        public async Task Should_reciver_reject_friend_request()
         {
             UserService.Login();
 
             string userId = UserService.GetCurrentUser()!.Id;
+            var reciver = await CreateFakeUser(userId);
+            var sender = await CreateFakeUser();
 
-            var currentUser = await CreateFakeUser(userId);
+            var fakeFriendRequest = await CreateFakeFriendRequest(sender, reciver);
 
-            var targetUser = await CreateFakeUser();
-
-            var command = new SendFriendRequestCommand
-            {
-                ReciverId = targetUser.Id
-            };
+            var command = new RejectFriendRequestCommand { FriendRequestId = fakeFriendRequest.Id };
 
             var result = await Mediator.Send(command);
 
@@ -47,9 +45,7 @@ namespace Vogel.Social.Application.Tests.Friendship
 
             var friendRequest = await FriendRequestRepository.FindByIdAsync(result.Value!.Id);
 
-            friendRequest.Should().NotBeNull();
-
-            friendRequest!.AssertSendFriendRequestCommand(command, userId);
+            friendRequest!.State.Should().Be(FriendRequestState.Rejected);
 
             var monogEntity = await FriendRequestMongoRepository.FindByIdAsync(friendRequest!.Id);
 
@@ -57,46 +53,41 @@ namespace Vogel.Social.Application.Tests.Friendship
 
             monogEntity!.AssertFriendRequestMongoEntity(friendRequest);
 
-            result.Value.AssertFriendRequestDto(friendRequest, currentUser, targetUser);
+            result.Value.AssertFriendRequestDto(friendRequest, sender, reciver);
         }
 
         [Test]
-        public async Task Should_failure_when_sending_friend_request_while_user_is_not_authorized()
+        public async Task Should_failure_when_rejecting_friend_request_while_user_is_not_authorized()
         {
-            var fakeUser = await CreateFakeUser();
+            var sender = await CreateFakeUser();
+            var reciver = await CreateFakeUser();
 
-            var command = new SendFriendRequestCommand
-            {
-                ReciverId = fakeUser.Id
-            };
+            var fakeFriendRequest = await CreateFakeFriendRequest(sender, reciver);
+
+            var command = new RejectFriendRequestCommand { FriendRequestId = fakeFriendRequest.Id };
 
             var result = await Mediator.Send(command);
 
             result.ShoulBeFailure(typeof(UnauthorizedAccessException));
+
         }
 
         [Test]
-        public async Task Should_failure_when_sending_friend_request_while_there_is_already_pending_request()
+        public async Task Should_failure_when_rejecting_friend_request_while_user_is_not_the_real_reciver()
         {
             UserService.Login();
-
             string userId = UserService.GetCurrentUser()!.Id;
+            var sender = await CreateFakeUser(userId);
+            var reciver = await CreateFakeUser();
 
-            var currentUser = await CreateFakeUser(userId);
-            var targetUser = await CreateFakeUser();
+            var fakeFriendRequest = await CreateFakeFriendRequest(sender, reciver);
 
-            var fakeRequest = await CreateFakeFriendRequest(currentUser, targetUser);
-
-            var command = new SendFriendRequestCommand
-            {
-                ReciverId = targetUser.Id
-            };
+            var command = new RejectFriendRequestCommand { FriendRequestId = fakeFriendRequest.Id };
 
             var result = await Mediator.Send(command);
 
-            result.ShoulBeFailure(typeof(BusinessLogicException));
+            result.ShoulBeFailure(typeof(ForbiddenAccessException));
         }
-
 
         private async Task<User> CreateFakeUser(string? userId = null)
         {
@@ -125,7 +116,6 @@ namespace Vogel.Social.Application.Tests.Friendship
 
             return await FriendRequestRepository.InsertAsync(reqeust);
         }
-
-
     }
+
 }
