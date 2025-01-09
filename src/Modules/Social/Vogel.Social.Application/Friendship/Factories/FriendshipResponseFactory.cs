@@ -46,9 +46,13 @@ namespace Vogel.Social.Application.Friendship.Factories
         }
 
 
-        public Task<List<FriendDto>> PrepareListFriendDto(List<FriendMongoView> friends)
+        public async Task<List<FriendDto>> PrepareListFriendDto(List<FriendMongoView> friends)
         {
-            throw new NotImplementedException();
+            var tasks = friends.Select(PrepareFriendDto);
+
+            var results = await Task.WhenAll(tasks);
+
+            return results.ToList();
         }
 
         public async Task<FriendDto> PrepareFriendDto(FriendMongoView friend)
