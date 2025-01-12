@@ -56,7 +56,7 @@ namespace Vogel.Application.Tests.Extensions
 
 
             return data
-                .OrderBy(x => EF.Functions.Random())
+                .OrderBy(x => Guid.NewGuid().ToString())
                 .FirstOrDefault();
         }
     }
