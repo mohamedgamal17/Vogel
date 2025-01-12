@@ -22,7 +22,9 @@ namespace Vogel.Content.Application.Tests.Medias
         [Test]
         public async Task Should_upload_user_media()
         {
-            AuthenticationService.Login();
+            var fakeUser = UserService.PickRandomUser()!;
+
+            AuthenticationService.Login(fakeUser.Id, fakeUser.FirstName + fakeUser.LastName, new List<string>());
 
             var command = new CreateMediaCommand
             {

@@ -27,9 +27,11 @@ namespace Vogel.Content.Application.Tests.Comments
         [Test]
         public async Task Should_update_comment()
         {
-            AuthenticationService.Login();
+            var fakeUser = UserService.PickRandomUser()!;
 
-            string userId = AuthenticationService.GetCurrentUser()!.Id;
+            AuthenticationService.Login(fakeUser.Id, fakeUser.FirstName + fakeUser.LastName, new List<string>());
+
+            string userId = fakeUser!.Id;
 
             var fakePost = await CreatePostAsync(userId);
 

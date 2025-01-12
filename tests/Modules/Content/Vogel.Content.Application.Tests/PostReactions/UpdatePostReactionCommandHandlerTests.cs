@@ -28,9 +28,11 @@ namespace Vogel.Content.Application.Tests.PostReactions
         [Test]
         public async Task Should_update_post_reaction()
         {
-            AuthenticationService.Login();
+            var fakeUser = UserService.PickRandomUser()!;
 
-            string userId = AuthenticationService.GetCurrentUser()!.Id;
+            AuthenticationService.Login(fakeUser.Id, fakeUser.FirstName + fakeUser.LastName, new List<string>());
+
+            string userId = fakeUser!.Id;
 
             var fakePost = await CreateFakePost(userId);
 

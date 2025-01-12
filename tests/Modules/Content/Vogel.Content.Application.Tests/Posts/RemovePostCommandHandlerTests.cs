@@ -22,9 +22,11 @@ namespace Vogel.Content.Application.Tests.Posts
         [Test]
         public async Task Should_remove_post()
         {
-            AuthenticationService.Login();
+            var fakeUser = UserService.PickRandomUser()!;
 
-            string userId = AuthenticationService.GetCurrentUser()!.Id;
+            AuthenticationService.Login(fakeUser.Id, fakeUser.FirstName + fakeUser.LastName, new List<string>());
+
+            string userId = fakeUser!.Id;
 
             var fakePost = await CreatePostAsync(userId);
 

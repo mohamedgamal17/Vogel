@@ -24,6 +24,8 @@ namespace Vogel.Content.Application.Tests
             });
 
             services.AddTransient<IUserService, FakeUserService>();
+
+            services.AddTransient<FakeUserService>();
         }
     }
 }
