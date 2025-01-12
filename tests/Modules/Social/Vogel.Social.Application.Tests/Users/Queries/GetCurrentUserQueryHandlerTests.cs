@@ -26,7 +26,7 @@ namespace Vogel.Social.Application.Tests.Users.Queries
 
             var userPicture = await PictureRepository.FindByIdAsync(targetUser!.AvatarId ?? Guid.NewGuid().ToString());
 
-            UserService.Login(targetUser.Id, targetUser.FirstName + targetUser.LastName, new List<string>());
+            AuthenticationService.Login(targetUser.Id, targetUser.FirstName + targetUser.LastName, new List<string>());
 
             var query = new GetCurrentUserQuery();
 
@@ -40,7 +40,7 @@ namespace Vogel.Social.Application.Tests.Users.Queries
         [Test]
         public async Task Should_failure_while_retriving_current_user_profile_when_user_dose_not_have_profile()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
             var query = new GetCurrentUserQuery();
 

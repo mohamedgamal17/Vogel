@@ -18,7 +18,7 @@ namespace Vogel.Social.Application.Tests.Users.Queries
         [Test]
         public async Task Should_list_users_by_ids()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
             var randomUsers = await UserRepository.AsQuerable().PickRandom(5);
 

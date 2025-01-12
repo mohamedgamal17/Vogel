@@ -24,7 +24,7 @@ namespace Vogel.Social.Application.Tests.Pictures.Commands
         [Test]
         public async Task Should_upload_picture()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
             var command = new CreatePictureCommand
             {
@@ -42,7 +42,7 @@ namespace Vogel.Social.Application.Tests.Pictures.Commands
 
             picture.Should().NotBeNull();
             mongoEntity.Should().NotBeNull();
-            picture!.AssertPicture(command, UserService.GetCurrentUser().Id);
+            picture!.AssertPicture(command, AuthenticationService.GetCurrentUser().Id);
             mongoEntity!.AssertPictureMongoEntity(picture!);
             result.Value.AssertPictureDto(picture!);
         }

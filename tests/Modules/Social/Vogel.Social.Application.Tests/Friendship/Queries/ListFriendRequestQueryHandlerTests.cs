@@ -20,7 +20,7 @@ namespace Vogel.Social.Application.Tests.Friendship.Queries
         {
             var currentUser = await UserRepository.AsQuerable().PickRandom();
 
-            UserService.Login(currentUser!.Id, currentUser.FirstName + currentUser.LastName, new List<string>());
+            AuthenticationService.Login(currentUser!.Id, currentUser.FirstName + currentUser.LastName, new List<string>());
 
             var query = new ListFriendRequestQuery() { UserId = currentUser.Id , Limit = 50};
 

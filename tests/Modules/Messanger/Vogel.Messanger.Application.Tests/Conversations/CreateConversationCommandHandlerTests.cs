@@ -33,9 +33,9 @@ namespace Vogel.Messanger.Application.Tests.Conversations
         [Test]
         public async Task Should_create_conversation()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
-            string currentUserId = UserService.GetCurrentUser()!.Id;
+            string currentUserId = AuthenticationService.GetCurrentUser()!.Id;
 
             await InsertUser(currentUserId);
 

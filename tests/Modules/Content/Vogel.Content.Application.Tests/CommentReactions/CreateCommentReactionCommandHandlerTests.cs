@@ -31,9 +31,9 @@ namespace Vogel.Content.Application.Tests.CommentReactions
         [Test]
         public async Task Should_create_comment_reaction()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
-            string userId = UserService.GetCurrentUser()!.Id;
+            string userId = AuthenticationService.GetCurrentUser()!.Id;
 
             var fakePost = await CreateFakePost(userId);
 

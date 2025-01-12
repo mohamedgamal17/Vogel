@@ -27,9 +27,9 @@ namespace Vogel.Social.Application.Tests.Friendship.Commands
         [Test]
         public async Task Should_remove_friend()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
-            string userId = UserService.GetCurrentUser()!.Id;
+            string userId = AuthenticationService.GetCurrentUser()!.Id;
 
             var soruce = await CreateFakeUser(userId);
 
@@ -71,7 +71,7 @@ namespace Vogel.Social.Application.Tests.Friendship.Commands
         [Test]
         public async Task Should_failure_when_removing_friend_while_user_is_not_the_soruce_or_target()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
             var source = await CreateFakeUser();
 

@@ -33,9 +33,9 @@ namespace Vogel.Social.Application.Tests.Friendship.Commands
         [Test]
         public async Task Should_accept_friend_request_and_create_new_friend()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
-            string userId = UserService.GetCurrentUser()!.Id;
+            string userId = AuthenticationService.GetCurrentUser()!.Id;
 
             var currentUser = await CreateFakeUser(userId);
             var senderUser = await CreateFakeUser()!;
@@ -97,9 +97,9 @@ namespace Vogel.Social.Application.Tests.Friendship.Commands
         [Test]
         public async Task Should_failure_when_accepting_friend_request_while_user_is_not_the_reciver_of_request()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
-            string userId = UserService.GetCurrentUser()!.Id;
+            string userId = AuthenticationService.GetCurrentUser()!.Id;
 
             var sender = await CreateFakeUser(userId);
             var reciver = await CreateFakeUser();

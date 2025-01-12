@@ -28,9 +28,9 @@ namespace Vogel.Social.Application.Tests.Friendship.Commands
         [Test]
         public async Task Should_create_friend_request()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
-            string userId = UserService.GetCurrentUser()!.Id;
+            string userId = AuthenticationService.GetCurrentUser()!.Id;
 
             var currentUser = await CreateFakeUser(userId);
 
@@ -78,9 +78,9 @@ namespace Vogel.Social.Application.Tests.Friendship.Commands
         [Test]
         public async Task Should_failure_when_sending_friend_request_while_there_is_already_pending_request()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
-            string userId = UserService.GetCurrentUser()!.Id;
+            string userId = AuthenticationService.GetCurrentUser()!.Id;
 
             var currentUser = await CreateFakeUser(userId);
             var targetUser = await CreateFakeUser();

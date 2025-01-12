@@ -29,11 +29,11 @@ namespace Vogel.Social.Application.Tests.Users.Commands
         [Test]
         public async Task Should_update_user()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
-            var fakeUser = await CreateUserAsync(UserService.GetCurrentUser().Id);
+            var fakeUser = await CreateUserAsync(AuthenticationService.GetCurrentUser().Id);
 
-            var fakePhoto = await CreatePictureAsync(UserService.GetCurrentUser().Id);
+            var fakePhoto = await CreatePictureAsync(AuthenticationService.GetCurrentUser().Id);
 
             var command = new UpdateUserCommand
             {
@@ -88,9 +88,9 @@ namespace Vogel.Social.Application.Tests.Users.Commands
         [Test]
         public async Task Should_failure_while_updating_user_when_user_is_dose_not_own_media()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
-            await CreateUserAsync(UserService.GetCurrentUser().Id);
+            await CreateUserAsync(AuthenticationService.GetCurrentUser().Id);
 
             var fakePhoto = await CreatePictureAsync(Guid.NewGuid().ToString());
 
@@ -111,9 +111,9 @@ namespace Vogel.Social.Application.Tests.Users.Commands
         [Test]
         public async Task Should_failure_while_updaing_user_when_user_is_not_exist()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
-            var fakePhoto = await CreatePictureAsync(UserService.GetCurrentUser().Id);
+            var fakePhoto = await CreatePictureAsync(AuthenticationService.GetCurrentUser().Id);
 
             var command = new UpdateUserCommand
             {
@@ -132,9 +132,9 @@ namespace Vogel.Social.Application.Tests.Users.Commands
         [Test]
         public async Task Should_failure_while_updating_user_when_image_is_not_exist()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
-            await CreateUserAsync(UserService.GetCurrentUser().Id);
+            await CreateUserAsync(AuthenticationService.GetCurrentUser().Id);
 
             var command = new UpdateUserCommand
             {

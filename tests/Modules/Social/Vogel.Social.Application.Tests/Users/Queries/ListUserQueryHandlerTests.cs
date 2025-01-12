@@ -9,7 +9,7 @@ namespace Vogel.Social.Application.Tests.Users.Queries
         [Test]
         public async Task Should_return_paged_list_of_users()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
             var query = new ListUsersQuery
             {

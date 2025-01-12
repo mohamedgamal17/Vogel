@@ -27,9 +27,9 @@ namespace Vogel.Content.Application.Tests.PostReactions
         [Test]
         public async Task Should_delete_post_reaction()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
-            string userId = UserService.GetCurrentUser()!.Id;
+            string userId = AuthenticationService.GetCurrentUser()!.Id;
 
             var fakePost = await CreateFakePost(userId);
 
@@ -77,7 +77,7 @@ namespace Vogel.Content.Application.Tests.PostReactions
         [Test]
         public async Task Shoul_failure_while_deleting_post_when_user_is_not_own_post_reaction()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
             var fakePost = await CreateFakePost(Guid.NewGuid().ToString());
 

@@ -22,8 +22,7 @@ namespace Vogel.Application.Tests
         protected IConfiguration Configuration { get; private set; }
         protected IHostEnvironment HostEnvironment { get; private set; }
         protected IMediator Mediator { get; private set; }
-
-        protected FakeUserService UserService { get; private set; }
+        protected FakeAuthenticationService AuthenticationService { get; private set; }
         protected abstract Task SetupAsync(IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment);
         protected abstract Task InitializeAsync(IServiceProvider services);
         protected abstract Task ShutdownAsync(IServiceProvider services);
@@ -49,7 +48,7 @@ namespace Vogel.Application.Tests
         protected virtual async Task BeforeAnyTests()
         {        
             Mediator = ServiceProvider.GetRequiredService<IMediator>();
-            UserService = ServiceProvider.GetRequiredService<FakeUserService>();
+            AuthenticationService = ServiceProvider.GetRequiredService<FakeAuthenticationService>();
             await InitializeAsync(ServiceProvider);
         }
 

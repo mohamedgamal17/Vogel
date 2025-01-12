@@ -28,9 +28,9 @@ namespace Vogel.Content.Application.Tests.Posts
         [Test]
         public async Task Should_update_post()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
-            string userId = UserService.GetCurrentUser()!.Id;
+            string userId = AuthenticationService.GetCurrentUser()!.Id;
 
             var fakeMedia = await CreateMediaAsync(userId);
 
@@ -89,7 +89,7 @@ namespace Vogel.Content.Application.Tests.Posts
         {
             var fakePost = await CreatePostAsync(Guid.NewGuid().ToString());
 
-            UserService.Login();
+            AuthenticationService.Login();
 
             var command = new UpdatePostCommand
             {
@@ -108,9 +108,9 @@ namespace Vogel.Content.Application.Tests.Posts
         {
             var fakeMedia = await CreateMediaAsync(Guid.NewGuid().ToString());
 
-            UserService.Login();
+            AuthenticationService.Login();
 
-            string userId = UserService.GetCurrentUser()!.Id;
+            string userId = AuthenticationService.GetCurrentUser()!.Id;
 
             var fakePost = await CreatePostAsync(userId);
 

@@ -25,9 +25,9 @@ namespace Vogel.Content.Application.Tests.Comments
         [Test]
         public async Task Should_remove_comment_when_comment_is_owned_to_the_user()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
-            string userId = UserService.GetCurrentUser()!.Id;
+            string userId = AuthenticationService.GetCurrentUser()!.Id;
 
             var fakePost = await CreatePostAsync(userId);
 
@@ -51,9 +51,9 @@ namespace Vogel.Content.Application.Tests.Comments
         [Test]
         public async Task Should_remove_comment_when_user_is_own_comment()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
-            string userId = UserService.GetCurrentUser()!.Id;
+            string userId = AuthenticationService.GetCurrentUser()!.Id;
 
             var fakePost = await CreatePostAsync(userId);
 
@@ -95,7 +95,7 @@ namespace Vogel.Content.Application.Tests.Comments
         [Test]
         public async Task Should_return_failure_result_while_removing_comment_when_post_is_not_exist()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
             var command = new RemoveCommentCommand
             {
@@ -111,9 +111,9 @@ namespace Vogel.Content.Application.Tests.Comments
         [Test]
         public async Task Should_return_failure_result_while_removing_comment_when_comment_is_not_exist()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
-            string userId = UserService.GetCurrentUser()!.Id;
+            string userId = AuthenticationService.GetCurrentUser()!.Id;
 
             var fakePost = await CreatePostAsync(userId);
 
@@ -131,7 +131,7 @@ namespace Vogel.Content.Application.Tests.Comments
         [Test]
         public async Task Should_return_failure_result_while_removing_comment_when_user_dose_not_own_comment()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
             var fakePost = await CreatePostAsync(Guid.NewGuid().ToString());
 

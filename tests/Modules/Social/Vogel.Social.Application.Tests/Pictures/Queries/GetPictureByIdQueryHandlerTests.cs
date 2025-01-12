@@ -25,7 +25,7 @@ namespace Vogel.Social.Application.Tests.Pictures.Queries
         {
             var currentUser = await UserRepository.AsQuerable().PickRandom();
 
-            UserService.Login(currentUser!.Id, currentUser.FirstName + currentUser.LastName, new List<string>());
+            AuthenticationService.Login(currentUser!.Id, currentUser.FirstName + currentUser.LastName, new List<string>());
 
             var targetPicture = await PictureRepository.AsQuerable().Where(x => x.UserId == currentUser.Id).PickRandom();
 
@@ -47,7 +47,7 @@ namespace Vogel.Social.Application.Tests.Pictures.Queries
         {
             var currentUser = await UserRepository.AsQuerable().PickRandom();
 
-            UserService.Login(currentUser!.Id, currentUser.FirstName + currentUser.LastName, new List<string>());
+            AuthenticationService.Login(currentUser!.Id, currentUser.FirstName + currentUser.LastName, new List<string>());
 
             var query = new GetPictureByIdQuery
             {
@@ -64,7 +64,7 @@ namespace Vogel.Social.Application.Tests.Pictures.Queries
         {
             var currentUser = await UserRepository.AsQuerable().PickRandom();
 
-            UserService.Login(currentUser!.Id, currentUser.FirstName + currentUser.LastName, new List<string>());
+            AuthenticationService.Login(currentUser!.Id, currentUser.FirstName + currentUser.LastName, new List<string>());
 
             var targetPicture = await PictureRepository.AsQuerable().Where(x => x.UserId != currentUser.Id).PickRandom();
 

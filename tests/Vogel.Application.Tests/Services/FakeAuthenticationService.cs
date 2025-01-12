@@ -4,7 +4,7 @@ using Vogel.BuildingBlocks.Infrastructure.Security;
 
 namespace Vogel.Application.Tests.Services
 {
-    public class FakeUserService
+    public class FakeAuthenticationService
     {
         private AsyncLocal<ClaimsPrincipal?> _ambientUserPrincipal = new AsyncLocal<ClaimsPrincipal?>();
         public bool IsAuthenticated => _ambientUserPrincipal.Value != null;
