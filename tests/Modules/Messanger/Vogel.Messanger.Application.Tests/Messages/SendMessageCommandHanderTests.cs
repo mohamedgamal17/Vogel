@@ -33,9 +33,9 @@ namespace Vogel.Messanger.Application.Tests.Messages
         [Test]
         public async Task Should_send_message_to_other_user()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
-            var currentUser = await CreateFakeUserAsync(UserService.GetCurrentUser()!.Id);
+            var currentUser = await CreateFakeUserAsync(AuthenticationService.GetCurrentUser()!.Id);
 
             var antotherUser = await CreateFakeUserAsync(Guid.NewGuid().ToString());
 
@@ -55,7 +55,7 @@ namespace Vogel.Messanger.Application.Tests.Messages
 
             message.Should().NotBeNull();
 
-            message!.AssertSendMessageCommand(command, UserService.GetCurrentUser()!.Id);
+            message!.AssertSendMessageCommand(command, AuthenticationService.GetCurrentUser()!.Id);
 
             var mongoEntity = await MessageMongoRepository.FindByIdAsync(result.Value!.Id);
 
@@ -82,7 +82,7 @@ namespace Vogel.Messanger.Application.Tests.Messages
         [Test]
         public async Task Should_failure_while_sending_message_when_conversation_is_not_exist()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
             var command = new SendMessageCommand
             {
@@ -98,7 +98,7 @@ namespace Vogel.Messanger.Application.Tests.Messages
         [Test]
         public async Task Should_failure_while_sending_message_when_user_is_not_participant_in_conversation()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
             List<string> participants = new List<string>
             {

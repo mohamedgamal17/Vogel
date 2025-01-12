@@ -28,9 +28,9 @@ namespace Vogel.Social.Application.Tests.Users.Commands
         [Test]
         public async Task Should_create_user_profile()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
-            var fakePicture = await CreatePictureAsync(UserService.GetCurrentUser().Id);
+            var fakePicture = await CreatePictureAsync(AuthenticationService.GetCurrentUser().Id);
 
             var command = new CreateUserCommand
             {
@@ -61,7 +61,7 @@ namespace Vogel.Social.Application.Tests.Users.Commands
         [Test]
         public async Task Should_failure_while_creating_user_when_user_dose_not_own_image()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
             var fakePicture = await CreatePictureAsync(Guid.NewGuid().ToString());
 
@@ -82,9 +82,9 @@ namespace Vogel.Social.Application.Tests.Users.Commands
         [Test]
         public async Task Should_failure_while_creating_user_when_user_profile_is_already_created()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
-            await CreateUserAsync(UserService.GetCurrentUser().Id);
+            await CreateUserAsync(AuthenticationService.GetCurrentUser().Id);
 
             var command = new CreateUserCommand
             {
@@ -117,7 +117,7 @@ namespace Vogel.Social.Application.Tests.Users.Commands
 
         public async Task Should_failure_while_creating_user_when_image_is_not_found()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
             var command = new CreateUserCommand
             {

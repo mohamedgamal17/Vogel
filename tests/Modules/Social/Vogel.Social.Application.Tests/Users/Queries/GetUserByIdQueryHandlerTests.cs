@@ -24,7 +24,7 @@ namespace Vogel.Social.Application.Tests.Users.Queries
         [Test]
         public async Task Should_get_user_Profile_by_id()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
             var targetUser = await UserRepository.AsQuerable().PickRandom();
 
@@ -45,7 +45,7 @@ namespace Vogel.Social.Application.Tests.Users.Queries
         [Test]
         public async Task Should_failure_while_getting_user_by_id_when_user_id_is_not_exist()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
             var userId = Guid.NewGuid().ToString();
 

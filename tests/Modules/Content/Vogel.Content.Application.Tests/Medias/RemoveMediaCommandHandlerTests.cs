@@ -24,9 +24,9 @@ namespace Vogel.Content.Application.Tests.Medias
         [Test]
         public async Task Should_remove_media()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
-            string userId = UserService.GetCurrentUser()!.Id;
+            string userId = AuthenticationService.GetCurrentUser()!.Id;
 
             var fakeMedia = await CreateMediaAsync(userId);
 
@@ -65,7 +65,7 @@ namespace Vogel.Content.Application.Tests.Medias
         {
             var media = await CreateMediaAsync(Guid.NewGuid().ToString());
 
-            UserService.Login();
+            AuthenticationService.Login();
 
             var command = new RemoveMediaCommand() { Id = media.Id };
 

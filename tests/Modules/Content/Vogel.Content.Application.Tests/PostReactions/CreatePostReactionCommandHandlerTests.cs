@@ -26,9 +26,9 @@ namespace Vogel.Content.Application.Tests.PostReactions
         [Test]
         public async Task Should_create_post_reaction()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
-            string userId = UserService.GetCurrentUser()!.Id;
+            string userId = AuthenticationService.GetCurrentUser()!.Id;
 
             var fakePost = await CreateFakePost(userId);
 

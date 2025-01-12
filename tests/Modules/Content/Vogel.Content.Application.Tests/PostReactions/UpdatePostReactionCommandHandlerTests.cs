@@ -28,9 +28,9 @@ namespace Vogel.Content.Application.Tests.PostReactions
         [Test]
         public async Task Should_update_post_reaction()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
-            string userId = UserService.GetCurrentUser()!.Id;
+            string userId = AuthenticationService.GetCurrentUser()!.Id;
 
             var fakePost = await CreateFakePost(userId);
 
@@ -87,9 +87,9 @@ namespace Vogel.Content.Application.Tests.PostReactions
         [Test]
         public async Task Should_failure_while_updating_post_when_user_is_not_owned_reactiom()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
-            string userId = UserService.GetCurrentUser()!.Id;
+            string userId = AuthenticationService.GetCurrentUser()!.Id;
 
             var fakePost = await CreateFakePost(userId);
 

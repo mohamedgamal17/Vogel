@@ -6,9 +6,9 @@ namespace Vogel.Application.Tests.Services
     public class FakeSecurityContext : ISecurityContext
     {
 
-        private readonly FakeUserService _userService;
+        private readonly FakeAuthenticationService _userService;
 
-        public FakeSecurityContext(FakeUserService userService)
+        public FakeSecurityContext(FakeAuthenticationService userService)
         {
             _userService = userService;
         }

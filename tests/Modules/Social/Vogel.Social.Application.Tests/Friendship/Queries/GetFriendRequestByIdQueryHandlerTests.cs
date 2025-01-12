@@ -29,7 +29,7 @@ namespace Vogel.Social.Application.Tests.Friendship.Queries
 
             var senderUser = await UserRepository.FindByIdAsync(friendRequest!.Id);
 
-            UserService.Login(currentUser!.Id, currentUser.FirstName + currentUser.LastName, new List<string>());
+            AuthenticationService.Login(currentUser!.Id, currentUser.FirstName + currentUser.LastName, new List<string>());
 
             var query = new GetFriendRequestByIdQuery { FriendRequestId = friendRequest!.Id };
 
@@ -45,7 +45,7 @@ namespace Vogel.Social.Application.Tests.Friendship.Queries
         {
             var currentUser = await UserRepository.AsQuerable().PickRandom();
 
-            UserService.Login(currentUser!.Id, currentUser.FirstName + currentUser.LastName, new List<string>());
+            AuthenticationService.Login(currentUser!.Id, currentUser.FirstName + currentUser.LastName, new List<string>());
 
             var query = new GetFriendRequestByIdQuery { FriendRequestId = Guid.NewGuid().ToString() };
 

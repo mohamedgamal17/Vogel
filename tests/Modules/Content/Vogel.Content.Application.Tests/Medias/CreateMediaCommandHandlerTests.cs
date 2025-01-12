@@ -22,7 +22,7 @@ namespace Vogel.Content.Application.Tests.Medias
         [Test]
         public async Task Should_upload_user_media()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
             var command = new CreateMediaCommand
             {
@@ -42,7 +42,7 @@ namespace Vogel.Content.Application.Tests.Medias
 
             mediaMongoEntity.Should().NotBeNull();
 
-            media!.AssertMedia(command, UserService.GetCurrentUser()!.Id);
+            media!.AssertMedia(command, AuthenticationService.GetCurrentUser()!.Id);
 
             media.AssertMediaMongoEntity(mediaMongoEntity!);
 

@@ -32,9 +32,9 @@ namespace Vogel.Social.Application.Tests.Friendship.Commands
         [Test]
         public async Task Should_sender_cancel_friend_request()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
-            string userId = UserService.GetCurrentUser()!.Id;
+            string userId = AuthenticationService.GetCurrentUser()!.Id;
 
             var sender = await CreateFakeUser(userId);
             var reciver = await CreateFakeUser();
@@ -81,9 +81,9 @@ namespace Vogel.Social.Application.Tests.Friendship.Commands
         [Test]
         public async Task Should_failure_when_cancelling_friend_request_when_user_is_not_the_real_sender()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
-            string userId = UserService.GetCurrentUser()!.Id;
+            string userId = AuthenticationService.GetCurrentUser()!.Id;
 
             var sender = await CreateFakeUser();
 

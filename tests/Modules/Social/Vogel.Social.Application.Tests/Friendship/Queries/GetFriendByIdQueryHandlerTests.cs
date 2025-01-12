@@ -27,7 +27,7 @@ namespace Vogel.Social.Application.Tests.Friendship.Queries
 
             var friendUser = await UserRepository.FindByIdAsync(friend!.TargetId);
 
-            UserService.Login(currentUser!.Id, currentUser.FirstName + currentUser.LastName, new List<string>());
+            AuthenticationService.Login(currentUser!.Id, currentUser.FirstName + currentUser.LastName, new List<string>());
 
             var query = new GetFriendByIdQuery { FriendId = friend.Id };
 
@@ -45,7 +45,7 @@ namespace Vogel.Social.Application.Tests.Friendship.Queries
 
             var friend = await FriendRepository.AsQuerable().Where(x => x.SourceId != currentUser!.Id && x.TargetId != currentUser.Id).PickRandom();
 
-            UserService.Login(currentUser!.Id, currentUser.FirstName + currentUser.LastName, new List<string>());
+            AuthenticationService.Login(currentUser!.Id, currentUser.FirstName + currentUser.LastName, new List<string>());
 
             var query = new GetFriendByIdQuery { FriendId = friend!.Id };
 
@@ -57,7 +57,7 @@ namespace Vogel.Social.Application.Tests.Friendship.Queries
         [Test]
         public async Task Should_failure_while_getting_friend_by_id_when_id_is_not_exist()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
             var query = new GetFriendByIdQuery { FriendId = Guid.NewGuid().ToString() };
 

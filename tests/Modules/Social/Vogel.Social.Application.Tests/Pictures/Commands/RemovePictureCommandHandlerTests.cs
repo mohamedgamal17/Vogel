@@ -24,9 +24,9 @@ namespace Vogel.Social.Application.Tests.Pictures.Commands
         [Test]
         public async Task Should_remove_picture()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
-            var fakePicture = await CreatePicture(UserService.GetCurrentUser().Id);
+            var fakePicture = await CreatePicture(AuthenticationService.GetCurrentUser().Id);
 
             var command = new RemovePictureCommand
             {
@@ -59,11 +59,11 @@ namespace Vogel.Social.Application.Tests.Pictures.Commands
         [Test]
         public async Task Should_failure_while_removing_image_when_user_is_not_the_owner()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
-            var fakePicture = await CreatePicture(UserService.GetCurrentUser().Id);
+            var fakePicture = await CreatePicture(AuthenticationService.GetCurrentUser().Id);
 
-            UserService.Login();
+            AuthenticationService.Login();
 
             var command = new RemovePictureCommand
             {
@@ -77,7 +77,7 @@ namespace Vogel.Social.Application.Tests.Pictures.Commands
         [Test]
         public async Task Should_failure_while_removing_image_when_image_is_not_exist()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
             var command = new RemovePictureCommand
             {

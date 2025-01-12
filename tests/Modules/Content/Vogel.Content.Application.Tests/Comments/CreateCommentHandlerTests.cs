@@ -28,9 +28,9 @@ namespace Vogel.Content.Application.Tests.Comments
         [Test]
         public async Task Should_post_user_comment()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
-            string userId = UserService.GetCurrentUser()!.Id;
+            string userId = AuthenticationService.GetCurrentUser()!.Id;
 
             var fakePost = await CreatePostAsync(userId);
 
@@ -65,9 +65,9 @@ namespace Vogel.Content.Application.Tests.Comments
         [Test]
         public async Task Should_create_sub_comment()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
-            string userId = UserService.GetCurrentUser()!.Id;
+            string userId = AuthenticationService.GetCurrentUser()!.Id;
 
             var fakePost = await CreatePostAsync(userId);
 
@@ -103,7 +103,7 @@ namespace Vogel.Content.Application.Tests.Comments
         [Test]
         public async Task Should_return_failure_result_while_creating_comment_when_post_is_not_exist()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
             var command = new CreateCommentCommand
             {

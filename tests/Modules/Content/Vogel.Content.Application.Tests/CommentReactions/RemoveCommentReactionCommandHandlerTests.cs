@@ -30,9 +30,9 @@ namespace Vogel.Content.Application.Tests.CommentReactions
         [Test]
         public async Task Should_remove_comment_reaction()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
-            string userId = UserService.GetCurrentUser()!.Id;
+            string userId = AuthenticationService.GetCurrentUser()!.Id;
 
             var fakePost = await CreateFakePost(userId);
 
@@ -84,7 +84,7 @@ namespace Vogel.Content.Application.Tests.CommentReactions
         [Test]
         public async Task Should_failure_while_removing_comment_reaction_when_user_dose_not_own_comment_reaction()
         {
-            UserService.Login();
+            AuthenticationService.Login();
 
             var fakePost = await CreateFakePost(Guid.NewGuid().ToString());
 
