@@ -6,7 +6,7 @@ namespace Vogel.Content.Application.Tests.Fakers
     {
         public PostFaker(string userId , string? mediaId = null)
         {
-            RuleFor(x => x.Caption, f => f.Lorem.Sentence(10));
+            RuleFor(x => x.Caption, _ => Guid.NewGuid().ToString());
             RuleFor(x => x.UserId, userId);
             RuleFor(x => x.MediaId, mediaId);
         }

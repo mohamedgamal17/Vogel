@@ -21,7 +21,7 @@ namespace Vogel.Content.Application.Tests.Fakers
         }
         public CommentFaker(List<string> usersId, string postId, string? parentId = null)
         {
-            RuleFor(x => x.Content, f => f.Lorem.Sentence(5));
+            RuleFor(x => x.Content, f => Guid.NewGuid().ToString());
             RuleFor(x => x.UserId, f=> f.PickRandom(usersId));
             RuleFor(x => x.PostId, postId);
             RuleFor(x => x.CommentId, parentId);
@@ -31,7 +31,7 @@ namespace Vogel.Content.Application.Tests.Fakers
 
         public CommentFaker(string userId, string postId, string? parentId = null)
         {
-            RuleFor(x => x.Content, f => f.Lorem.Sentence(5));
+            RuleFor(x => x.Content, f => Guid.NewGuid().ToString());
             RuleFor(x => x.UserId, userId);
             RuleFor(x => x.PostId, postId);
             RuleFor(x => x.CommentId, parentId);
