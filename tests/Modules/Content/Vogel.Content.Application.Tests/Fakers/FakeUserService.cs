@@ -93,9 +93,32 @@ namespace Vogel.Content.Application.Tests.Fakers
             }
         }
 
+        public void AddUserFriends(string userId,List<UserDto> friends)
+        {
+            _friends[userId].AddRange(friends);
+        }
+
+        public List<UserDto> GetUserFriends(string id)
+        {
+            return _friends[id];
+        }
+
         public UserDto? PickRandomUser()
         {
            return _users.PickRandom();
+        }
+        public List<UserDto>? PickRandomUser(int count)
+        {
+            return _users.PickRandom(count);
+        }
+        public UserDto? PickRandomUserFriend(string userId)
+        {
+            return _friends[userId].PickRandom();
+        }
+
+        public List<UserDto> PickRandomUserFriend(string userId, int count)
+        {
+            return _friends[userId].PickRandom(count);
         }
     }
 }
