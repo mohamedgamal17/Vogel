@@ -7,7 +7,7 @@ using Vogel.Content.Application.Tests.Extensions;
 using Vogel.Content.Domain;
 using Vogel.Content.Domain.Medias;
 using Vogel.Content.MongoEntities.Medias;
-namespace Vogel.Content.Application.Tests.Medias
+namespace Vogel.Content.Application.Tests.Medias.Commands
 {
     public class CreateMediaCommandHandlerTests : ContentTestFixture
     {
@@ -68,6 +68,6 @@ namespace Vogel.Content.Application.Tests.Medias
             result.ShoulBeFailure(typeof(UnauthorizedAccessException));
         }
 
- 
+
     }
 }

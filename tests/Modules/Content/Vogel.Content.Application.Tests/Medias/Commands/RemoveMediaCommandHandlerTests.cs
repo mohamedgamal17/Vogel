@@ -8,7 +8,7 @@ using Vogel.Application.Tests.Extensions;
 using FluentAssertions;
 using Vogel.BuildingBlocks.Domain.Exceptions;
 
-namespace Vogel.Content.Application.Tests.Medias
+namespace Vogel.Content.Application.Tests.Medias.Commands
 {
     public class RemoveMediaCommandHandlerTests : ContentTestFixture
     {
