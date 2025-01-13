@@ -40,7 +40,7 @@ namespace Vogel.Application.Tests.Extensions
             int skipper = faker.Random.Int(0, totalCount);
 
             return  data
-                .OrderBy(x => EF.Functions.Random())
+                .OrderBy(x => Guid.NewGuid().ToString())
                 .Skip(skipper)
                 .Take(count)
                 .ToList();
