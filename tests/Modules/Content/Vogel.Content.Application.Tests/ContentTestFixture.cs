@@ -59,7 +59,7 @@ namespace Vogel.Content.Application.Tests
         private Task<List<UserDto>> SeedUsers(FakeUserService userService)
         {
 
-            var users = new UserFaker().Generate(50);
+            var users = new UserFaker().Generate(15);
 
             userService.AddRangeOfUsers(users);
 
@@ -73,7 +73,7 @@ namespace Vogel.Content.Application.Tests
 
             foreach (var user in users)
             {
-                var friends = users.Where(x => x.Id != user.Id).PickRandom(12).ToList();
+                var friends = users.Where(x => x.Id != user.Id).PickRandom(3).ToList();
 
                 userService.AddUserFriends(user.Id,friends);
 
@@ -114,11 +114,11 @@ namespace Vogel.Content.Application.Tests
 
                 string? mediaId = hasMedia ? medias.Where(x => x.UserId == user.Id).PickRandom()!.Id : null;
 
-                var userPosts = new PostFaker(user.Id, mediaId).Generate(10);
+                var userPosts = new PostFaker(user.Id, mediaId).Generate(3);
 
                 await dbContext.AddRangeAsync(userPosts);
 
-                posts.AddRange(posts);
+                posts.AddRange(userPosts);
             }
 
             await dbContext.SaveChangesAsync();
@@ -133,9 +133,9 @@ namespace Vogel.Content.Application.Tests
 
             foreach (var post in posts)
             {
-                var userFriends = userService.PickRandomUserFriend(post.UserId, 10).Select(x => x.Id).ToList();
+                var userFriends = userService.PickRandomUserFriend(post.UserId, 3).Select(x => x.Id).ToList();
 
-                var postComments = new CommentFaker(userFriends, post.Id).Generate(10);
+                var postComments = new CommentFaker(userFriends, post.Id).Generate(3);
 
                 await dbContext.AddRangeAsync(postComments);
 
@@ -147,7 +147,7 @@ namespace Vogel.Content.Application.Tests
 
                     if (hasSubComment)
                     {
-                        var subComments = new CommentFaker(userFriends, item).Generate(5);
+                        var subComments = new CommentFaker(userFriends, item).Generate(2);
 
                         await dbContext.AddRangeAsync(subComments);
 
@@ -163,13 +163,11 @@ namespace Vogel.Content.Application.Tests
 
         private async Task SeedPostReactions(ContentDbContext dbContext , FakeUserService userService , List<Post> posts)
         {
-            List<PostReaction> reactions = new List<PostReaction>();
-
             var faker = new Faker();
 
             foreach (var post in posts)
             {
-                var users = userService.PickRandomUser(10);
+                var users = userService.PickRandomUser(3);
 
                 var postReactions = users!.Select(x => new PostReaction
                 {
@@ -178,9 +176,7 @@ namespace Vogel.Content.Application.Tests
                     Type = faker.PickRandom<ReactionType>()
                 }).ToList();
 
-                reactions.AddRange(postReactions);
-
-                await dbContext.AddRangeAsync(reactions);
+                await dbContext.AddRangeAsync(postReactions);
             }
 
             await dbContext.SaveChangesAsync();
@@ -188,13 +184,12 @@ namespace Vogel.Content.Application.Tests
 
         private async Task SeedCommentReactions(ContentDbContext dbContext , FakeUserService userService , List<Comment> comments)
         {
-            List<CommentReaction> reactions = new List<CommentReaction>();
 
             var faker = new Faker();
 
             foreach (var comment in comments)
             {
-                var users = userService.PickRandomUser(10);
+                var users = userService.PickRandomUser(3);
 
                 var commentReactions = users!.Select(x => new CommentReaction
                 {
@@ -204,10 +199,10 @@ namespace Vogel.Content.Application.Tests
                 }).ToList();
 
 
-                reactions.AddRange(reactions);
-
-                await dbContext.AddRangeAsync(reactions);
+                await dbContext.AddRangeAsync(commentReactions);
             }
+
+            await dbContext.SaveChangesAsync();
 
         }
         protected override async Task ShutdownAsync(IServiceProvider services)
