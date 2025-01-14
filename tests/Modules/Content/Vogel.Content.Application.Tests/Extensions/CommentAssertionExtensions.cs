@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Vogel.Application.Tests.Extensions;
+using Vogel.Content.Application.CommentReactions.Dtos;
 using Vogel.Content.Application.Comments.Commands.CreateComment;
 using Vogel.Content.Application.Comments.Commands.UpdateComment;
 using Vogel.Content.Application.Comments.Dtos;
@@ -40,6 +41,16 @@ namespace Vogel.Content.Application.Tests.Extensions
             dto.PostId.Should().Be(comment.PostId);
             dto.UserId.Should().Be(comment.UserId);
             dto.User.Should().NotBeNull();
+        }
+
+        public static void AssertReactionSummary(this CommentDto dto, CommentReactionSummaryDto expected)
+        {
+            dto.ReactionSummary.Should().NotBeNull();
+            dto.ReactionSummary!.TotalAngry.Should().Be(expected.TotalAngry);
+            dto.ReactionSummary!.TotalLaugh.Should().Be(expected.TotalLaugh);
+            dto.ReactionSummary!.TotalSad.Should().Be(expected.TotalSad);
+            dto.ReactionSummary!.TotalLike.Should().Be(expected.TotalLike);
+            dto.ReactionSummary!.TotalLove.Should().Be(expected.TotalLove);
         }
     }
 }
