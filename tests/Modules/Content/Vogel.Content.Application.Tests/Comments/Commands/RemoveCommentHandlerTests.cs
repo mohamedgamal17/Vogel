@@ -8,7 +8,7 @@ using Vogel.Content.Application.Comments.Commands.RemoveComent;
 using Vogel.Application.Tests.Extensions;
 using FluentAssertions;
 using Vogel.BuildingBlocks.Domain.Exceptions;
-namespace Vogel.Content.Application.Tests.Comments
+namespace Vogel.Content.Application.Tests.Comments.Commands
 {
     public class RemoveCommentHandlerTests : ContentTestFixture
     {
@@ -79,7 +79,7 @@ namespace Vogel.Content.Application.Tests.Comments
         {
             var fakePost = await CreatePostAsync(Guid.NewGuid().ToString());
 
-            var fakeComment = await CreateCommentAsync(fakePost.Id , Guid.NewGuid().ToString());
+            var fakeComment = await CreateCommentAsync(fakePost.Id, Guid.NewGuid().ToString());
 
             var command = new RemoveCommentCommand
             {
@@ -139,7 +139,7 @@ namespace Vogel.Content.Application.Tests.Comments
 
             var command = new RemoveCommentCommand
             {
-                CommentId= fakeComment.Id,
+                CommentId = fakeComment.Id,
                 PostId = fakePost.Id
             };
 
