@@ -15,7 +15,7 @@ namespace Vogel.Application.Tests.Extensions
 
             int totalCount = await query.CountAsync();
 
-            int skipper = faker.Random.Int(0, totalCount);
+            int skipper = faker.Random.Int(0, totalCount - count);
 
             return await query
                 .OrderBy(x => EF.Functions.Random())
@@ -37,7 +37,7 @@ namespace Vogel.Application.Tests.Extensions
 
             int totalCount =  data.Count();
 
-            int skipper = faker.Random.Int(0, totalCount);
+            int skipper = faker.Random.Int(0, totalCount - count);
 
             return  data
                 .OrderBy(x => Guid.NewGuid().ToString())
