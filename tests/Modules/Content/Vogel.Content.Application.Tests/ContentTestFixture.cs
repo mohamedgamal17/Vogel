@@ -45,15 +45,17 @@ namespace Vogel.Content.Application.Tests
 
             var userService = services.GetRequiredService<FakeUserService>();
 
+            var userFriendService = services.GetRequiredService<FakeUserFriendService>();
+
             var users = await SeedUsers(userService);
 
-            await SeedUsersFriends(userService, users);
+            await SeedUsersFriends(userFriendService, users);
 
             var medias = await SeedMedias(dbContext, users);
 
             var posts = await SeedPosts(dbContext, users, medias);
 
-            var comments = await SeedComments(dbContext, userService, posts);
+            var comments = await SeedComments(dbContext, userFriendService, posts);
 
             await SeedPostReactions(dbContext, userService, posts);
 
@@ -70,22 +72,18 @@ namespace Vogel.Content.Application.Tests
             return Task.FromResult(users);
         }
 
-        private Task<Dictionary<string, List<UserDto>>> SeedUsersFriends(FakeUserService userService, List<UserDto> users)
+        private Task SeedUsersFriends(FakeUserFriendService friendService, List<UserDto> users)
         {
-
-            Dictionary<string, List<UserDto>> data = new Dictionary<string, List<UserDto>>();
 
             foreach (var user in users)
             {
                 var friends = users.Where(x => x.Id != user.Id).PickRandom(3).ToList();
 
-                userService.AddUserFriends(user.Id, friends);
+                friendService.AddRangeOfFriens(user, friends);
 
-                data[user.Id] = friends;
             }
 
-            return Task.FromResult(data);
-            ;
+            return Task.CompletedTask;
         }
 
         private async Task<List<Media>> SeedMedias(ContentDbContext dbContext, List<UserDto> users)
@@ -129,7 +127,7 @@ namespace Vogel.Content.Application.Tests
             return posts;
         }
 
-        private async Task<List<Comment>> SeedComments(ContentDbContext dbContext, FakeUserService userService, List<Post> posts)
+        private async Task<List<Comment>> SeedComments(ContentDbContext dbContext, FakeUserFriendService userFriendService, List<Post> posts)
         {
             List<Comment> comments = new List<Comment>();
 
@@ -137,7 +135,7 @@ namespace Vogel.Content.Application.Tests
 
             foreach (var post in posts)
             {
-                var userFriends = userService.PickRandomUserFriend(post.UserId, 3).Select(x => x.Id).ToList();
+                var userFriends = userFriendService.PickRandomFriend(post.UserId, 3).Select(x => x.TargetId).ToList();
 
                 var postComments = new CommentFaker(userFriends, post.Id).Generate(3);
 
@@ -242,7 +240,9 @@ namespace Vogel.Content.Application.Tests
         protected void ResetInMemoryUsers(IServiceProvider services)
         {
             var userService = services.GetRequiredService<FakeUserService>();
+            var userFriendService = services.GetRequiredService<FakeUserFriendService>();
             userService.Reset();
+            userFriendService.Reset();
         }
     }
 }

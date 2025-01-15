@@ -26,6 +26,10 @@ namespace Vogel.Content.Application.Tests
             services.AddSingleton<IUserService, FakeUserService>();
 
             services.AddSingleton<FakeUserService>();
+
+            services.AddTransient<IUserFriendService, FakeUserFriendService>();
+
+            services.AddTransient<FakeUserFriendService>();
         }
     }
 }
