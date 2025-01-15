@@ -1,18 +1,14 @@
-﻿using NUnit.Framework.Constraints;
-using Vogel.BuildingBlocks.Shared.Models;
+﻿using Vogel.BuildingBlocks.Shared.Models;
 using Vogel.BuildingBlocks.Shared.Results;
 using Vogel.Social.Shared.Dtos;
 using Vogel.Social.Shared.Services;
 using Vogel.Application.Tests.Extensions;
-using Vogel.BuildingBlocks.MongoDb.Extensions;
-using Vogel.BuildingBlocks.MongoDb;
 namespace Vogel.Content.Application.Tests.Fakers
 {
     public class FakeUserService : IUserService
     {
         private static List<UserDto> _users = new List<UserDto>();
 
-        private static Dictionary<string , List<UserDto>> _friends= new Dictionary<string, List<UserDto>>();
 
         public Task<Result<UserDto>> GetUserById(string id)
         {
@@ -80,8 +76,6 @@ namespace Vogel.Content.Application.Tests.Fakers
         public void AddUser(UserDto user)
         {
             _users.Add(user);
-
-            _friends[user.Id] = new List<UserDto>();
         }
 
 
@@ -93,16 +87,6 @@ namespace Vogel.Content.Application.Tests.Fakers
             }
         }
 
-        public void AddUserFriends(string userId,List<UserDto> friends)
-        {
-            _friends[userId].AddRange(friends);
-        }
-
-        public List<UserDto> GetUserFriends(string id)
-        {
-            return _friends[id];
-        }
-
         public UserDto? PickRandomUser()
         {
            return _users.PickRandom();
@@ -111,20 +95,11 @@ namespace Vogel.Content.Application.Tests.Fakers
         {
             return _users.PickRandom(count);
         }
-        public UserDto? PickRandomUserFriend(string userId)
-        {
-            return _friends[userId].PickRandom();
-        }
-
-        public List<UserDto> PickRandomUserFriend(string userId, int count)
-        {
-            return _friends[userId].PickRandom(count);
-        }
-
+   
         public void Reset()
         {
             _users.Clear();
-            _friends.Clear();
+
         }
     }
 }
