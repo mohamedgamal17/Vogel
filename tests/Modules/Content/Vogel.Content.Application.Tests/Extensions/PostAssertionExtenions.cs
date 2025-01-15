@@ -1,4 +1,6 @@
 ﻿using FluentAssertions;
+using Humanizer;
+using Vogel.Content.Application.PostReactions.Dtos;
 using Vogel.Content.Application.Posts.Commands.CreatePost;
 using Vogel.Content.Application.Posts.Commands.UpdatePost;
 using Vogel.Content.Application.Posts.Dtos;
@@ -42,6 +44,17 @@ namespace Vogel.Content.Application.Tests.Extensions
                 dto.Media.Should().NotBeNull();
                 dto.Media.AssertMediaDto(media);
             }
+        }
+
+        public static void AssertReactionSummaryDto(this PostDto  dto, PostReactionSummaryDto expected)
+        {
+            dto.ReactionSummary.Should().NotBeNull();
+            dto.ReactionSummary.Should().NotBeNull();
+            dto.ReactionSummary!.TotalAngry.Should().Be(expected.TotalAngry);
+            dto.ReactionSummary!.TotalLaugh.Should().Be(expected.TotalLaugh);
+            dto.ReactionSummary!.TotalSad.Should().Be(expected.TotalSad);
+            dto.ReactionSummary!.TotalLike.Should().Be(expected.TotalLike);
+            dto.ReactionSummary!.TotalLove.Should().Be(expected.TotalLove);
         }
     }
 }
