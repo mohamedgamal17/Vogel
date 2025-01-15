@@ -11,14 +11,14 @@ using Vogel.Content.Domain.Common;
 using Vogel.Content.Domain.Posts;
 using Vogel.Content.MongoEntities.CommentReactions;
 
-namespace Vogel.Content.Application.Tests.CommentReactions
+namespace Vogel.Content.Application.Tests.CommentReactions.Commands
 {
     public class CreateCommentReactionCommandHandlerTests : ContentTestFixture
     {
         public IContentRepository<Comment> CommentRepository { get; }
-        public IContentRepository<Post> PostRepository { get;  }
+        public IContentRepository<Post> PostRepository { get; }
         public IContentRepository<CommentReaction> CommentReactionRepository { get; }
-        public IMongoRepository<CommentReactionMongoEntity> CommentReactionMongoRepository { get;  }
+        public IMongoRepository<CommentReactionMongoEntity> CommentReactionMongoRepository { get; }
 
         public CreateCommentReactionCommandHandlerTests()
         {
@@ -90,7 +90,7 @@ namespace Vogel.Content.Application.Tests.CommentReactions
         }
 
 
-        private async Task<Comment> CreateFakeComment(string postId,  string userId)
+        private async Task<Comment> CreateFakeComment(string postId, string userId)
         {
 
             var comment = new Comment
@@ -103,7 +103,7 @@ namespace Vogel.Content.Application.Tests.CommentReactions
             return await CommentRepository.InsertAsync(comment);
         }
 
-        private async Task<Post> CreateFakePost(  string userId)
+        private async Task<Post> CreateFakePost(string userId)
         {
             var post = new Post
             {

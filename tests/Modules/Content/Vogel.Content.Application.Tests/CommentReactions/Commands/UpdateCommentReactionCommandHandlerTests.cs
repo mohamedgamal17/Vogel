@@ -5,21 +5,22 @@ using Vogel.Content.Domain.Posts;
 using Vogel.Content.Domain;
 using Vogel.Content.MongoEntities.CommentReactions;
 using Bogus;
-using Vogel.Content.Application.CommentReactions.Commands.RemoveCommentReaction;
+using Vogel.Content.Application.CommentReactions.Commands.UpdateCommentReaction;
+using Vogel.Content.Domain.Common;
 using Vogel.Application.Tests.Extensions;
 using FluentAssertions;
 using Vogel.BuildingBlocks.Domain.Exceptions;
-using Vogel.Content.Domain.Common;
-namespace Vogel.Content.Application.Tests.CommentReactions
+using Vogel.Content.Application.Tests.Extensions;
+namespace Vogel.Content.Application.Tests.CommentReactions.Commands
 {
-    public class RemoveCommentReactionCommandHandlerTests : ContentTestFixture
+    public class UpdateCommentReactionCommandHandlerTests : ContentTestFixture
     {
         public IContentRepository<Comment> CommentRepository { get; }
         public IContentRepository<Post> PostRepository { get; }
         public IContentRepository<CommentReaction> CommentReactionRepository { get; }
         public IMongoRepository<CommentReactionMongoEntity> CommentReactionMongoRepository { get; }
 
-        public RemoveCommentReactionCommandHandlerTests()
+        public UpdateCommentReactionCommandHandlerTests()
         {
             CommentRepository = ServiceProvider.GetRequiredService<IContentRepository<Comment>>();
             PostRepository = ServiceProvider.GetRequiredService<IContentRepository<Post>>();
@@ -28,11 +29,13 @@ namespace Vogel.Content.Application.Tests.CommentReactions
         }
 
         [Test]
-        public async Task Should_remove_comment_reaction()
+        public async Task Should_update_comment_reaction()
         {
-            AuthenticationService.Login();
+            var fakeUser = UserService.PickRandomUser()!;
 
-            string userId = AuthenticationService.GetCurrentUser()!.Id;
+            AuthenticationService.Login(fakeUser.Id, fakeUser.FirstName + fakeUser.LastName, new List<string>());
+
+            string userId = fakeUser!.Id;
 
             var fakePost = await CreateFakePost(userId);
 
@@ -40,8 +43,9 @@ namespace Vogel.Content.Application.Tests.CommentReactions
 
             var fakeCommentReaction = await CreateFakeCommentReaction(fakeComment.Id, userId);
 
-            var command = new RemoveCommentReactionCommand
+            var command = new UpdateCommentReactionCommand
             {
+                Type = new Faker().PickRandom<ReactionType>(),
                 PostId = fakePost.Id,
                 CommentId = fakeComment.Id,
                 ReactionId = fakeCommentReaction.Id
@@ -51,17 +55,23 @@ namespace Vogel.Content.Application.Tests.CommentReactions
 
             result.ShouldBeSuccess();
 
-            var commentReaction = await  CommentReactionRepository.FindByIdAsync(fakeCommentReaction!.Id);
+            var commentReaction = await CommentReactionRepository.FindByIdAsync(result.Value!.Id);
 
-            commentReaction.Should().BeNull();
+            commentReaction.Should().NotBeNull();
+
+            commentReaction!.AssertCommentReaction(command, userId);
 
             var mongoEntity = await CommentReactionMongoRepository.FindByIdAsync(fakeCommentReaction!.Id);
 
-            mongoEntity.Should().BeNull();
+            mongoEntity.Should().NotBeNull();
+
+            mongoEntity!.AssertCommentReactionMongoEntity(commentReaction!);
+
+            result.Value.AssertCommentReactionDto(commentReaction);
         }
 
         [Test]
-        public async Task Should_failure_while_removing_comment_reaction_when_user_is_not_authorized()
+        public async Task Should_failure_while_updating_comment_reaction_when_user_is_not_authorized()
         {
             var fakePost = await CreateFakePost(Guid.NewGuid().ToString());
 
@@ -69,8 +79,9 @@ namespace Vogel.Content.Application.Tests.CommentReactions
 
             var fakeCommentReaction = await CreateFakeCommentReaction(fakeComment.Id, Guid.NewGuid().ToString());
 
-            var command = new RemoveCommentReactionCommand
+            var command = new UpdateCommentReactionCommand
             {
+                Type = new Faker().PickRandom<ReactionType>(),
                 PostId = fakePost.Id,
                 CommentId = fakeComment.Id,
                 ReactionId = fakeCommentReaction.Id
@@ -79,10 +90,11 @@ namespace Vogel.Content.Application.Tests.CommentReactions
             var result = await Mediator.Send(command);
 
             result.ShoulBeFailure(typeof(UnauthorizedAccessException));
+
         }
 
         [Test]
-        public async Task Should_failure_while_removing_comment_reaction_when_user_dose_not_own_comment_reaction()
+        public async Task Should_failure_while_updating_comment_reaction_when_user_dose_not_own_this_reaction()
         {
             AuthenticationService.Login();
 
@@ -92,8 +104,9 @@ namespace Vogel.Content.Application.Tests.CommentReactions
 
             var fakeCommentReaction = await CreateFakeCommentReaction(fakeComment.Id, Guid.NewGuid().ToString());
 
-            var command = new RemoveCommentReactionCommand
+            var command = new UpdateCommentReactionCommand
             {
+                Type = new Faker().PickRandom<ReactionType>(),
                 PostId = fakePost.Id,
                 CommentId = fakeComment.Id,
                 ReactionId = fakeCommentReaction.Id
@@ -102,8 +115,8 @@ namespace Vogel.Content.Application.Tests.CommentReactions
             var result = await Mediator.Send(command);
 
             result.ShoulBeFailure(typeof(ForbiddenAccessException));
-
         }
+
 
         private async Task<Comment> CreateFakeComment(string postId, string userId)
         {
