@@ -120,5 +120,11 @@ namespace Vogel.Content.Application.Tests.Fakers
         {
             return _friends[userId].PickRandom(count);
         }
+
+        public void Reset()
+        {
+            _users.Clear();
+            _friends.Clear();
+        }
     }
 }

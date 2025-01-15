@@ -1,4 +1,4 @@
-﻿using Autofac;
+﻿ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +8,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Hosting.Internal;
 using MongoDB.Driver;
 using NUnit.Framework;
+using Respawn;
+using Respawn.Graph;
 using System;
 using System.Reflection;
 using Vogel.Application.Tests.Services;
@@ -78,13 +80,8 @@ namespace Vogel.Application.Tests
         }
 
 
-        protected async Task DropSqlDb()
-        {
-            var dbContext = ServiceProvider.GetRequiredService<DbContext>();
-            await dbContext.Database.EnsureDeletedAsync();
-        }
 
-        protected async Task DropMongoDb()
+        protected async Task DropMongoDb(IServiceProvider services)
         {
             var mongoConfiguration = ServiceProvider.GetRequiredService<MongoDbSettings>();
 

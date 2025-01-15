@@ -1,7 +1,9 @@
 ﻿using Bogus;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Respawn.Graph;
 using Vogel.Application.Tests;
 using Vogel.Application.Tests.Extensions;
 using Vogel.BuildingBlocks.Infrastructure.Extensions;
@@ -30,8 +32,10 @@ namespace Vogel.Content.Application.Tests
         }
         protected override async Task InitializeAsync(IServiceProvider services)
         {
+            await ResetSqlDb(services);
+            await DropMongoDb(services);
+            ResetInMemoryUsers(services);
             await services.RunModulesBootstrapperAsync();
-
             await SeedData(services);
         }
 
@@ -66,7 +70,7 @@ namespace Vogel.Content.Application.Tests
             return Task.FromResult(users);
         }
 
-        private Task<Dictionary<string , List<UserDto>>> SeedUsersFriends(FakeUserService userService, List<UserDto> users)
+        private Task<Dictionary<string, List<UserDto>>> SeedUsersFriends(FakeUserService userService, List<UserDto> users)
         {
 
             Dictionary<string, List<UserDto>> data = new Dictionary<string, List<UserDto>>();
@@ -75,13 +79,13 @@ namespace Vogel.Content.Application.Tests
             {
                 var friends = users.Where(x => x.Id != user.Id).PickRandom(3).ToList();
 
-                userService.AddUserFriends(user.Id,friends);
+                userService.AddUserFriends(user.Id, friends);
 
                 data[user.Id] = friends;
             }
 
             return Task.FromResult(data);
-                ;
+            ;
         }
 
         private async Task<List<Media>> SeedMedias(ContentDbContext dbContext, List<UserDto> users)
@@ -101,7 +105,7 @@ namespace Vogel.Content.Application.Tests
 
             return medias;
         }
-        private async Task<List<Post>> SeedPosts(ContentDbContext dbContext, List<UserDto> users , List<Media> medias)
+        private async Task<List<Post>> SeedPosts(ContentDbContext dbContext, List<UserDto> users, List<Media> medias)
         {
             List<Post> posts = new List<Post>();
 
@@ -125,7 +129,7 @@ namespace Vogel.Content.Application.Tests
             return posts;
         }
 
-        private async Task<List<Comment>> SeedComments(ContentDbContext dbContext, FakeUserService userService , List<Post> posts)
+        private async Task<List<Comment>> SeedComments(ContentDbContext dbContext, FakeUserService userService, List<Post> posts)
         {
             List<Comment> comments = new List<Comment>();
 
@@ -161,7 +165,7 @@ namespace Vogel.Content.Application.Tests
             return comments;
         }
 
-        private async Task SeedPostReactions(ContentDbContext dbContext , FakeUserService userService , List<Post> posts)
+        private async Task SeedPostReactions(ContentDbContext dbContext, FakeUserService userService, List<Post> posts)
         {
             var faker = new Faker();
 
@@ -182,7 +186,7 @@ namespace Vogel.Content.Application.Tests
             await dbContext.SaveChangesAsync();
         }
 
-        private async Task SeedCommentReactions(ContentDbContext dbContext , FakeUserService userService , List<Comment> comments)
+        private async Task SeedCommentReactions(ContentDbContext dbContext, FakeUserService userService, List<Comment> comments)
         {
 
             var faker = new Faker();
@@ -207,8 +211,38 @@ namespace Vogel.Content.Application.Tests
         }
         protected override async Task ShutdownAsync(IServiceProvider services)
         {
-            await DropSqlDb();
-            await DropMongoDb();
+            await ResetSqlDb(services);
+            await DropMongoDb(services);
+            ResetInMemoryUsers(services);
+        }
+
+        protected async Task ResetSqlDb(IServiceProvider services)
+        {
+            var config = services.GetRequiredService<IConfiguration>();
+
+            var respwan = await Respawn.Respawner.CreateAsync(config.GetConnectionString("Default")!, new Respawn.RespawnerOptions
+            {
+                TablesToIgnore = new Table[]
+                {
+                  "sysdiagrams",
+                  "tblUser",
+                  "tblObjectType",
+                  "__EFMigrationsHistory"
+                },
+                SchemasToInclude = new string[]
+                {
+                    "Content"
+                }
+
+            });
+
+            await respwan.ResetAsync(config.GetConnectionString("Default")!);
+        }
+
+        protected void ResetInMemoryUsers(IServiceProvider services)
+        {
+            var userService = services.GetRequiredService<FakeUserService>();
+            userService.Reset();
         }
     }
 }

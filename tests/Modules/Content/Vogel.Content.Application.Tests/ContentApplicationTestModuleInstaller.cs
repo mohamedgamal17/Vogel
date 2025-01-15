@@ -23,9 +23,9 @@ namespace Vogel.Content.Application.Tests
                 opt.Database = configuration.GetValue<string>("MongoDb:Database")!;
             });
 
-            services.AddTransient<IUserService, FakeUserService>();
+            services.AddSingleton<IUserService, FakeUserService>();
 
-            services.AddTransient<FakeUserService>();
+            services.AddSingleton<FakeUserService>();
         }
     }
 }

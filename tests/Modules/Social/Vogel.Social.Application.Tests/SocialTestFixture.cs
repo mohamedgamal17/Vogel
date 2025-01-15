@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Respawn.Graph;
 using Vogel.Application.Tests;
 using Vogel.BuildingBlocks.Infrastructure.Extensions;
 using Vogel.Social.Application.Tests.Fakers;
@@ -21,6 +22,10 @@ namespace Vogel.Social.Application.Tests
         }
         protected override async Task InitializeAsync(IServiceProvider services)
         {
+            await ResetSqlDb(services);
+
+            await DropMongoDb(services);
+
             await services.RunModulesBootstrapperAsync();
 
             await SeedTestData(services);
@@ -149,8 +154,33 @@ namespace Vogel.Social.Application.Tests
 
         protected override async Task ShutdownAsync(IServiceProvider services)
         {
-            await DropSqlDb();
-            await DropMongoDb();
+            await ResetSqlDb(services);
+            await DropMongoDb(services);
+        }
+
+        protected async Task ResetSqlDb(IServiceProvider services)
+        {
+            var config = services.GetRequiredService<IConfiguration>();
+
+            var respwan = await Respawn.Respawner.CreateAsync(config.GetConnectionString("Default")!, new Respawn.RespawnerOptions
+            {
+                TablesToIgnore = new Table[]
+                {
+                  "sysdiagrams",
+                  "tblUser",
+                  "tblObjectType",
+                  "__EFMigrationsHistory"
+                },
+                SchemasToInclude = new string[]
+                {
+                    "Social"
+                }
+
+
+
+            });
+
+            await respwan.ResetAsync(config.GetConnectionString("Default")!);
         }
     }
 }
