@@ -1,9 +1,10 @@
-﻿using Vogel.BuildingBlocks.Application.Requests;
-using Vogel.BuildingBlocks.Shared.Models;
+﻿using Microsoft.AspNetCore.Authorization;
+using Vogel.BuildingBlocks.Application.Requests;
 using Vogel.Content.Application.CommentReactions.Dtos;
 
 namespace Vogel.Content.Application.CommentReactions.Queries.GetCommentReactionById
 {
+    [Authorize]
     public class GetCommentReactionByIdQuery : IQuery<CommentReactionDto>
     {
         public string PostId { get; set; }
