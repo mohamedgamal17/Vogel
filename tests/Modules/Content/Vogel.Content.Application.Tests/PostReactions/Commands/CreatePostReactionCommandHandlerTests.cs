@@ -2,22 +2,21 @@
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Vogel.Application.Tests.Extensions;
-using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.BuildingBlocks.MongoDb;
-using Vogel.Content.Application.PostReactions.Commands.RemovePostReaction;
+using Vogel.Content.Application.PostReactions.Commands.CreatePostReaction;
+using Vogel.Content.Application.Tests.Extensions;
 using Vogel.Content.Domain;
 using Vogel.Content.Domain.Posts;
 using Vogel.Content.MongoEntities.PostReactions;
-namespace Vogel.Content.Application.Tests.PostReactions
+namespace Vogel.Content.Application.Tests.PostReactions.Commands
 {
-    public class RemovePostReactionCommandHandlerTests : ContentTestFixture
+    public class CreatePostReactionCommandHandlerTests : ContentTestFixture
     {
         public IContentRepository<Post> PostRepository { get; }
         public IContentRepository<PostReaction> PostReactionRepository { get; }
         public IMongoRepository<PostReactionMongoEntity> PostReactionMongoRepository { get; }
 
-
-        public RemovePostReactionCommandHandlerTests()
+        public CreatePostReactionCommandHandlerTests()
         {
             PostRepository = ServiceProvider.GetRequiredService<IContentRepository<Post>>();
             PostReactionRepository = ServiceProvider.GetRequiredService<IContentRepository<PostReaction>>();
@@ -25,7 +24,7 @@ namespace Vogel.Content.Application.Tests.PostReactions
         }
 
         [Test]
-        public async Task Should_delete_post_reaction()
+        public async Task Should_create_post_reaction()
         {
             var fakeUser = UserService.PickRandomUser()!;
 
@@ -35,11 +34,9 @@ namespace Vogel.Content.Application.Tests.PostReactions
 
             var fakePost = await CreateFakePost(userId);
 
-            var fakePostReaction = await CreateFakePostReaction(fakePost.Id, userId);
-
-            var command = new RemovePostReactionCommand
+            var command = new CreatePostReactionCommand
             {
-                ReactionId = fakePostReaction.Id,
+                Type = new Faker().PickRandom<Domain.Common.ReactionType>(),
                 PostId = fakePost.Id
             };
 
@@ -47,53 +44,36 @@ namespace Vogel.Content.Application.Tests.PostReactions
 
             result.ShouldBeSuccess();
 
-            var postReaction = await PostReactionRepository.FindByIdAsync(fakePostReaction.Id);
+            var postReaction = await PostReactionRepository.FindByIdAsync(result.Value!.Id);
 
-            postReaction.Should().BeNull();
+            postReaction.Should().NotBeNull();
 
-            var mongoEntity = await PostReactionMongoRepository.FindByIdAsync(fakePostReaction.Id);
+            postReaction!.AssertPostReaction(command, userId);
 
-            mongoEntity.Should().BeNull();
+            var mongoEntity = await PostReactionMongoRepository.FindByIdAsync(postReaction!.Id);
+
+            mongoEntity.Should().NotBeNull();
+
+            mongoEntity!.AssertPostReactionMongoEntity(postReaction);
+
+            result.Value.AssertPostReactionDto(postReaction);
 
         }
 
         [Test]
-        public async Task Should_failure_while_deleting_post_when_user_is_not_authorized()
+        public async Task Should_failure_while_creating_post_reaction_when_user_is_not_authorized()
         {
-
             var fakePost = await CreateFakePost(Guid.NewGuid().ToString());
 
-            var fakePostReaction = await CreateFakePostReaction(fakePost.Id, Guid.NewGuid().ToString());
-     
-            var command = new RemovePostReactionCommand
+            var command = new CreatePostReactionCommand
             {
-                ReactionId = fakePostReaction.Id,
+                Type = new Faker().PickRandom<Domain.Common.ReactionType>(),
                 PostId = fakePost.Id
             };
 
             var result = await Mediator.Send(command);
 
             result.ShoulBeFailure(typeof(UnauthorizedAccessException));
-        }
-
-        [Test]
-        public async Task Shoul_failure_while_deleting_post_when_user_is_not_own_post_reaction()
-        {
-            AuthenticationService.Login();
-
-            var fakePost = await CreateFakePost(Guid.NewGuid().ToString());
-
-            var fakePostReaction = await CreateFakePostReaction(fakePost.Id , Guid.NewGuid().ToString());
-     
-            var command = new RemovePostReactionCommand
-            {
-                ReactionId = fakePostReaction.Id,
-                PostId = fakePost.Id
-            };
-
-            var result = await Mediator.Send(command);
-
-            result.ShoulBeFailure(typeof(ForbiddenAccessException));
         }
 
         private async Task<Post> CreateFakePost(string userId)
@@ -113,7 +93,7 @@ namespace Vogel.Content.Application.Tests.PostReactions
             {
                 UserId = userId,
                 PostId = postId,
-                Type = new Faker().PickRandom<Content.Domain.Common.ReactionType>()
+                Type = new Faker().PickRandom<Domain.Common.ReactionType>()
             };
 
             return await PostReactionRepository.InsertAsync(reaction);
