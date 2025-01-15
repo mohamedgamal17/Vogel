@@ -23,7 +23,7 @@ namespace Vogel.Content.Application.Posts.Queries.GetPostbyId
         {
             var post = await _postMongoRepository.GetPostViewById(request.PostId);
 
-            if(post != null)
+            if(post == null)
             {
                 return new Result<PostDto>(new EntityNotFoundException(typeof(Post), request.PostId));
             }
