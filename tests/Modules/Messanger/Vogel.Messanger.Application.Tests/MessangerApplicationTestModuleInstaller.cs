@@ -37,6 +37,12 @@ namespace Vogel.Messanger.Application.Tests
                     inMemoryBusConfig.ConfigureEndpoints(context);
                 });
             });
+
+            services.AddTransient<FakeUserService>();
+
+            services.AddTransient<IUserFriendService, FakeUserFriendService>();
+
+            services.AddTransient<FakeUserFriendService>();
         }
     }
 }
