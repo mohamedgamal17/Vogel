@@ -12,9 +12,9 @@ namespace Vogel.Messanger.Application.Conversations.Queries.GetUserConversationP
     {
         private readonly ConversationMongoRepository _conversationMongoRepository;
         private readonly ISecurityContext _securityContext;
-        private readonly ParticipantResponseFactory _participantResponseFactory;
+        private readonly IParticipantResponseFactory _participantResponseFactory;
 
-        public GetUserConversationParticipantQueryHandler(ConversationMongoRepository conversationMongoRepository, ISecurityContext securityContext, ParticipantResponseFactory participantResponseFactory)
+        public GetUserConversationParticipantQueryHandler(ConversationMongoRepository conversationMongoRepository, ISecurityContext securityContext, IParticipantResponseFactory participantResponseFactory)
         {
             _conversationMongoRepository = conversationMongoRepository;
             _securityContext = securityContext;
