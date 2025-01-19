@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using NUnit.Framework;
 
 // In SDK-style projects such as this one, several assembly attributes that were historically
 // defined in this file are now automatically added during build and populated with
@@ -15,4 +16,4 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM.
 
 [assembly: Guid("95302301-46d7-4672-bcbb-6f88ea21272b")]
-[assembly: NonParallelizable]
+[assembly: Parallelizable(ParallelScope.None)]

@@ -43,6 +43,13 @@ namespace Vogel.Messanger.Application.Tests.Extensions
             }
         }
 
+        public static void AssertConversationDto(this ConversationDto dto, Conversation conversation , List<Participant> participants)
+        {
+            dto.Id.Should().Be(conversation.Id);
+            dto.TotalParticpants.Should().Be(participants.Count);
+            dto.Participants.All(x => participants.Any(c => c.Id == x.Id));
+        }
+
         public static void AssertParticipantMongoEntity(this ParticipantMongoEntity mongoEntity , Participant participant)
         {
             mongoEntity.Id.Should().Be(participant.Id);

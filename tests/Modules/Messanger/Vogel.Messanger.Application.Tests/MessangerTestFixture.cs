@@ -16,6 +16,12 @@ namespace Vogel.Messanger.Application.Tests
     [TestFixture]
     public class MessangerTestFixture : TestFixture
     {
+        public FakeUserService UserService { get; }
+
+        public MessangerTestFixture()
+        {
+            UserService = ServiceProvider.GetRequiredService<FakeUserService>();
+        }
         protected override Task SetupAsync(IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment)
         {
             services.InstallModule<MessangerApplicationTestModuleInstaller>(configuration, hostEnvironment);
@@ -23,9 +29,12 @@ namespace Vogel.Messanger.Application.Tests
         }
         protected override async Task InitializeAsync(IServiceProvider services)
         {
+            ResetInMemoryUsers(services);
             await ResetSqlDb(services);
             await DropMongoDb(services);
+
             await services.RunModulesBootstrapperAsync();
+            await SeedData(services);
         }
 
         protected async Task SeedData(IServiceProvider services)
@@ -150,6 +159,7 @@ namespace Vogel.Messanger.Application.Tests
         }
         protected override async Task ShutdownAsync(IServiceProvider services)
         {
+            ResetInMemoryUsers(services);
             await ResetSqlDb(services);
             await DropMongoDb(services);
         }
@@ -176,5 +186,13 @@ namespace Vogel.Messanger.Application.Tests
 
             await respwan.ResetAsync(config.GetConnectionString("Default")!);
         }
+        protected void ResetInMemoryUsers(IServiceProvider services)
+        {
+            var userService = services.GetRequiredService<FakeUserService>();
+            var userFriendService = services.GetRequiredService<FakeUserFriendService>();
+            userService.Reset();
+            userFriendService.Reset();
+        }
+
     }
 }
