@@ -12,11 +12,11 @@ using Vogel.Messanger.MongoEntities.Conversations;
 using MongoDB.Driver;
 using Vogel.BuildingBlocks.Domain.Repositories;
 using Vogel.Messanger.MongoEntities.Users;
-namespace Vogel.Messanger.Application.Tests.Conversations
+namespace Vogel.Messanger.Application.Tests.Conversations.Commands
 {
     public class CreateConversationCommandHandlerTests : MessangerTestFixture
     {
-        public IMessangerRepository<Conversation> ConversationRepository { get;  }
+        public IMessangerRepository<Conversation> ConversationRepository { get; }
         public IMessangerRepository<Participant> ParticipantRepository { get; }
         public IMongoRepository<ConversationMongoEntity> ConversationMongoRepository { get; }
         public IMongoRepository<ParticipantMongoEntity> ParticipantMongoRepository { get; }
@@ -73,7 +73,7 @@ namespace Vogel.Messanger.Application.Tests.Conversations
 
         }
 
-        [Test] 
+        [Test]
         public async Task Should_failure_while_creating_conversation_when_user_is_not_authorized()
         {
             var userFriend = Guid.NewGuid().ToString();
@@ -109,5 +109,5 @@ namespace Vogel.Messanger.Application.Tests.Conversations
         }
     }
 
-   
+
 }

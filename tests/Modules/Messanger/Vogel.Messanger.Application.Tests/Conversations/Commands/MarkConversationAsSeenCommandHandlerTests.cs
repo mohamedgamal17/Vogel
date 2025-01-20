@@ -15,7 +15,7 @@ using MongoDB.Driver;
 using Vogel.Messanger.Application.Tests.Extensions;
 using Vogel.Application.Tests.Extensions;
 using Vogel.BuildingBlocks.Domain.Exceptions;
-namespace Vogel.Messanger.Application.Tests.Conversations
+namespace Vogel.Messanger.Application.Tests.Conversations.Commands
 {
     public class MarkConversationAsSeenCommandHandlerTests : MessangerTestFixture
     {
