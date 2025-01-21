@@ -28,6 +28,7 @@ namespace Vogel.Messanger.MongoEntities.Messages
             return await query.Match(x => x.Id == messageId).SingleOrDefaultAsync();
         }
 
+
         public async Task<UpdateResult> LogConversationMessages(string conversationId ,string userId , DateTime seenAt )
         {
             var filter = Filter.Where(x => x.ConversationId == conversationId
@@ -81,7 +82,7 @@ namespace Vogel.Messanger.MongoEntities.Messages
                     f => f.Id,
                     x => x.Sender
                 )
-                .Unwind<MessageJoinedView, MessageJoinedView>(x => x.Sender)
+                .Unwind(x => x.Sender, new AggregateUnwindOptions<MessageJoinedView> { PreserveNullAndEmptyArrays = true })
                 .Project(x => new MessageMongoView
                 {
                     Id = x.Id,
