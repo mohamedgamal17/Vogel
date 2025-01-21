@@ -61,9 +61,9 @@ namespace Vogel.Messanger.Application.Tests.Messages
 
             mongoEntity.Should().NotBeNull();
 
-            message!.AssertMessageMongoEntity(mongoEntity!);
+            mongoEntity!.AssertMessageMongoEntity(message!);
 
-            message!.AssertMessageDto(result.Value);
+            result.Value!.AssertMessageDto(message);
         }
 
         [Test]

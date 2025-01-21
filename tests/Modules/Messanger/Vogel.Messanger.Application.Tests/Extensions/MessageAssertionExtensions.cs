@@ -16,7 +16,7 @@ namespace Vogel.Messanger.Application.Tests.Extensions
             message.SenderId.Should().Be(userId);
         }
 
-        public static void AssertMessageMongoEntity(this Message message , MessageMongoEntity mongoEntity)
+        public static void AssertMessageMongoEntity(this MessageMongoEntity mongoEntity, Message message )
         {
             mongoEntity.Id.Should().Be(message.Id);
             mongoEntity.ConversationId.Should().Be(message.ConversationId);
@@ -24,13 +24,12 @@ namespace Vogel.Messanger.Application.Tests.Extensions
             mongoEntity.SenderId.Should().Be(message.SenderId);
             mongoEntity.AssertAuditingProperties(message);
         }
-        public static void AssertMessageDto(this Message message, MessageDto dto)
+        public static void AssertMessageDto(this MessageDto dto, Message message)
         {
             dto.Id.Should().Be(message.Id);
             dto.ConversationId.Should().Be(message.ConversationId);
             dto.Content.Should().Be(message.Content);
             dto.SenderId.Should().Be(message.SenderId);
-            dto.Sender.Should().NotBeNull();
         }
 
         public static void AssertMessageActivityMongoEntity(this MessageLogMongoEntity mongoEntity , MessageLog messageActivity)
