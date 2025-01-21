@@ -17,9 +17,9 @@ namespace Vogel.Messanger.Application.Messages.Queries.ListUserConversationMessa
         private readonly ConversationMongoRepository _conversationMongoRepository;
         private readonly MessageMongoRepository _messageMongoRepository;
         private readonly IApplicationAuthorizationService _applicationAuthorizationSerivce;
-        private readonly MessageResponseFactory _messageResponseFactory;
+        private readonly IMessageResponseFactory _messageResponseFactory;
 
-        public ListUserConversationMessageQueryHandler(ConversationMongoRepository conversationMongoRepository, MessageMongoRepository messageMongoRepository, IApplicationAuthorizationService applicationAuthorizationSerivce, MessageResponseFactory messageResponseFactory)
+        public ListUserConversationMessageQueryHandler(ConversationMongoRepository conversationMongoRepository, MessageMongoRepository messageMongoRepository, IApplicationAuthorizationService applicationAuthorizationSerivce, IMessageResponseFactory messageResponseFactory)
         {
             _conversationMongoRepository = conversationMongoRepository;
             _messageMongoRepository = messageMongoRepository;
