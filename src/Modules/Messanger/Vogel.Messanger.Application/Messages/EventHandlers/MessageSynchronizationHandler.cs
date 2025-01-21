@@ -7,7 +7,7 @@ using Vogel.Messanger.MongoEntities.Messages;
 
 namespace Vogel.Messanger.Application.Messages.EventHandlers
 {
-    public class MongoSynchronizationHandler : 
+    public class MessageSynchronizationHandler : 
         INotificationHandler<EntityCreatedEvent<Message>>,
         INotificationHandler<EntityUpdatedEvent<Message>>,
         INotificationHandler<EntityDeletedEvent<Message>>
@@ -15,7 +15,7 @@ namespace Vogel.Messanger.Application.Messages.EventHandlers
         private readonly IMapper _mapper;
         private readonly IMongoRepository<MessageMongoEntity> _messageMongoRepository;
 
-        public MongoSynchronizationHandler(IMapper mapper, IMongoRepository<MessageMongoEntity> messageMongoRepository)
+        public MessageSynchronizationHandler(IMapper mapper, IMongoRepository<MessageMongoEntity> messageMongoRepository)
         {
             _mapper = mapper;
             _messageMongoRepository = messageMongoRepository;
@@ -39,4 +39,5 @@ namespace Vogel.Messanger.Application.Messages.EventHandlers
             await _messageMongoRepository.DeleteAsync(notification.Entity.Id); 
         }
     }
+
 }
