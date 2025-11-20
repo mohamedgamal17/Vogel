@@ -1,10 +1,12 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Vogel.BuildingBlocks.Application.Requests;
 using Vogel.Content.Application.CommentReactions.Dtos;
 using Vogel.Content.Domain.Comments;
 using Vogel.Content.Domain.Common;
 namespace Vogel.Content.Application.CommentReactions.Commands.UpdateCommentReaction
 {
+    [Authorize]
     public class UpdateCommentReactionCommand : ICommand<CommentReactionDto>
     {
         public string ReactionId { get; set; }

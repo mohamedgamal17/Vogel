@@ -1,7 +1,7 @@
 ﻿using Vogel.BuildingBlocks.Domain.Auditing;
 namespace Vogel.Content.Domain.Comments
 {
-    public class Comment : OwnedAuditedEntity<string>
+    public class Comment : OwnedAuditedAggregateRoot<string>
     {
         public Comment()
         {

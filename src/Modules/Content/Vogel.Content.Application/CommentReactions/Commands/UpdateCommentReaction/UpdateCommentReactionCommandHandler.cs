@@ -5,7 +5,6 @@ using Vogel.BuildingBlocks.MongoDb;
 using Vogel.BuildingBlocks.Shared.Results;
 using Vogel.Content.Application.CommentReactions.Dtos;
 using Vogel.Content.Application.CommentReactions.Factories;
-using Vogel.Content.Application.CommentReactions.Policies;
 using Vogel.Content.Domain;
 using Vogel.Content.Domain.Comments;
 using Vogel.Content.MongoEntities.CommentReactions;
@@ -17,19 +16,21 @@ namespace Vogel.Content.Application.CommentReactions.Commands.UpdateCommentReact
         private readonly IContentRepository<Comment> _commentRepository;
         private readonly IMongoRepository<CommentReactionMongoEntity> _commentReactionMongoRepository;
         private readonly ICommentReactionResponseFactory _commentReactionResponseFactory;
-        private readonly IApplicationAuthorizationService _applicationAuthorizationService;
+        private readonly ISecurityContext _securityContxt;
 
-        public UpdateCommentReactionCommandHandler(IContentRepository<CommentReaction> commentReactionRepository, IContentRepository<Comment> commentRepository, IMongoRepository<CommentReactionMongoEntity> commentReactionMongoRepository, ICommentReactionResponseFactory commentReactionResponseFactory, IApplicationAuthorizationService applicationAuthorizationService)
+        public UpdateCommentReactionCommandHandler(IContentRepository<CommentReaction> commentReactionRepository, IContentRepository<Comment> commentRepository, IMongoRepository<CommentReactionMongoEntity> commentReactionMongoRepository, ICommentReactionResponseFactory commentReactionResponseFactory, ISecurityContext securityContxt)
         {
             _commentReactionRepository = commentReactionRepository;
             _commentRepository = commentRepository;
             _commentReactionMongoRepository = commentReactionMongoRepository;
             _commentReactionResponseFactory = commentReactionResponseFactory;
-            _applicationAuthorizationService = applicationAuthorizationService;
+            _securityContxt = securityContxt;
         }
 
         public async Task<Result<CommentReactionDto>> Handle(UpdateCommentReactionCommand request, CancellationToken cancellationToken)
         {
+            string userId = _securityContxt.User!.Id;
+
             var comment = await _commentRepository.SingleOrDefaultAsync(x => x.Id == request.CommentId && x.PostId == request.PostId);
 
             if (comment == null)
@@ -44,13 +45,10 @@ namespace Vogel.Content.Application.CommentReactions.Commands.UpdateCommentReact
                 return new Result<CommentReactionDto>(new EntityNotFoundException(typeof(CommentReaction), request.ReactionId));
             }
 
-            var authorizationResult = await _applicationAuthorizationService.AuthorizeAsync(reaction, CommentReactionOperationAuthorizationRequirment.IsOwner);
-
-            if (authorizationResult.IsFailure)
+            if (!reaction.IsOwnedBy(userId))
             {
-                return new Result<CommentReactionDto>(authorizationResult.Exception!);
+                return new Result<CommentReactionDto>(new ForbiddenAccessException());
             }
-
 
             reaction.Type = request.Type;
 

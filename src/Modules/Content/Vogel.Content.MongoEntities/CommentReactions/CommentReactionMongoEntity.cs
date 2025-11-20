@@ -5,12 +5,9 @@ namespace Vogel.Content.MongoEntities.CommentReactions
 {
 
     [MongoCollection(CommentReactionMongoConsts.CollectionName)]
-    public class CommentReactionMongoEntity : FullAuditedMongoEntity<string>
+    public class CommentReactionMongoEntity : OwnedFullAuditedMongoEntity<string>
     {
-        public string UserId { get; set; }
-
         public string CommentId { get; set; }
-
         public ReactionType Type { get; set; }
     }
 }
