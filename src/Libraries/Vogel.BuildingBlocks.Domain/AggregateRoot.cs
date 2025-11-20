@@ -13,4 +13,14 @@ namespace Vogel.BuildingBlocks.Domain
         }
 
     }
+
+    public class OwnedAggregateRoot<TKey> : AggregateRoot<TKey>, IOwnedEntity<TKey>
+    {
+        public TKey UserId { get ; set ; }
+
+        public bool IsOwnedBy(TKey userId)
+        {
+            return EqualityComparer<TKey>.Default.Equals(Id, userId);
+        }
+    }
 }

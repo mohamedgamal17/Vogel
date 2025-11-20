@@ -10,4 +10,14 @@ namespace Vogel.BuildingBlocks.Domain.Auditing
         public DateTime? DeletionTime { get; set; }
         public string? DeletorId { get; set; }
     }
+
+    public class OwnedAuditedAggregateRoot<TKey> : AuditedAggregateRoot<TKey>, IOwnedEntity<TKey>
+    {
+        public TKey UserId { get ; set ; }
+
+        public bool IsOwnedBy(TKey userId)
+        {
+            return EqualityComparer<TKey>.Default.Equals(Id, userId);
+        }
+    }
 }
