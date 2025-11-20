@@ -51,11 +51,9 @@ namespace Vogel.Social.Application.Users.Commands.UpdateUser
                     return new Result<UserDto>(new EntityNotFoundException(typeof(Picture), request.AvatarId));
                 }
 
-                var authorizationResult = await _applicationAuthorizationService.AuthorizeAsync(avatar!, PictureOperationRequirements.IsPictureOwner);
-
-                if (authorizationResult.IsFailure)
+                if (!avatar.IsOwnedBy(currentUserId))
                 {
-                    return new Result<UserDto>(authorizationResult.Exception!);
+                    return new Result<UserDto>(new ForbiddenAccessException());
                 }
             }
 

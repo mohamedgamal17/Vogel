@@ -27,6 +27,7 @@ namespace Vogel.Social.Application.Pictures.Commands.RemovePicture
 
         public async Task<Result<Unit>> Handle(RemovePictureCommand request, CancellationToken cancellationToken)
         {
+            string userId = _securityContext.User!.Id;
 
             var picture = await _pictureRepository.FindByIdAsync(request.Id);
 
@@ -35,13 +36,11 @@ namespace Vogel.Social.Application.Pictures.Commands.RemovePicture
                 return new Result<Unit>(new EntityNotFoundException(typeof(Picture), request.Id));
             }
 
-            var authorizationResult = await _applicationAuthorizationService.AuthorizeAsync(picture, PictureOperationRequirements.IsPictureOwner);
 
-            if (authorizationResult.IsFailure)
+            if (!picture.IsOwnedBy(userId))
             {
-                return authorizationResult;
+                return new Result<Unit>(new ForbiddenAccessException());
             }
-
 
             await _s3ObjectStorageService.RemoveObjectAsync(picture.File);
 

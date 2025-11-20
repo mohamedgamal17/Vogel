@@ -3,9 +3,8 @@
 namespace Vogel.Social.MongoEntities.Pictures
 {
     [MongoCollection(PictureMongoConsts.CollectionName)]
-    public class PictureMongoEntity : FullAuditedMongoEntity<string>
+    public class PictureMongoEntity : OwnedFullAuditedMongoEntity
     {
         public string File { get; set; }
-        public string UserId { get; set; }
     }
 }

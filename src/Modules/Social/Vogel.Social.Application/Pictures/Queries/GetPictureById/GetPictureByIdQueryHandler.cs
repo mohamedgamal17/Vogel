@@ -15,16 +15,21 @@ namespace Vogel.Social.Application.Pictures.Queries.GetPictureById
         private readonly PictureMongoRepository _pictureMongoRepository;
         private readonly IApplicationAuthorizationService _applicationAuthorizationService;
         private readonly IPictureResponseFactory _pictureResponseFactory;
+        private readonly ISecurityContext _securityContext;
 
-        public GetPictureByIdQueryHandler(PictureMongoRepository pictureMongoRepository, IApplicationAuthorizationService applicationAuthorizationService, IPictureResponseFactory pictureResponseFactory)
+        public GetPictureByIdQueryHandler(PictureMongoRepository pictureMongoRepository, IApplicationAuthorizationService applicationAuthorizationService, IPictureResponseFactory pictureResponseFactory, ISecurityContext securityContext)
         {
             _pictureMongoRepository = pictureMongoRepository;
             _applicationAuthorizationService = applicationAuthorizationService;
             _pictureResponseFactory = pictureResponseFactory;
+            _securityContext = securityContext;
         }
 
         public async Task<Result<PictureDto>> Handle(GetPictureByIdQuery request, CancellationToken cancellationToken)
         {
+
+            string userId = _securityContext.User!.Id;
+
             var picture = await _pictureMongoRepository.FindByIdAsync(request.Id);
 
             if (picture == null)
@@ -32,11 +37,9 @@ namespace Vogel.Social.Application.Pictures.Queries.GetPictureById
                 return new Result<PictureDto>(new EntityNotFoundException(typeof(Picture), request.Id));
             }
 
-            var authorizationResult = await _applicationAuthorizationService.AuthorizeAsync(picture, PictureOperationRequirements.IsPictureOwner);
-
-            if (authorizationResult.IsFailure)
+            if (!picture.IsOwnedBy(userId))
             {
-                return new Result<PictureDto>(authorizationResult.Exception!);
+                return new Result<PictureDto>(new ForbiddenAccessException());
             }
 
             return await _pictureResponseFactory.PreparePictureDto(picture);

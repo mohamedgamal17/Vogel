@@ -52,11 +52,9 @@ namespace Vogel.Social.Application.Users.Commands.CreateUser
                     return new Result<UserDto>(new EntityNotFoundException(typeof(Picture), request.AvatarId));
                 }
 
-                var authorizationResult = await _applicationAuthorizationService.AuthorizeAsync(avatar!, PictureOperationRequirements.IsPictureOwner);
-
-                if (authorizationResult.IsFailure)
+                if (!avatar.IsOwnedBy(userId))
                 {
-                    return new Result<UserDto>(authorizationResult.Exception!);
+                    return new Result<UserDto>(new ForbiddenAccessException());
                 }
             }
             var user = new User(userId)
