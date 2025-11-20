@@ -16,7 +16,7 @@ namespace Vogel.BuildingBlocks.Domain.Auditing
         public TKey UserId { get; set; }
         public bool IsOwnedBy(TKey userId)
         {
-            return EqualityComparer<TKey>.Default.Equals(Id, userId);
+            return EqualityComparer<TKey>.Default.Equals(UserId, userId);
         }
     }
 }

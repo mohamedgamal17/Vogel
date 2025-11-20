@@ -15,6 +15,7 @@ namespace Vogel.BuildingBlocks.MongoDb
 
     public abstract class MongoOwnedEntity : MongoEntity, IMongoOwnedEntity
     {
+        [BsonElement("userId")]
         public string UserId { get; set; }
 
         public bool IsOwnedBy(string userId)

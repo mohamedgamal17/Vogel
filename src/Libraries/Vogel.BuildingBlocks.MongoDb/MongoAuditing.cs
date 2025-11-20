@@ -32,6 +32,7 @@ namespace Vogel.BuildingBlocks.MongoDb
 
     public class OwnedFullAuditedMongoEntity<TKey> : FullAuditedMongoEntity<TKey>, IMongoOwnedEntity<TKey>
     {
+        [BsonElement("userId")]
         public TKey UserId { get ; set ; }
 
         public bool IsOwnedBy(TKey userId)
