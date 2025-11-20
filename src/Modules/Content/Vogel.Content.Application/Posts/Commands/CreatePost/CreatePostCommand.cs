@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Vogel.BuildingBlocks.Application.Requests;
 using Vogel.BuildingBlocks.MongoDb;
 using Vogel.Content.Application.Posts.Dtos;
@@ -8,6 +9,7 @@ using Vogel.Content.Domain.Posts;
 
 namespace Vogel.Content.Application.Posts.Commands.CreatePost
 {
+    [Authorize]
     public class CreatePostCommand : ICommand<PostDto>
     {
         public string? Caption { get; set; }

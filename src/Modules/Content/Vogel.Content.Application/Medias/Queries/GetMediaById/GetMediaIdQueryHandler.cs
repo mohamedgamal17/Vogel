@@ -5,7 +5,6 @@ using Vogel.BuildingBlocks.MongoDb;
 using Vogel.BuildingBlocks.Shared.Results;
 using Vogel.Content.Application.Medias.Dtos;
 using Vogel.Content.Application.Medias.Factories;
-using Vogel.Content.Application.Medias.Policies;
 using Vogel.Content.Domain.Medias;
 using Vogel.Content.MongoEntities.Medias;
 
@@ -14,17 +13,20 @@ namespace Vogel.Content.Application.Medias.Queries.GetMediaById
     public class GetMediaIdQueryHandler : IApplicationRequestHandler<GetMediaByIdQuery, MediaDto>
     {
         private readonly IMongoRepository<MediaMongoEntity> _mediaMongoRepository;
-        private readonly IApplicationAuthorizationService _applicationAuthorizationService;
         private readonly IMediaResponseFactory _mediaResponseFactory;
-        public GetMediaIdQueryHandler(IMongoRepository<MediaMongoEntity> mediaMongoRepository,  IApplicationAuthorizationService applicationAuthorizationService, IMediaResponseFactory mediaResponseFactory)
+        private readonly ISecurityContext _securityContext;
+
+        public GetMediaIdQueryHandler(IMongoRepository<MediaMongoEntity> mediaMongoRepository, IMediaResponseFactory mediaResponseFactory, ISecurityContext securityContext)
         {
             _mediaMongoRepository = mediaMongoRepository;
-            _applicationAuthorizationService = applicationAuthorizationService;
             _mediaResponseFactory = mediaResponseFactory;
+            _securityContext = securityContext;
         }
 
         public async Task<Result<MediaDto>> Handle(GetMediaByIdQuery request, CancellationToken cancellationToken)
         {
+            string userId = _securityContext.User!.Id;
+
             var media = await _mediaMongoRepository.FindByIdAsync(request.MediaId);
 
             if (media == null)
@@ -32,11 +34,9 @@ namespace Vogel.Content.Application.Medias.Queries.GetMediaById
                 return new Result<MediaDto>(new EntityNotFoundException(typeof(Media), request.MediaId));
             }
 
-            var authorizationResult = await _applicationAuthorizationService.AuthorizeAsync(media, MediaOperationRequirements.IsOwner);
-
-            if (authorizationResult.IsFailure)
+            if (!media.IsOwnedBy(userId))
             {
-                return new Result<MediaDto>(authorizationResult.Exception!);
+                return new Result<MediaDto>(new ForbiddenAccessException());
             }
 
             return await _mediaResponseFactory.PrepareMediaDto(media);

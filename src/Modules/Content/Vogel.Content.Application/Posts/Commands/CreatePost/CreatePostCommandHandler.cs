@@ -1,7 +1,7 @@
 ﻿using Vogel.BuildingBlocks.Application.Requests;
+using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.BuildingBlocks.Infrastructure.Security;
 using Vogel.BuildingBlocks.Shared.Results;
-using Vogel.Content.Application.Medias.Policies;
 using Vogel.Content.Application.Posts.Dtos;
 using Vogel.Content.Application.Posts.Factories;
 using Vogel.Content.Domain;
@@ -32,18 +32,17 @@ namespace Vogel.Content.Application.Posts.Commands.CreatePost
 
         public async Task<Result<PostDto>> Handle(CreatePostCommand request, CancellationToken cancellationToken)
         {
-            Media? media = default(Media);
+            string userId = _securityContext.User!.Id;
 
+            Media? media = default(Media);
 
             if (request.MediaId != null)
             {
-                media = await _mediaRepository.FindByIdAsync(request.MediaId);
+                media = await _mediaRepository.SingleAsync(x=> x.Id == request.MediaId);
 
-                var authorizationResult = await _applicationAuthorizationService.AuthorizeAsync(media!, MediaOperationRequirements.IsOwner);
-
-                if (authorizationResult.IsFailure)
+                if (!media!.IsOwnedBy(userId))
                 {
-                    return new Result<PostDto>(authorizationResult.Exception!);
+                    return new Result<PostDto>(new ForbiddenAccessException());
                 }
             }
             var post = new Post

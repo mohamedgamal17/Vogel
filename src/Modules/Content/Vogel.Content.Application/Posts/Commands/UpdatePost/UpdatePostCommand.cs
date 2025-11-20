@@ -4,9 +4,11 @@ using Vogel.Content.Application.Posts.Dtos;
 using Vogel.Content.Domain.Medias;
 using Vogel.Content.Domain.Posts;
 using Vogel.Content.Domain;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Vogel.Content.Application.Posts.Commands.UpdatePost
 {
+    [Authorize]
     public class UpdatePostCommand : ICommand<PostDto>
     {
         public string PostId { get; set; }

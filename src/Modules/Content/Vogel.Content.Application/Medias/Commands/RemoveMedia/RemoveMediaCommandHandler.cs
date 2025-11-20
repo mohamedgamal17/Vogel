@@ -5,7 +5,6 @@ using Vogel.BuildingBlocks.Infrastructure.S3Storage;
 using Vogel.BuildingBlocks.Infrastructure.Security;
 using Vogel.BuildingBlocks.Shared.Results;
 using Vogel.Content.Application.Medias.Factories;
-using Vogel.Content.Application.Medias.Policies;
 using Vogel.Content.Domain;
 using Vogel.Content.Domain.Medias;
 namespace Vogel.Content.Application.Medias.Commands.RemoveMedia
@@ -29,6 +28,8 @@ namespace Vogel.Content.Application.Medias.Commands.RemoveMedia
 
         public async Task<Result<Unit>> Handle(RemoveMediaCommand request, CancellationToken cancellationToken)
         {
+            string userId = _securityContext.User!.Id;
+
             var media = await _mediaRepository.FindByIdAsync(request.Id);
 
             if (media == null)
@@ -36,13 +37,10 @@ namespace Vogel.Content.Application.Medias.Commands.RemoveMedia
                 return new Result<Unit>(new EntityNotFoundException(typeof(Media), request.Id));
             }
 
-            var authorizationResult = await _applicationAuthorizationService.AuthorizeAsync(media, MediaOperationRequirements.IsOwner);
-
-            if (authorizationResult.IsFailure)
+            if (!media.IsOwnedBy(userId))
             {
-                return authorizationResult;
+                return new Result<Unit>(new ForbiddenAccessException());
             }
-
 
             await _s3ObjectStorageService.RemoveObjectAsync(media.File);
 

@@ -1,7 +1,7 @@
 ﻿using Vogel.BuildingBlocks.Domain.Auditing;
 namespace Vogel.Content.Domain.Medias
 {
-    public class Media : AuditedAggregateRoot<string>
+    public class Media : OwnedAuditedEntity<string>
     {
         public Media()
         {
@@ -11,8 +11,6 @@ namespace Vogel.Content.Domain.Medias
         public MediaType MediaType { get; set; }
         public string MimeType { get; set; }
         public long Size { get; set; }
-        public string UserId { get; set; }
-
     }
 
     public enum MediaType

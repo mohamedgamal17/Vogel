@@ -2,7 +2,6 @@
 using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.BuildingBlocks.Infrastructure.Security;
 using Vogel.BuildingBlocks.Shared.Results;
-using Vogel.Content.Application.Medias.Policies;
 using Vogel.Content.Application.Posts.Dtos;
 using Vogel.Content.Application.Posts.Factories;
 using Vogel.Content.Application.Posts.Policies;
@@ -20,18 +19,22 @@ namespace Vogel.Content.Application.Posts.Commands.UpdatePost
         private readonly PostMongoRepository _postMongoRepository;
         private readonly IApplicationAuthorizationService _applicationAuthorizationService;
         private readonly IPostResponseFactory _postResponseFactory;
+        private readonly ISecurityContext _securityContext;
 
-        public UpdatePostCommandHandler(IContentRepository<Post> postRepository, IContentRepository<Media> mediaRepository, PostMongoRepository postMongoRepository, IApplicationAuthorizationService applicationAuthorizationService, IPostResponseFactory postResponseFactory)
+        public UpdatePostCommandHandler(IContentRepository<Post> postRepository, IContentRepository<Media> mediaRepository, PostMongoRepository postMongoRepository, IApplicationAuthorizationService applicationAuthorizationService, IPostResponseFactory postResponseFactory, ISecurityContext securityContext)
         {
             _postRepository = postRepository;
             _mediaRepository = mediaRepository;
             _postMongoRepository = postMongoRepository;
             _applicationAuthorizationService = applicationAuthorizationService;
             _postResponseFactory = postResponseFactory;
+            _securityContext = securityContext;
         }
 
         public async Task<Result<PostDto>> Handle(UpdatePostCommand request, CancellationToken cancellationToken)
         {
+            string userId = _securityContext.User!.Id;
+
             var post = await _postRepository.FindByIdAsync(request.PostId);
 
             if (post == null)
@@ -51,13 +54,11 @@ namespace Vogel.Content.Application.Posts.Commands.UpdatePost
 
             if (request.MediaId != null)
             {
-                media = await _mediaRepository.FindByIdAsync(request.MediaId);
+                media = await _mediaRepository.SingleAsync(x=> x.Id == request.MediaId);
 
-                var mediaAuthorizationResult = await _applicationAuthorizationService.AuthorizeAsync(media!, MediaOperationRequirements.IsOwner);
-
-                if (mediaAuthorizationResult.IsFailure)
+                if (!media.IsOwnedBy(userId))
                 {
-                    return new Result<PostDto>(mediaAuthorizationResult.Exception!);
+                    return new Result<PostDto>(new ForbiddenAccessException());
                 }
             }
 
