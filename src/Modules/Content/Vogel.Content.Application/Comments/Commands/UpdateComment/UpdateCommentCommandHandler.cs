@@ -4,7 +4,6 @@ using Vogel.BuildingBlocks.Infrastructure.Security;
 using Vogel.BuildingBlocks.Shared.Results;
 using Vogel.Content.Application.Comments.Dtos;
 using Vogel.Content.Application.Comments.Factories;
-using Vogel.Content.Application.Comments.Polices;
 using Vogel.Content.Domain;
 using Vogel.Content.Domain.Comments;
 using Vogel.Content.MongoEntities.Comments;
@@ -15,18 +14,20 @@ namespace Vogel.Content.Application.Comments.Commands.UpdateComment
         private readonly IContentRepository<Comment> _commentRepository;
         private readonly ICommentResponseFactory _commentResponseFactory;
         private readonly CommentMongoRepository _commentMongoRepository;
-        private readonly IApplicationAuthorizationService _applicationAuthorizationService;
+        private readonly ISecurityContext _securityContext;
 
-        public UpdateCommentCommandHandler(IContentRepository<Comment> commentRepository,  ICommentResponseFactory commentResponseFactory, CommentMongoRepository commentMongoRepository, IApplicationAuthorizationService applicationAuthorizationService)
+        public UpdateCommentCommandHandler(IContentRepository<Comment> commentRepository, ICommentResponseFactory commentResponseFactory, CommentMongoRepository commentMongoRepository, ISecurityContext securityContext)
         {
             _commentRepository = commentRepository;
             _commentResponseFactory = commentResponseFactory;
             _commentMongoRepository = commentMongoRepository;
-            _applicationAuthorizationService = applicationAuthorizationService;
+            _securityContext = securityContext;
         }
 
         public async Task<Result<CommentDto>> Handle(UpdateCommentCommand request, CancellationToken cancellationToken)
         {
+            string userId = _securityContext.User!.Id;
+
             var comment = await _commentRepository.SingleOrDefaultAsync(x => x.Id == request.CommentId && x.PostId == request.PostId);
 
             if (comment == null)
@@ -34,12 +35,9 @@ namespace Vogel.Content.Application.Comments.Commands.UpdateComment
                 return new Result<CommentDto>(new EntityNotFoundException(typeof(Comment), request.CommentId));
             }
 
-            var authorizationResult = await _applicationAuthorizationService
-             .AuthorizeAsync(comment, CommentOperationAuthorizationRequirement.Edit);
-
-            if (authorizationResult.IsFailure)
+            if (!comment.IsOwnedBy(userId))
             {
-                return new Result<CommentDto>(authorizationResult.Exception!);
+                return new Result<CommentDto>(new ForbiddenAccessException());
             }
 
             comment.Content = request.Content;

@@ -28,7 +28,7 @@ namespace Vogel.Content.Application.Comments.Commands.RemoveComent
                 return new Result<Unit>(new EntityNotFoundException(typeof(Comment), request.CommentId));
             }
             var authorizationResult = await _applicationAuthorizationService
-                  .AuthorizeAsync(comment, CommentOperationAuthorizationRequirement.Delete);
+                  .AuthorizeAsync(comment, CommentOperationAuthorizationRequirement.Remove);
 
             if (authorizationResult.IsFailure)
             {
