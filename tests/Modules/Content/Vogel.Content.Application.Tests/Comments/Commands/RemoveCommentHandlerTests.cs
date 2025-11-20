@@ -49,7 +49,7 @@ namespace Vogel.Content.Application.Tests.Comments.Commands
         }
 
         [Test]
-        public async Task Should_remove_comment_when_user_is_own_comment()
+        public async Task Should_remove_comment_when_user_is_own_the_post()
         {
             AuthenticationService.Login();
 
@@ -57,7 +57,35 @@ namespace Vogel.Content.Application.Tests.Comments.Commands
 
             var fakePost = await CreatePostAsync(userId);
 
-            var fakeComment = await CreateCommentAsync(fakePost.Id, userId);
+            var fakeComment = await CreateCommentAsync(fakePost.Id, Guid.NewGuid().ToString());
+
+            var command = new RemoveCommentCommand
+            {
+                CommentId = fakeComment.Id,
+                PostId = fakePost.Id
+            };
+
+            var result = await Mediator.Send(command);
+
+            result.ShouldBeSuccess();
+
+            var comment = await CommentRepository.FindByIdAsync(fakeComment.Id);
+
+            comment.Should().BeNull();
+        }
+
+        [Test]
+        public async Task Should_remove_comment_when_user_is_own_the_parent_comment()
+        {
+            AuthenticationService.Login();
+
+            string userId = AuthenticationService.GetCurrentUser()!.Id;
+
+            var fakePost = await CreatePostAsync(Guid.NewGuid().ToString());
+
+            var parentComment = await CreateCommentAsync(fakePost.Id, userId);
+
+            var fakeComment = await CreateCommentAsync(fakePost.Id, Guid.NewGuid().ToString(), parentComment.Id);
 
             var command = new RemoveCommentCommand
             {
