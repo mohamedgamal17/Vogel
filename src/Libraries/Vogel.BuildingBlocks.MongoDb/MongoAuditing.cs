@@ -29,4 +29,15 @@ namespace Vogel.BuildingBlocks.MongoDb
         public string? DeletorId { get; set; }
 
     }
+
+    public class OwnedFullAuditedMongoEntity<TKey> : FullAuditedMongoEntity<TKey>, IMongoOwnedEntity<TKey>
+    {
+        public TKey UserId { get ; set ; }
+
+        public bool IsOwnedBy(TKey userId)
+        {
+            return EqualityComparer<TKey>.Default.Equals(userId, UserId);
+        }
+    }
+    public class OwnedFullAuditedMongoEntity : OwnedFullAuditedMongoEntity<string> { }
 }

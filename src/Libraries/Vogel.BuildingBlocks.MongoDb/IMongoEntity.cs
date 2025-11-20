@@ -6,7 +6,6 @@ namespace Vogel.BuildingBlocks.MongoDb
     {
         string Id { get; set; }
     }
-
     public abstract class MongoEntity : IMongoEntity
     {
         [BsonId]
@@ -14,4 +13,13 @@ namespace Vogel.BuildingBlocks.MongoDb
         public string Id { get; set; }
     }
 
+    public abstract class MongoOwnedEntity : MongoEntity, IMongoOwnedEntity
+    {
+        public string UserId { get; set; }
+
+        public bool IsOwnedBy(string userId)
+        {
+            return userId == UserId;
+        }
+    }
 }
