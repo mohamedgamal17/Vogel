@@ -1,9 +1,8 @@
 ﻿using Vogel.BuildingBlocks.Domain;
 using Vogel.BuildingBlocks.Domain.Auditing;
-
 namespace Vogel.Content.Domain.Posts
 {
-    public class Post : AuditedAggregateRoot<string>
+    public class Post : OwnedAuditedAggregateRoot<string>
     {
         public Post()
         {
@@ -13,8 +12,6 @@ namespace Vogel.Content.Domain.Posts
 
         public string Caption { get; set; }
         public string? MediaId { get; set; }
-        public string UserId { get; set; }
-
     }
 
 

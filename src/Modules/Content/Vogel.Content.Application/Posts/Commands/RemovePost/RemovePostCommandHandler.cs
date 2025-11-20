@@ -3,7 +3,6 @@ using Vogel.BuildingBlocks.Application.Requests;
 using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.BuildingBlocks.Infrastructure.Security;
 using Vogel.BuildingBlocks.Shared.Results;
-using Vogel.Content.Application.Posts.Policies;
 using Vogel.Content.Domain;
 using Vogel.Content.Domain.Posts;
 namespace Vogel.Content.Application.Posts.Commands.RemovePost
@@ -11,16 +10,18 @@ namespace Vogel.Content.Application.Posts.Commands.RemovePost
     public class RemovePostCommandHandler : IApplicationRequestHandler<RemovePostCommand, Unit>
     {
         private readonly IContentRepository<Post> _postRepository;
-        private readonly IApplicationAuthorizationService _applicationAuthorizationService;
+        private readonly ISecurityContext _securityContext;
 
-        public RemovePostCommandHandler(IContentRepository<Post> postRepository, IApplicationAuthorizationService applicationAuthorizationService)
+        public RemovePostCommandHandler(IContentRepository<Post> postRepository, ISecurityContext securityContext)
         {
             _postRepository = postRepository;
-            _applicationAuthorizationService = applicationAuthorizationService;
+            _securityContext = securityContext;
         }
 
         public async Task<Result<Unit>> Handle(RemovePostCommand request, CancellationToken cancellationToken)
         {
+            string userId = _securityContext.User!.Id;
+
             var post = await _postRepository.FindByIdAsync(request.PostId);
 
             if (post == null)
@@ -28,12 +29,9 @@ namespace Vogel.Content.Application.Posts.Commands.RemovePost
                 return new Result<Unit>(new EntityNotFoundException(typeof(Post), request.PostId));
             }
 
-            var authorizationResult = await _applicationAuthorizationService
-                .AuthorizeAsync(post, PostOperationAuthorizationRequirement.Edit);
-
-            if (authorizationResult.IsFailure)
+            if (!post.IsOwnedBy(userId))
             {
-                return authorizationResult;
+                return new Result<Unit>(new ForbiddenAccessException());
             }
 
             await _postRepository.DeleteAsync(post);

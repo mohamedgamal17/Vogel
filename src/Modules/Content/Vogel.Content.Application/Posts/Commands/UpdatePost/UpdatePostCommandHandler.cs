@@ -4,7 +4,6 @@ using Vogel.BuildingBlocks.Infrastructure.Security;
 using Vogel.BuildingBlocks.Shared.Results;
 using Vogel.Content.Application.Posts.Dtos;
 using Vogel.Content.Application.Posts.Factories;
-using Vogel.Content.Application.Posts.Policies;
 using Vogel.Content.Domain;
 using Vogel.Content.Domain.Medias;
 using Vogel.Content.Domain.Posts;
@@ -17,16 +16,14 @@ namespace Vogel.Content.Application.Posts.Commands.UpdatePost
         private readonly IContentRepository<Post> _postRepository;
         private readonly IContentRepository<Media> _mediaRepository;
         private readonly PostMongoRepository _postMongoRepository;
-        private readonly IApplicationAuthorizationService _applicationAuthorizationService;
         private readonly IPostResponseFactory _postResponseFactory;
         private readonly ISecurityContext _securityContext;
 
-        public UpdatePostCommandHandler(IContentRepository<Post> postRepository, IContentRepository<Media> mediaRepository, PostMongoRepository postMongoRepository, IApplicationAuthorizationService applicationAuthorizationService, IPostResponseFactory postResponseFactory, ISecurityContext securityContext)
+        public UpdatePostCommandHandler(IContentRepository<Post> postRepository, IContentRepository<Media> mediaRepository, PostMongoRepository postMongoRepository, IPostResponseFactory postResponseFactory, ISecurityContext securityContext)
         {
             _postRepository = postRepository;
             _mediaRepository = mediaRepository;
             _postMongoRepository = postMongoRepository;
-            _applicationAuthorizationService = applicationAuthorizationService;
             _postResponseFactory = postResponseFactory;
             _securityContext = securityContext;
         }
@@ -42,12 +39,9 @@ namespace Vogel.Content.Application.Posts.Commands.UpdatePost
                 return new Result<PostDto>(new EntityNotFoundException(typeof(Post), request.PostId));
             }
 
-            var authorizationResult = await _applicationAuthorizationService
-                .AuthorizeAsync(post, PostOperationAuthorizationRequirement.Edit);
-
-            if (authorizationResult.IsFailure)
+            if (!post.IsOwnedBy(userId))
             {
-                return new Result<PostDto>(authorizationResult.Exception!);
+                return new Result<PostDto>(new ForbiddenAccessException());
             }
 
             Media? media = default(Media);
