@@ -1,11 +1,12 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Vogel.BuildingBlocks.Application.Requests;
-using Vogel.Content.Application.PostReactions.Commands.CreatePostReaction;
 using Vogel.Content.Application.PostReactions.Dtos;
 using Vogel.Content.Domain.Common;
 using Vogel.Content.Domain.Posts;
 namespace Vogel.Content.Application.PostReactions.Commands.UpdatePostReaction
 {
+    [Authorize]
     public class UpdatePostReactionCommand : ICommand<PostReactionDto>
     {
         public string ReactionId { get; set; }
