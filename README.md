@@ -129,6 +129,13 @@ The architecture is organized into multiple layers and modules, each responsible
   }
 ```
 ---
+5. **MongoDb configuration**
+   ```json
+    "MongoDb": {
+      "ConnectionString": "YOUR_MONGO_DB_SERVER",
+      "Database": "YOUR_MONGO_DB_DATABASE"
+    }
+   ```
 
 
 ## Getting Started
@@ -181,6 +188,13 @@ Ensure you have the following installed:
       "SecretKey": "STORAGE_SECRET_KEY",
       "BucketName": "YOUR_BUCKET_NAME",
       "WithSSL" : "PREFERED_TO_BE_TRUE_PRODUCTION_MODE"
+    },
+   "ConnectionStrings": {
+      "Default": "YOUR_SQL_SERVER_DB_CONNECTION_STRING"
+    },
+   "MongoDb": {
+      "ConnectionString": "YOUR_MONGO_DB_SERVER",
+      "Database": "YOUR_MONGO_DB_DATABASE"
     },
   }
 ```
