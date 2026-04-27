@@ -1,0 +1,17 @@
+---
+description: Require pre-merge feature checklist and module-aligned tests
+alwaysApply: true
+---
+
+# Vogel Feature Delivery Checklist
+
+For every feature/edit, apply this sequence:
+
+1. Map the request to one target module and determine command side, query side, or both.
+2. Place each file in the correct project layer (`Domain`, `Application`, `Infrastructure`, `Presentation`, `MongoEntities`).
+3. Preserve command flow (`Command -> Domain -> SQL`) and query flow (`Query -> Mongo`).
+4. Update read-model synchronization handlers when command-side changes affect query projections.
+5. Add tests in `tests/Modules/<Module>/<Module>.Application.Tests` for each new command/query handler.
+6. For features touching both sides, assert both SQL mutation results and Mongo query/projection results.
+7. When query listing is involved, test cursor pagination behavior (cursor generation, direction, and boundary handling).
+8. Run affected module tests before considering the change complete.

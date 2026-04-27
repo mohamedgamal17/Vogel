@@ -1,0 +1,14 @@
+---
+description: Enforce CQRS separation with SQL command side and Mongo query side
+alwaysApply: true
+---
+
+# Vogel CQRS And Data Consistency Rules
+
+- Every write use case must be modeled as `*Command` + `*CommandHandler` and persist through SQL/EF command-side repositories.
+- Every read use case must be modeled as `*Query` + `*QueryHandler` and read from Mongo read models/repositories.
+- Do not read EF command aggregates directly inside query handlers.
+- Do not write Mongo read models from endpoints or ad-hoc flows; use existing domain-event synchronization patterns.
+- Treat SQL Server as source of truth for mutations and MongoDB as query projection store.
+- Keep query pagination cursor-based; do not introduce page-number/offset pagination unless explicitly requested.
+- If a feature changes read-model shape, update synchronization handlers and Mongo projections in the same change set.

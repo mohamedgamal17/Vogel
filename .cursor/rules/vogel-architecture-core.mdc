@@ -1,0 +1,19 @@
+---
+description: Enforce Vogel module and clean architecture boundaries
+alwaysApply: true
+---
+
+# Vogel Module Architecture Rules
+
+- Work inside one module under `src/Modules/<ModuleName>` per feature unless a shared contract change is explicitly required.
+- Keep Clean Architecture layering strict:
+  - Domain: entities, value objects, domain services, repository interfaces.
+  - Application: CQRS requests/handlers, orchestration, policies.
+  - Infrastructure: EF/Mongo wiring, repository implementations, installers.
+  - Presentation: endpoints/routing/transport mapping only.
+  - MongoEntities: read models and Mongo query repositories.
+- Preserve dependency direction: `Presentation -> Application -> Domain`; domain never depends on infrastructure/presentation/framework transport types.
+- Reuse shared primitives from `src/Libraries` before introducing new abstractions.
+- Follow existing naming conventions: `*Command`, `*CommandHandler`, `*Query`, `*QueryHandler`, `*Endpoint`, `*ServiceInstaller`, `*ModuleBootstrapper`.
+- Keep endpoints thin; business and authorization decisions belong in application/domain policies and handlers.
+- Use existing module installer/bootstrapper patterns for schema/config/runtime wiring.
