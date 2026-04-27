@@ -20,9 +20,12 @@ namespace Vogel.BuildingBlocks.MongoDb.Extensions
 
                 query = orderedQuery.Match(filter);
             }
-            var data = await orderedQuery.Limit(limit).ToListAsync();
 
-            var pagingInfo = await PreparePagingInfo(orderedQuery, cursor, limit, ascending);
+            var limitFixed = limit == 0 ? 10 : limit;
+
+            var data = await orderedQuery.Limit(limitFixed).ToListAsync();
+
+            var pagingInfo = await PreparePagingInfo(orderedQuery, cursor, limitFixed, ascending);
 
             return new Paging<T>
             {
