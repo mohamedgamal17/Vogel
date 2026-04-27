@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Libraries\Vogel.BuildingBlocks.EntityFramework\Vogel.BuildingBlocks.EntityFramework.csproj" />
+    <ProjectReference Include="..\Vogel.MediaEngine.Application\Vogel.MediaEngine.Application.csproj" />
+    <ProjectReference Include="..\Vogel.MediaEngine.Domain\Vogel.MediaEngine.Domain.csproj" />
+    <ProjectReference Include="..\Vogel.MediaEngine.MongoEntities\Vogel.MediaEngine.MongoEntities.csproj" />
+    <ProjectReference Include="..\Vogel.MediaEngine.Presentation\Vogel.MediaEngine.Presentation.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="AssemblyReference.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+  </ItemGroup>
+
+</Project>

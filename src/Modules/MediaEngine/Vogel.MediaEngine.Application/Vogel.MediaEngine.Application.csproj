@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.10.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Libraries\Vogel.BuildingBlocks.Application\Vogel.BuildingBlocks.Application.csproj" />
+    <ProjectReference Include="..\Vogel.MediaEngine.Domain\Vogel.MediaEngine.Domain.csproj" />
+    <ProjectReference Include="..\Vogel.MediaEngine.MongoEntities\Vogel.MediaEngine.MongoEntities.csproj" />
+    <ProjectReference Include="..\Vogel.MediaEngine.Shared\Vogel.MediaEngine.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="AssemblyReference.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+  </ItemGroup>
+
+</Project>

@@ -37,7 +37,8 @@ namespace Vogel.Host
                      BuildingBlocks.Infrastructure.AssemblyReference.Assembly,
                      Social.Infrastructure.AssemblyReference.Assembly,
                      Content.Infrastructure.AssemblyReference.Assembly,
-                     Messanger.Infrastructure.AssemblyReference.Assembly
+                     Messanger.Infrastructure.AssemblyReference.Assembly,
+                     MediaEngine.Infrastructure.AssemblyReference.Assembly
                 );
 
             ConfigureFastEndpoint(services);
