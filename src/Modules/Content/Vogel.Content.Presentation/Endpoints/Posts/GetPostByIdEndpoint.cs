@@ -1,5 +1,6 @@
 ﻿using FastEndpoints;
 using MediatR;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Vogel.BuildingBlocks.Infrastructure.Extensions;
 using Vogel.Content.Application.Posts.Dtos;
@@ -18,6 +19,7 @@ namespace Vogel.Content.Presentation.Endpoints.Posts
         public override void Configure()
         {
             Get("{postId}");
+            Options(x => x.WithName("GetPostById"));
             Description(x => x.Produces(StatusCodes.Status200OK, typeof(PostDto))
                 .Produces(StatusCodes.Status404NotFound, typeof(ProblemDetails))
               );
