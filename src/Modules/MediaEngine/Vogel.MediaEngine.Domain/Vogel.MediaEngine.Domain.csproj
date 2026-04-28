@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Libraries\Vogel.BuildingBlocks.Domain\Vogel.BuildingBlocks.Domain.csproj" />
+    <ProjectReference Include="..\Vogel.MediaEngine.Shared\Vogel.MediaEngine.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
