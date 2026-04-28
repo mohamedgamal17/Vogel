@@ -15,29 +15,6 @@ namespace Vogel.Content.Infrastructure.EntityFramework.Migrations
                 name: "Content");
 
             migrationBuilder.CreateTable(
-                name: "Medias",
-                schema: "Content",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    File = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    MediaType = table.Column<int>(type: "int", nullable: false),
-                    MimeType = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Size = table.Column<long>(type: "bigint", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    CreatorId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModificationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifierId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DeletorId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Medias", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Posts",
                 schema: "Content",
                 columns: table => new
@@ -217,30 +194,6 @@ namespace Vogel.Content.Infrastructure.EntityFramework.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Medias_CreatorId",
-                schema: "Content",
-                table: "Medias",
-                column: "CreatorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Medias_DeletorId",
-                schema: "Content",
-                table: "Medias",
-                column: "DeletorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Medias_ModifierId",
-                schema: "Content",
-                table: "Medias",
-                column: "ModifierId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Medias_UserId",
-                schema: "Content",
-                table: "Medias",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PostReactions_CreatorId",
                 schema: "Content",
                 table: "PostReactions",
@@ -294,10 +247,6 @@ namespace Vogel.Content.Infrastructure.EntityFramework.Migrations
         {
             migrationBuilder.DropTable(
                 name: "CommentReactions",
-                schema: "Content");
-
-            migrationBuilder.DropTable(
-                name: "Medias",
                 schema: "Content");
 
             migrationBuilder.DropTable(
