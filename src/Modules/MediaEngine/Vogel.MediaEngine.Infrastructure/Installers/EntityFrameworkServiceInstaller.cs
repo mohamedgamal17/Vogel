@@ -4,7 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Vogel.BuildingBlocks.EntityFramework.Interceptors;
 using Vogel.BuildingBlocks.Infrastructure.Modularity;
+using Vogel.MediaEngine.Domain;
 using Vogel.MediaEngine.Infrastructure.EntityFramework;
+using Vogel.MediaEngine.Infrastructure.EntityFramework.Repositories;
 
 namespace Vogel.MediaEngine.Infrastructure.Installers
 {
@@ -20,6 +22,8 @@ namespace Vogel.MediaEngine.Infrastructure.Installers
                     sp.GetRequiredService<AuditableEntityInterceptors>(),
                     sp.GetRequiredService<DispatchDomainEventInterceptor>());
             });
+
+            services.AddTransient(typeof(IMediaEngineRepository<>), typeof(MediaEngineRepository<>));
         }
     }
 }
