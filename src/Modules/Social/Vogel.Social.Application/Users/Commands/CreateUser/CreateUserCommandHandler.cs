@@ -1,4 +1,4 @@
-﻿using Vogel.BuildingBlocks.Application.Requests;
+using Vogel.BuildingBlocks.Application.Requests;
 using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.BuildingBlocks.Infrastructure.Security;
 using Vogel.BuildingBlocks.Shared.Results;
@@ -57,6 +57,7 @@ namespace Vogel.Social.Application.Users.Commands.CreateUser
                     return new Result<UserDto>(new ForbiddenAccessException());
                 }
             }
+
             var user = new User(userId)
             {
                 FirstName = request.FirstName,

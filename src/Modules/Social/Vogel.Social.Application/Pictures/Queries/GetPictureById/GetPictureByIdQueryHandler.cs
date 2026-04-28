@@ -1,4 +1,4 @@
-﻿using Vogel.BuildingBlocks.Application.Requests;
+using Vogel.BuildingBlocks.Application.Requests;
 using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.BuildingBlocks.Infrastructure.Security;
 using Vogel.BuildingBlocks.Shared.Results;
@@ -27,7 +27,6 @@ namespace Vogel.Social.Application.Pictures.Queries.GetPictureById
 
         public async Task<Result<PictureDto>> Handle(GetPictureByIdQuery request, CancellationToken cancellationToken)
         {
-
             string userId = _securityContext.User!.Id;
 
             var picture = await _pictureMongoRepository.FindByIdAsync(request.Id);

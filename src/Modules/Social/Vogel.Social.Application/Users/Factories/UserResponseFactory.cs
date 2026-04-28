@@ -1,4 +1,5 @@
-﻿using Vogel.BuildingBlocks.Infrastructure.S3Storage;
+using Vogel.Social.Application.Pictures.Factories;
+using Vogel.Social.MongoEntities.Pictures;
 using Vogel.Social.MongoEntities.Users;
 using Vogel.Social.Shared.Dtos;
 
@@ -6,11 +7,13 @@ namespace Vogel.Social.Application.Users.Factories
 {
     public class UserResponseFactory : IUserResponseFactory
     {
-        private readonly IS3ObjectStorageService _s3ObjectStorageService;
+        private readonly PictureMongoRepository _pictureMongoRepository;
+        private readonly IPictureResponseFactory _pictureResponseFactory;
 
-        public UserResponseFactory(IS3ObjectStorageService s3ObjectStorageService)
+        public UserResponseFactory(PictureMongoRepository pictureMongoRepository, IPictureResponseFactory pictureResponseFactory)
         {
-            _s3ObjectStorageService = s3ObjectStorageService;
+            _pictureMongoRepository = pictureMongoRepository;
+            _pictureResponseFactory = pictureResponseFactory;
         }
 
         public async Task<List<UserDto>> PrepareListUserDto(List<UserMongoView> users)
@@ -34,14 +37,13 @@ namespace Vogel.Social.Application.Users.Factories
                 BirthDate = user.BirthDate.ToShortDateString()
             };
 
-            if (user.Avatar != null)
+            if (user.AvatarId != null)
             {
-                result.Avatar = new PictureDto
+                var avatar = await _pictureMongoRepository.FindByIdAsync(user.AvatarId);
+                if (avatar != null)
                 {
-                    Id = user.Avatar.Id,
-                    UserId = user.Avatar.UserId,
-                    Reference = await _s3ObjectStorageService.GeneratePresignedDownloadUrlAsync(user.Avatar.File)
-                };
+                    result.Avatar = await _pictureResponseFactory.PreparePictureDto(avatar);
+                }
             }
 
             return result;

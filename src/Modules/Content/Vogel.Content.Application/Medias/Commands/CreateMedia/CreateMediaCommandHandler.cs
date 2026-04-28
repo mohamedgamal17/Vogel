@@ -1,4 +1,4 @@
-﻿using Vogel.BuildingBlocks.Application.Requests;
+using Vogel.BuildingBlocks.Application.Requests;
 using Vogel.BuildingBlocks.Infrastructure.S3Storage;
 using Vogel.BuildingBlocks.Infrastructure.Security;
 using Vogel.BuildingBlocks.Shared.Results;
@@ -11,20 +11,19 @@ namespace Vogel.Content.Application.Medias.Commands.CreateMedia
     public class CreateMediaCommandHandler : IApplicationRequestHandler<CreateMediaCommand, MediaDto>
     {
         private readonly IContentRepository<Media> _mediaRepository;
-        private readonly IMediaResponseFactory _mediaResponseFactory;
         private readonly IS3ObjectStorageService _s3ObjectStorageService;
         private readonly ISecurityContext _securityContext;
-        public CreateMediaCommandHandler(IContentRepository<Media> mediaRepository,IMediaResponseFactory mediaResponseFactory, IS3ObjectStorageService s3ObjectStorageService, ISecurityContext securityContext)
+        private readonly IMediaResponseFactory _mediaResponseFactory;
+        public CreateMediaCommandHandler(IContentRepository<Media> mediaRepository, IS3ObjectStorageService s3ObjectStorageService, ISecurityContext securityContext, IMediaResponseFactory mediaResponseFactory)
         {
             _mediaRepository = mediaRepository;
-            _mediaResponseFactory = mediaResponseFactory;
             _s3ObjectStorageService = s3ObjectStorageService;
             _securityContext = securityContext;
+            _mediaResponseFactory = mediaResponseFactory;
         }
 
         public async Task<Result<MediaDto>> Handle(CreateMediaCommand request, CancellationToken cancellationToken)
         {
-
             var objectSaveModel = new S3ObjectStorageSaveModel
             {
                 FileName = request.Name,
@@ -32,19 +31,18 @@ namespace Vogel.Content.Application.Medias.Commands.CreateMedia
                 ContentType = request.MimeType,
             };
 
-
             var objectResponse = await _s3ObjectStorageService.SaveObjectAsync(objectSaveModel);
 
             var media = new Media
             {
                 File = objectResponse.ObjectName,
-                Size = objectResponse.Size,
+                UserId = _securityContext.User!.Id,
                 MimeType = request.MimeType,
-                MediaType = request.MediaType,
-                UserId = _securityContext.User!.Id
+                Size = request.Content.Length,
+                MediaType = request.MediaType
             };
 
-            media = await _mediaRepository.InsertAsync(media);
+            await _mediaRepository.InsertAsync(media);
 
             return await _mediaResponseFactory.PrepareMediaDto(media);
         }

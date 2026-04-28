@@ -1,4 +1,4 @@
-﻿using Vogel.BuildingBlocks.Application.Requests;
+using Vogel.BuildingBlocks.Application.Requests;
 using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.BuildingBlocks.Infrastructure.Security;
 using Vogel.BuildingBlocks.Shared.Results;
@@ -44,11 +44,15 @@ namespace Vogel.Content.Application.Posts.Commands.UpdatePost
                 return new Result<PostDto>(new ForbiddenAccessException());
             }
 
-            Media? media = default(Media);
+            Media? media = null;
 
             if (request.MediaId != null)
             {
-                media = await _mediaRepository.SingleAsync(x=> x.Id == request.MediaId);
+                media = await _mediaRepository.FindByIdAsync(request.MediaId);
+                if (media == null)
+                {
+                    return new Result<PostDto>(new EntityNotFoundException(typeof(Media), request.MediaId));
+                }
 
                 if (!media.IsOwnedBy(userId))
                 {

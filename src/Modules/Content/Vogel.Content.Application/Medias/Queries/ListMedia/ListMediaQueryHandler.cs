@@ -1,4 +1,4 @@
-﻿using MongoDB.Driver;
+using MongoDB.Driver;
 using Vogel.BuildingBlocks.Application.Requests;
 using Vogel.BuildingBlocks.Infrastructure.Security;
 using Vogel.BuildingBlocks.MongoDb;
@@ -28,21 +28,18 @@ namespace Vogel.Content.Application.Medias.Queries.ListMedia
         {
             string currentUserId = _securityContext.User!.Id;
 
+            var query = _mediaMongoRepository.AsMongoCollection()
+                .Aggregate();
 
-            var paged = await _mediaMongoRepository
-                .AsMongoCollection()
-                .Aggregate()
-                .Match(x => x.UserId == currentUserId)
-                .ToPaged(request.Cursor, request.Limit, request.Asending);
+            query = query.Match(Builders<MediaMongoEntity>.Filter.Eq(x => x.UserId, currentUserId));
 
+            var paged = await query.ToPaged(request.Cursor, request.Limit, request.Asending);
 
-            var response = new Paging<MediaDto>
+            return new Paging<MediaDto>
             {
                 Data = await _mediaResponseFactory.PrepareListMediaDto(paged.Data),
                 Info = paged.Info
             };
-
-            return response;
         }
     }
 }

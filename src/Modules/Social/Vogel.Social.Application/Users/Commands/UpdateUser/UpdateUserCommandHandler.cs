@@ -1,4 +1,4 @@
-﻿using Vogel.BuildingBlocks.Application.Requests;
+using Vogel.BuildingBlocks.Application.Requests;
 using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.BuildingBlocks.Infrastructure.Security;
 using Vogel.BuildingBlocks.Shared.Results;
@@ -42,11 +42,12 @@ namespace Vogel.Social.Application.Users.Commands.UpdateUser
                 return new Result<UserDto>(new EntityNotFoundException(typeof(User), currentUserId));
             }
 
+            Picture? avatar = null;
+
             if (request.AvatarId != null)
             {
-                var avatar = await _pictureRepository.FindByIdAsync(request.AvatarId);
-
-                if(avatar == null)
+                avatar = await _pictureRepository.FindByIdAsync(request.AvatarId);
+                if (avatar == null)
                 {
                     return new Result<UserDto>(new EntityNotFoundException(typeof(Picture), request.AvatarId));
                 }
@@ -57,7 +58,7 @@ namespace Vogel.Social.Application.Users.Commands.UpdateUser
                 }
             }
 
-            PrepareUserEntity(request, user);
+            PrepareUserEntity(request, user, avatar);
 
             await _userRepository.UpdateAsync(user);
 
@@ -66,13 +67,13 @@ namespace Vogel.Social.Application.Users.Commands.UpdateUser
             return await _userResponseFactory.PrepareUserDto(userView);
         }
 
-        private void PrepareUserEntity(UpdateUserCommand command, User user)
+        private void PrepareUserEntity(UpdateUserCommand command, User user, Picture? avatar = null)
         {
             user.FirstName = command.FirstName;
             user.LastName = command.LastName;
             user.BirthDate = command.BirthDate;
             user.Gender = command.Gender;
-            user.AvatarId = command.AvatarId;
+            user.AvatarId = avatar?.Id;
         }
     }
 }

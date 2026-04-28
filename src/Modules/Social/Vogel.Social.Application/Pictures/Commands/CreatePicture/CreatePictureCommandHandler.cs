@@ -1,4 +1,4 @@
-﻿using Vogel.BuildingBlocks.Application.Requests;
+using Vogel.BuildingBlocks.Application.Requests;
 using Vogel.BuildingBlocks.Infrastructure.S3Storage;
 using Vogel.BuildingBlocks.Infrastructure.Security;
 using Vogel.BuildingBlocks.Shared.Results;
@@ -15,6 +15,7 @@ namespace Vogel.Social.Application.Pictures.Commands.CreatePicture
         private readonly IS3ObjectStorageService _s3ObjectStorageService;
         private readonly ISecurityContext _securityContext;
         private readonly IPictureResponseFactory _pictureResponseFactory;
+
         public CreatePictureCommandHandler(ISocialRepository<Picture> pictureRepository, IS3ObjectStorageService s3ObjectStorageService, ISecurityContext securityContext, IPictureResponseFactory pictureResponseFactory)
         {
             _pictureRepository = pictureRepository;
@@ -25,7 +26,6 @@ namespace Vogel.Social.Application.Pictures.Commands.CreatePicture
 
         public async Task<Result<PictureDto>> Handle(CreatePictureCommand request, CancellationToken cancellationToken)
         {
-
             var objectSaveModel = new S3ObjectStorageSaveModel
             {
                 FileName = request.Name,
@@ -42,7 +42,6 @@ namespace Vogel.Social.Application.Pictures.Commands.CreatePicture
             };
 
             await _pictureRepository.InsertAsync(picture);
-
 
             return await _pictureResponseFactory.PreparePictureDto(picture);
 

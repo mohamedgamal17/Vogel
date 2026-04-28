@@ -1,4 +1,4 @@
-﻿using Vogel.BuildingBlocks.Application.Requests;
+using Vogel.BuildingBlocks.Application.Requests;
 using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.BuildingBlocks.Infrastructure.Security;
 using Vogel.BuildingBlocks.MongoDb;
@@ -28,7 +28,6 @@ namespace Vogel.Content.Application.Medias.Queries.GetMediaById
             string userId = _securityContext.User!.Id;
 
             var media = await _mediaMongoRepository.FindByIdAsync(request.MediaId);
-
             if (media == null)
             {
                 return new Result<MediaDto>(new EntityNotFoundException(typeof(Media), request.MediaId));

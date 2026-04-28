@@ -1,4 +1,4 @@
-﻿using MongoDB.Driver;
+using MongoDB.Driver;
 using Vogel.BuildingBlocks.Application.Requests;
 using Vogel.BuildingBlocks.Infrastructure.Security;
 using Vogel.BuildingBlocks.MongoDb.Extensions;
@@ -33,13 +33,11 @@ namespace Vogel.Social.Application.Pictures.Queries.ListCurrentUserPictures
 
             var paged = await query.ToPaged(request.Cursor, request.Limit, request.Asending);
 
-            var result = new Paging<PictureDto>
+            return new Paging<PictureDto>
             {
                 Data = await _pictureResponseFactory.PrepareListPictureDto(paged.Data),
                 Info = paged.Info
             };
-
-            return result;
         }
     }
 }

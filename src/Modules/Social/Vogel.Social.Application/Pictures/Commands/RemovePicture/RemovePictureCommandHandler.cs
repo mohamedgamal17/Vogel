@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Vogel.BuildingBlocks.Application.Requests;
 using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.BuildingBlocks.Infrastructure.S3Storage;
@@ -36,14 +36,12 @@ namespace Vogel.Social.Application.Pictures.Commands.RemovePicture
                 return new Result<Unit>(new EntityNotFoundException(typeof(Picture), request.Id));
             }
 
-
             if (!picture.IsOwnedBy(userId))
             {
                 return new Result<Unit>(new ForbiddenAccessException());
             }
 
             await _s3ObjectStorageService.RemoveObjectAsync(picture.File);
-
             await _pictureRepository.DeleteAsync(picture);
 
             return Unit.Value;

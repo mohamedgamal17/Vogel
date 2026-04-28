@@ -1,9 +1,11 @@
-﻿using MongoDB.Driver;
-using Vogel.BuildingBlocks.Infrastructure.S3Storage;
+using MongoDB.Driver;
+using Vogel.BuildingBlocks.MongoDb;
 using Vogel.BuildingBlocks.Shared.Extensions;
 using Vogel.Content.Application.Medias.Dtos;
+using Vogel.Content.Application.Medias.Factories;
 using Vogel.Content.Application.PostReactions.Dtos;
 using Vogel.Content.Application.Posts.Dtos;
+using Vogel.Content.MongoEntities.Medias;
 using Vogel.Content.MongoEntities.PostReactions;
 using Vogel.Content.MongoEntities.Posts;
 using Vogel.Social.Shared.Dtos;
@@ -12,14 +14,16 @@ namespace Vogel.Content.Application.Posts.Factories
 {
     public class PostResponseFactory : IPostResponseFactory
     {
-        private readonly IS3ObjectStorageService _s3ObjectStorageService;
+        private readonly IMongoRepository<MediaMongoEntity> _mediaMongoRepository;
+        private readonly IMediaResponseFactory _mediaResponseFactory;
 
         private readonly IUserService _userService;
 
         private readonly PostReactionMongoRepository _postReactionMongoRepository;
-        public PostResponseFactory(IS3ObjectStorageService s3ObjectStorageService, IUserService userService, PostReactionMongoRepository postReactionMongoRepository)
+        public PostResponseFactory(IMongoRepository<MediaMongoEntity> mediaMongoRepository, IMediaResponseFactory mediaResponseFactory, IUserService userService, PostReactionMongoRepository postReactionMongoRepository)
         {
-            _s3ObjectStorageService = s3ObjectStorageService;
+            _mediaMongoRepository = mediaMongoRepository;
+            _mediaResponseFactory = mediaResponseFactory;
             _userService = userService;
             _postReactionMongoRepository = postReactionMongoRepository;
         }
@@ -67,16 +71,13 @@ namespace Vogel.Content.Application.Posts.Factories
                 User = user
             };
 
-            if (post.Media != null)
+            if (post.MediaId != null)
             {
-                result.Media = new MediaDto
+                var media = await _mediaMongoRepository.FindByIdAsync(post.MediaId);
+                if (media != null)
                 {
-                    Id = post.Media.Id,
-                    MimeType = post.Media.MimeType,
-                    MediaType = post.Media.MediaType,
-                    UserId = post.Media.UserId,
-                    Reference = await _s3ObjectStorageService.GeneratePresignedDownloadUrlAsync(post.Media.File)
-                };
+                    result.Media = await _mediaResponseFactory.PrepareMediaDto(media);
+                }
             }
 
 
