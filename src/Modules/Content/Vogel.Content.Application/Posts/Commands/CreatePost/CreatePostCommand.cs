@@ -1,11 +1,9 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Vogel.BuildingBlocks.Application.Requests;
-using Vogel.BuildingBlocks.MongoDb;
 using Vogel.Content.Application.Posts.Dtos;
-using Vogel.Content.Domain;
-using Vogel.Content.Domain.Medias;
 using Vogel.Content.Domain.Posts;
+using Vogel.MediaEngine.Shared.Services;
 
 namespace Vogel.Content.Application.Posts.Commands.CreatePost
 {
@@ -18,10 +16,10 @@ namespace Vogel.Content.Application.Posts.Commands.CreatePost
 
     public class CreatePostCommandValidator : AbstractValidator<CreatePostCommand>
     {
-        private readonly IContentRepository<Media> _mediaRepository;
-        public CreatePostCommandValidator(IContentRepository<Media> mediaRepository)
+        private readonly IMediaService _mediaService;
+        public CreatePostCommandValidator(IMediaService mediaService)
         {
-            _mediaRepository = mediaRepository;
+            _mediaService = mediaService;
 
             RuleFor(x => x.Caption)
                 .MaximumLength(PostTableConsts.CaptionLength)
@@ -41,7 +39,9 @@ namespace Vogel.Content.Application.Posts.Commands.CreatePost
 
         private async Task<bool> CheckMediaExist(string mediaId , CancellationToken cancellationToken)
         {
-            return await _mediaRepository.AnyAsync(x => x.Id == mediaId);
+            var media = await _mediaService.GetMediaById(mediaId);
+
+            return media.IsSuccess;
         }
 
 

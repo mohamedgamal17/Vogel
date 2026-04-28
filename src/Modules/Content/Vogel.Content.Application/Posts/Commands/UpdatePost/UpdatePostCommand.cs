@@ -1,10 +1,9 @@
 ﻿using FluentValidation;
 using Vogel.BuildingBlocks.Application.Requests;
 using Vogel.Content.Application.Posts.Dtos;
-using Vogel.Content.Domain.Medias;
 using Vogel.Content.Domain.Posts;
-using Vogel.Content.Domain;
 using Microsoft.AspNetCore.Authorization;
+using Vogel.MediaEngine.Shared.Services;
 
 namespace Vogel.Content.Application.Posts.Commands.UpdatePost
 {
@@ -18,10 +17,10 @@ namespace Vogel.Content.Application.Posts.Commands.UpdatePost
 
     public class UpdatePostCommandValidator : AbstractValidator<UpdatePostCommand>
     {
-        private readonly IContentRepository<Media> _mediaRepository;
-        public UpdatePostCommandValidator(IContentRepository<Media> mediaRepository)
+        private readonly IMediaService _mediaService;
+        public UpdatePostCommandValidator(IMediaService mediaService)
         {
-            _mediaRepository = mediaRepository;
+            _mediaService = mediaService;
 
             RuleFor(x => x.PostId)
                 .MaximumLength(PostTableConsts.IdLength)
@@ -46,7 +45,9 @@ namespace Vogel.Content.Application.Posts.Commands.UpdatePost
 
         private async Task<bool> CheckMediaExist(string mediaId, CancellationToken cancellationToken)
         {
-            return await _mediaRepository.AnyAsync(x => x.Id == mediaId);
+            var media = await _mediaService.GetMediaById(mediaId);
+
+            return media.IsSuccess;
         }
     }
 }

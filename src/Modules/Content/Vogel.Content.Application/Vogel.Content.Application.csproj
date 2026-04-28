@@ -10,11 +10,11 @@
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.10.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.5" />
-	<PackageReference Include="AutoMapper.Extensions.EnumMapping" Version="3.2.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Libraries\Vogel.BuildingBlocks.Application\Vogel.BuildingBlocks.Application.csproj" />
+    <ProjectReference Include="..\..\MediaEngine\Vogel.MediaEngine.Shared\Vogel.MediaEngine.Shared.csproj" />
     <ProjectReference Include="..\..\Social\Vogel.Social.Shared\Vogel.Social.Shared.csproj" />
     <ProjectReference Include="..\Vogel.Content.Domain\Vogel.Content.Domain.csproj" />
     <ProjectReference Include="..\Vogel.Content.MongoEntities\Vogel.Content.MongoEntities.csproj" />
