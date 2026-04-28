@@ -4,11 +4,12 @@ using Vogel.Application.Tests.Extensions;
 using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.BuildingBlocks.MongoDb;
 using Vogel.Content.Application.Posts.Commands.CreatePost;
+using Vogel.Content.Application.Tests.Fakers;
 using Vogel.Content.Application.Tests.Extensions;
 using Vogel.Content.Domain;
-using Vogel.Content.Domain.Medias;
 using Vogel.Content.Domain.Posts;
 using Vogel.Content.MongoEntities.Posts;
+using Vogel.MediaEngine.Shared.Dtos;
 
 namespace Vogel.Content.Application.Tests.Posts
 {
@@ -16,13 +17,13 @@ namespace Vogel.Content.Application.Tests.Posts
     {
         public IContentRepository<Post> PostRepository { get;  }
         public IMongoRepository<PostMongoEntity> PostMongoRepository { get; }
-        public IContentRepository<Media> MediaRepository { get;  }
+        public FakeMediaService MediaService { get; }
 
         public CreatePostCommandHandlerTests()
         {
             PostRepository = ServiceProvider.GetRequiredService<IContentRepository<Post>>();
             PostMongoRepository = ServiceProvider.GetRequiredService<IMongoRepository<PostMongoEntity>>();
-            MediaRepository = ServiceProvider.GetRequiredService<IContentRepository<Media>>();
+            MediaService = ServiceProvider.GetRequiredService<FakeMediaService>();
         }
 
 
@@ -96,18 +97,9 @@ namespace Vogel.Content.Application.Tests.Posts
             result.ShoulBeFailure(typeof(ForbiddenAccessException));
         }
 
-        private async Task<Media> CreateMediaAsync(string userId)
+        private Task<PublicMediaFileDto> CreateMediaAsync(string userId)
         {
-            var media = new Media()
-            {
-                MediaType = Domain.Medias.MediaType.Image,
-                Size = 56666,
-                File = Guid.NewGuid().ToString(),
-                MimeType = "image/png",
-                UserId = userId
-            };
-
-            return await MediaRepository.InsertAsync(media);
+            return Task.FromResult(MediaService.AddMedia(userId));
         }
 
     }

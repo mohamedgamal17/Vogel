@@ -10,7 +10,6 @@ using Vogel.BuildingBlocks.Infrastructure.Extensions;
 using Vogel.Content.Application.Tests.Fakers;
 using Vogel.Content.Domain.Comments;
 using Vogel.Content.Domain.Common;
-using Vogel.Content.Domain.Medias;
 using Vogel.Content.Domain.Posts;
 using Vogel.Content.Infrastructure.EntityFramework;
 using Vogel.Social.Shared.Dtos;
@@ -20,10 +19,12 @@ namespace Vogel.Content.Application.Tests
     public class ContentTestFixture : TestFixture
     {
         protected FakeUserService UserService { get; }
+        protected FakeMediaService MediaService { get; }
 
         public ContentTestFixture()
         {
             UserService = ServiceProvider.GetRequiredService<FakeUserService>();
+            MediaService = ServiceProvider.GetRequiredService<FakeMediaService>();
         }
         protected override Task SetupAsync(IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment)
         {
@@ -51,9 +52,7 @@ namespace Vogel.Content.Application.Tests
 
             await SeedUsersFriends(userFriendService, users);
 
-            var medias = await SeedMedias(dbContext, users);
-
-            var posts = await SeedPosts(dbContext, users, medias);
+            var posts = await SeedPosts(dbContext, users);
 
             var comments = await SeedComments(dbContext, userFriendService, posts);
 
@@ -86,24 +85,7 @@ namespace Vogel.Content.Application.Tests
             return Task.CompletedTask;
         }
 
-        private async Task<List<Media>> SeedMedias(ContentDbContext dbContext, List<UserDto> users)
-        {
-            List<Media> medias = new List<Media>();
-
-            foreach (var user in users)
-            {
-                var userMedias = new MediaFaker(user.Id).Generate(3);
-
-                await dbContext.AddRangeAsync(userMedias);
-
-                medias.AddRange(userMedias);
-            }
-
-            await dbContext.SaveChangesAsync();
-
-            return medias;
-        }
-        private async Task<List<Post>> SeedPosts(ContentDbContext dbContext, List<UserDto> users, List<Media> medias)
+        private async Task<List<Post>> SeedPosts(ContentDbContext dbContext, List<UserDto> users)
         {
             List<Post> posts = new List<Post>();
 
@@ -114,7 +96,7 @@ namespace Vogel.Content.Application.Tests
 
                 bool hasMedia = faker.Random.Bool();
 
-                string? mediaId = hasMedia ? medias.Where(x => x.UserId == user.Id).PickRandom()!.Id : null;
+                string? mediaId = hasMedia ? MediaService.AddMedia(user.Id).Id : null;
 
                 var userPosts = new PostFaker(user.Id, mediaId).Generate(3);
 
@@ -241,8 +223,10 @@ namespace Vogel.Content.Application.Tests
         {
             var userService = services.GetRequiredService<FakeUserService>();
             var userFriendService = services.GetRequiredService<FakeUserFriendService>();
+            var mediaService = services.GetRequiredService<FakeMediaService>();
             userService.Reset();
             userFriendService.Reset();
+            mediaService.Reset();
         }
     }
 }

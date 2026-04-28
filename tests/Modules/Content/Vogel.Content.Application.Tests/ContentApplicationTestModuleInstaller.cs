@@ -7,6 +7,7 @@ using Vogel.BuildingBlocks.Infrastructure.Modularity;
 using Vogel.BuildingBlocks.MongoDb.Extensions;
 using Vogel.Content.Application.Tests.Fakers;
 using Vogel.Content.Infrastructure;
+using Vogel.MediaEngine.Shared.Services;
 using Vogel.Social.Shared.Services;
 namespace Vogel.Content.Application.Tests
 {
@@ -30,6 +31,10 @@ namespace Vogel.Content.Application.Tests
             services.AddTransient<IUserFriendService, FakeUserFriendService>();
 
             services.AddTransient<FakeUserFriendService>();
+
+            services.AddSingleton<FakeMediaService>();
+
+            services.AddSingleton<IMediaService>(sp => sp.GetRequiredService<FakeMediaService>());
         }
     }
 }

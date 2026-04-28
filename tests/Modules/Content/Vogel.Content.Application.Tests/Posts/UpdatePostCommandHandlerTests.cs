@@ -1,14 +1,15 @@
 ﻿using Vogel.BuildingBlocks.MongoDb;
-using Vogel.Content.Domain.Medias;
 using Vogel.Content.Domain.Posts;
 using Vogel.Content.Domain;
 using Vogel.Content.MongoEntities.Posts;
 using Microsoft.Extensions.DependencyInjection;
 using Vogel.Content.Application.Posts.Commands.UpdatePost;
+using Vogel.Content.Application.Tests.Fakers;
 using FluentAssertions;
 using Vogel.Content.Application.Tests.Extensions;
 using Vogel.Application.Tests.Extensions;
 using Vogel.BuildingBlocks.Domain.Exceptions;
+using Vogel.MediaEngine.Shared.Dtos;
 
 namespace Vogel.Content.Application.Tests.Posts
 {
@@ -16,13 +17,13 @@ namespace Vogel.Content.Application.Tests.Posts
     {
         public IContentRepository<Post> PostRepository { get; }
         public IMongoRepository<PostMongoEntity> PostMongoRepository { get; }
-        public IContentRepository<Media> MediaRepository { get; }
+        public FakeMediaService MediaService { get; }
 
         public UpdatePostCommandHandlerTests()
         {
             PostRepository = ServiceProvider.GetRequiredService<IContentRepository<Post>>();
             PostMongoRepository = ServiceProvider.GetRequiredService<IMongoRepository<PostMongoEntity>>();
-            MediaRepository = ServiceProvider.GetRequiredService<IContentRepository<Media>>();
+            MediaService = ServiceProvider.GetRequiredService<FakeMediaService>();
         }
 
         [Test]
@@ -129,7 +130,7 @@ namespace Vogel.Content.Application.Tests.Posts
         }
 
 
-        private async Task<Post> CreatePostAsync(string userId , Media? media = null)
+        private async Task<Post> CreatePostAsync(string userId , PublicMediaFileDto? media = null)
         {
             var post = new Post
             {
@@ -142,18 +143,9 @@ namespace Vogel.Content.Application.Tests.Posts
             return await PostRepository.InsertAsync(post);
         }
 
-        private async Task<Media> CreateMediaAsync(string userId)
+        private Task<PublicMediaFileDto> CreateMediaAsync(string userId)
         {
-            var media = new Media()
-            {
-                MediaType = Domain.Medias.MediaType.Image,
-                Size = 56666,
-                File = Guid.NewGuid().ToString(),
-                MimeType = "image/png",
-                UserId = userId
-            };
-
-            return await MediaRepository.InsertAsync(media);
+            return Task.FromResult(MediaService.AddMedia(userId));
         }
     }
 }

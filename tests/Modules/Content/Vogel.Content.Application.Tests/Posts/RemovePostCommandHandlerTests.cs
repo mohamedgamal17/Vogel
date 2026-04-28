@@ -1,5 +1,4 @@
 ﻿using Vogel.BuildingBlocks.MongoDb;
-using Vogel.Content.Domain.Medias;
 using Vogel.Content.Domain.Posts;
 using Vogel.Content.Domain;
 using Vogel.Content.MongoEntities.Posts;
@@ -7,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Vogel.Content.Application.Posts.Commands.RemovePost;
 using Vogel.Application.Tests.Extensions;
 using FluentAssertions;
+using Vogel.MediaEngine.Shared.Dtos;
 namespace Vogel.Content.Application.Tests.Posts
 {
     public class RemovePostCommandHandlerTests : ContentTestFixture
@@ -62,7 +62,7 @@ namespace Vogel.Content.Application.Tests.Posts
 
             result.ShoulBeFailure(typeof(UnauthorizedAccessException));
         }
-        private async Task<Post> CreatePostAsync(string userId, Media? media = null)
+        private async Task<Post> CreatePostAsync(string userId, PublicMediaFileDto? media = null)
         {
             var post = new Post
             {

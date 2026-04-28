@@ -41,6 +41,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\src\Modules\Content\Vogel.Content.Infrastructure\Vogel.Content.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Modules\MediaEngine\Vogel.MediaEngine.Shared\Vogel.MediaEngine.Shared.csproj" />
     <ProjectReference Include="..\..\..\Vogel.Application.Tests\Vogel.Application.Tests.csproj" />
   </ItemGroup>
 
