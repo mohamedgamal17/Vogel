@@ -1,6 +1,4 @@
 ﻿using Vogel.BuildingBlocks.MongoDb;
-using Vogel.Content.MongoEntities.Medias;
-using Vogel.Content.MongoEntities.PostReactions;
 namespace Vogel.Content.MongoEntities.Posts
 {
     public class PostMongoView : FullAuditedMongoEntity<string>
@@ -8,6 +6,5 @@ namespace Vogel.Content.MongoEntities.Posts
         public string Caption { get; set; }
         public string? MediaId { get; set; }
         public string UserId { get; set; }
-        public MediaMongoEntity? Media { get; set; }
     }
 }
