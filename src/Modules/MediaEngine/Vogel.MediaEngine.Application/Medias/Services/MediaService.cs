@@ -27,7 +27,7 @@ namespace Vogel.MediaEngine.Application.Medias.Services
             return new MediaDto
             {
                 Id = media.Id,
-                File = media.Reference,
+                File = media.File,
                 MediaType = (Shared.Enums.MediaType)media.MediaType,
                 MimeType = media.MimeType,
                 Size = media.Size,
@@ -47,8 +47,8 @@ namespace Vogel.MediaEngine.Application.Medias.Services
             return new PublicMediaFileDto
             {
                 Id = media.Id,
-                Reference = media.Reference,
-                File = media.Reference,
+                Reference = media.File,
+                File = media.File,
                 MediaType = (Shared.Enums.MediaType)media.MediaType,
                 MimeType = media.MimeType,
                 Size = media.Size,
