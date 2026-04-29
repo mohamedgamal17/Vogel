@@ -1,10 +1,9 @@
-﻿using MongoDB.Bson;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using Vogel.BuildingBlocks.MongoDb;
 using Vogel.BuildingBlocks.MongoDb.Extensions;
 using Vogel.BuildingBlocks.Shared.Models;
 using Vogel.Social.MongoEntities.Friendship;
-using Vogel.Social.MongoEntities.Pictures;
 
 namespace Vogel.Social.MongoEntities.Users
 {
@@ -27,12 +26,19 @@ namespace Vogel.Social.MongoEntities.Users
         {
             return AsMongoCollection()
                 .Aggregate()
-                .Lookup<UserMongoEntity, PictureMongoEntity, UserMongoView>(GetCollection<PictureMongoEntity>(PictureMongoConsts.CollectionName),
-                    l => l.AvatarId,
-                    f => f.Id,
-                    r => r.Avatar
-                )
-                .Unwind(x => x.Avatar, new AggregateUnwindOptions<UserMongoView> { PreserveNullAndEmptyArrays = true });
+                .Project(x => new UserMongoView
+                {
+                    Id = x.Id,
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    BirthDate = x.BirthDate,
+                    Gender = x.Gender,
+                    AvatarId = x.AvatarId,
+                    CreationTime = x.CreationTime,
+                    CreatorId = x.CreatorId,
+                    ModificationTime = x.ModificationTime,
+                    ModifierId = x.ModifierId
+                });
         }
 
         public async Task<UserMongoView?> GetByIdUserMongoView(string id)

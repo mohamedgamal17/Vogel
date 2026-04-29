@@ -1,5 +1,4 @@
-﻿using Vogel.BuildingBlocks.MongoDb;
-using Vogel.Social.MongoEntities.Pictures;
+using Vogel.BuildingBlocks.MongoDb;
 using Vogel.Social.Shared.Common;
 
 namespace Vogel.Social.MongoEntities.Users
@@ -11,6 +10,5 @@ namespace Vogel.Social.MongoEntities.Users
         public DateTime BirthDate { get; set; }
         public Gender Gender { get; set; }
         public string? AvatarId { get; set; }
-        public PictureMongoEntity? Avatar { get; set; }
     }
 }
