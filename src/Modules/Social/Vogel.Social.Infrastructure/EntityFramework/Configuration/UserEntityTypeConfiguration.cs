@@ -1,7 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Vogel.BuildingBlocks.EntityFramework.Extensions;
-using Vogel.Social.Domain.Pictures;
 using Vogel.Social.Domain.Users;
 namespace Vogel.Social.Infrastructure.EntityFramework.Configuration
 {
@@ -21,9 +20,7 @@ namespace Vogel.Social.Infrastructure.EntityFramework.Configuration
 
             builder.Property(x => x.BirthDate).HasColumnType("date");
 
-            builder.Property(x => x.AvatarId).HasMaxLength(256);
-
-            builder.HasOne<Picture>().WithOne().HasForeignKey<User>(x => x.AvatarId);
+            builder.Property(x => x.AvatarId).HasMaxLength(UserTableConsts.AvatarIdLength);
 
             builder.AutoMapAuditing();
         }
