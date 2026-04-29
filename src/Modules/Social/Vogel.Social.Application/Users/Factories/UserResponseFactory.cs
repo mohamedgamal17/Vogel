@@ -1,3 +1,4 @@
+using Vogel.MediaEngine.Shared.Enums;
 using Vogel.MediaEngine.Shared.Services;
 using Vogel.Social.MongoEntities.Users;
 using Vogel.Social.Shared.Dtos;
@@ -37,7 +38,7 @@ namespace Vogel.Social.Application.Users.Factories
             if (user.AvatarId != null)
             {
                 var avatarResult = await _mediaService.GetPublicMediaById(user.AvatarId);
-                if (avatarResult.IsSuccess)
+                if (avatarResult.IsSuccess && avatarResult.Value!.MediaType == MediaType.Image)
                 {
                     result.Avatar = avatarResult.Value;
                 }
