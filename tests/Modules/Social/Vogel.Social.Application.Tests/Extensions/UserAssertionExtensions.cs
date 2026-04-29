@@ -1,12 +1,12 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using Vogel.Social.Application.Tests.Extensions;
 using Vogel.Social.Application.Users.Commands.CreateUser;
 using Vogel.Social.Application.Users.Commands.UpdateUser;
 using Vogel.Social.Domain.Users;
 using Vogel.Social.MongoEntities.Users;
 using Vogel.Application.Tests.Extensions;
+using Vogel.MediaEngine.Shared.Dtos;
 using Vogel.Social.Shared.Dtos;
-using Vogel.Social.Domain.Pictures;
 namespace Vogel.Social.Application.Tests.Extensions
 {
     public static class UserAssertionExtensions
@@ -39,7 +39,7 @@ namespace Vogel.Social.Application.Tests.Extensions
             user.AssertAuditingProperties(mongoEntity);
         }
 
-        public static void AssertUserDto(this UserDto userDto, User user, Picture? picture = null)
+        public static void AssertUserDto(this UserDto userDto, User user, PublicMediaFileDto? media = null)
         {
 
             userDto.Id.Should().Be(user.Id);
@@ -47,10 +47,13 @@ namespace Vogel.Social.Application.Tests.Extensions
             userDto.LastName.Should().Be(user.LastName);
             userDto.AvatarId.Should().Be(user.AvatarId);
             // userDto.BirthDate.Should().BeSameDateAs(userAggregate.BirthDate);
-            if (picture != null)
+            if (media != null)
             {
                 userDto.Avatar.Should().NotBeNull();
-                userDto.Avatar!.AssertPictureDto(picture);
+                userDto.Avatar!.Id.Should().Be(media.Id);
+                userDto.Avatar.File.Should().Be(media.File);
+                userDto.Avatar.Reference.Should().Be(media.Reference);
+                userDto.Avatar.UserId.Should().Be(media.UserId);
             }
         }
     }

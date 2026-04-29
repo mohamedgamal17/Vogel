@@ -1,4 +1,4 @@
-﻿using Bogus;
+using Bogus;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -26,6 +26,8 @@ namespace Vogel.Social.Application.Tests
 
             await DropMongoDb(services);
 
+            services.GetRequiredService<FakeMediaService>().Reset();
+
             await services.RunModulesBootstrapperAsync();
 
             await SeedTestData(services);
@@ -37,7 +39,7 @@ namespace Vogel.Social.Application.Tests
 
             var users = await SeedUsers(dbContext);
 
-            await SeedMedias(dbContext, users);
+            await SeedMedias(dbContext, services, users);
 
             await SeedFriendRequest(dbContext, users);
 
@@ -56,24 +58,18 @@ namespace Vogel.Social.Application.Tests
             return users;
         }
 
-        private async Task SeedMedias(SocialDbContext dbContext , List<User> users)
+        private static async Task SeedMedias(SocialDbContext dbContext, IServiceProvider services, List<User> users)
         {
             var faker = new Faker();
-
-            int mediaCount = 3;
+            var fakeMediaService = services.GetRequiredService<FakeMediaService>();
 
             foreach (var user in users)
             {
-                var medias = new MediaFaker(user).Generate(mediaCount);
-
-                await dbContext.AddRangeAsync(medias);
-
                 bool hasAvatar = faker.Random.Bool();
 
                 if (hasAvatar)
                 {
-                    var avatar = faker.PickRandom(medias);
-
+                    var avatar = fakeMediaService.AddMedia(user.Id);
                     user.AvatarId = avatar.Id;
                 }
             }
@@ -168,8 +164,7 @@ namespace Vogel.Social.Application.Tests
                 {
                   "sysdiagrams",
                   "tblUser",
-                  "tblObjectType",
-                  "__EFMigrationsHistory"
+                  "tblObjectType"
                 },
                 SchemasToInclude = new string[]
                 {

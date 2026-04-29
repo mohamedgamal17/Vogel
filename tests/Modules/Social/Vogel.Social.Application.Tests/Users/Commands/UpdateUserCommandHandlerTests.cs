@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Vogel.MediaEngine.Shared.Dtos;
 using Vogel.BuildingBlocks.MongoDb;
-using Vogel.Social.Domain.Pictures;
 using Vogel.Social.Domain.Users;
 using Vogel.Social.Domain;
 using Vogel.Social.MongoEntities.Users;
@@ -10,19 +10,21 @@ using Vogel.Social.Application.Users.Commands.UpdateUser;
 using Vogel.Application.Tests.Extensions;
 using FluentAssertions;
 using Vogel.Social.Application.Tests.Extensions;
+using Vogel.Social.Application.Tests.Fakers;
+using Vogel.MediaEngine.Shared.Enums;
 namespace Vogel.Social.Application.Tests.Users.Commands
 {
     public class UpdateUserCommandHandlerTests : SocialTestFixture
     {
         protected ISocialRepository<User> UserRepository { get; }
         protected IMongoRepository<UserMongoEntity> UserMongoRepository { get; }
-        protected ISocialRepository<Picture> PictureRepository { get; }
+        protected FakeMediaService FakeMediaService { get; }
 
         public UpdateUserCommandHandlerTests()
         {
             UserRepository = ServiceProvider.GetRequiredService<ISocialRepository<User>>();
             UserMongoRepository = ServiceProvider.GetRequiredService<IMongoRepository<UserMongoEntity>>();
-            PictureRepository = ServiceProvider.GetRequiredService<ISocialRepository<Picture>>();
+            FakeMediaService = ServiceProvider.GetRequiredService<FakeMediaService>();
         }
 
 
@@ -33,7 +35,7 @@ namespace Vogel.Social.Application.Tests.Users.Commands
 
             var fakeUser = await CreateUserAsync(AuthenticationService.GetCurrentUser().Id);
 
-            var fakePhoto = await CreatePictureAsync(AuthenticationService.GetCurrentUser().Id);
+            var fakePhoto = CreateMedia(AuthenticationService.GetCurrentUser().Id);
 
             var command = new UpdateUserCommand
             {
@@ -69,7 +71,7 @@ namespace Vogel.Social.Application.Tests.Users.Commands
         public async Task Should_failure_while_updating_user_when_user_is_not_authorized()
         {
 
-            var fakePhoto = await CreatePictureAsync(Guid.NewGuid().ToString());
+            var fakePhoto = CreateMedia(Guid.NewGuid().ToString());
 
             var command = new UpdateUserCommand
             {
@@ -92,7 +94,7 @@ namespace Vogel.Social.Application.Tests.Users.Commands
 
             await CreateUserAsync(AuthenticationService.GetCurrentUser().Id);
 
-            var fakePhoto = await CreatePictureAsync(Guid.NewGuid().ToString());
+            var fakePhoto = CreateMedia(Guid.NewGuid().ToString());
 
             var command = new UpdateUserCommand
             {
@@ -109,11 +111,34 @@ namespace Vogel.Social.Application.Tests.Users.Commands
         }
 
         [Test]
+        public async Task Should_failure_while_updating_user_when_avatar_is_not_image()
+        {
+            AuthenticationService.Login();
+
+            await CreateUserAsync(AuthenticationService.GetCurrentUser().Id);
+
+            var fakeVideo = FakeMediaService.AddMedia(AuthenticationService.GetCurrentUser().Id, MediaType.Video);
+
+            var command = new UpdateUserCommand
+            {
+                FirstName = Guid.NewGuid().ToString(),
+                LastName = Guid.NewGuid().ToString(),
+                AvatarId = fakeVideo.Id,
+                BirthDate = DateTime.Now.AddYears(-18),
+                Gender = Shared.Common.Gender.Female
+            };
+
+            var result = await Mediator.Send(command);
+
+            result.ShoulBeFailure(typeof(BusinessLogicException));
+        }
+
+        [Test]
         public async Task Should_failure_while_updaing_user_when_user_is_not_exist()
         {
             AuthenticationService.Login();
 
-            var fakePhoto = await CreatePictureAsync(AuthenticationService.GetCurrentUser().Id);
+            var fakePhoto = CreateMedia(AuthenticationService.GetCurrentUser().Id);
 
             var command = new UpdateUserCommand
             {
@@ -152,7 +177,7 @@ namespace Vogel.Social.Application.Tests.Users.Commands
 
         private async Task<User> CreateUserAsync(string userId)
         {
-            var picture = await CreatePictureAsync(userId);
+            var picture = CreateMedia(userId);
 
             Faker faker = new Faker();
 
@@ -169,15 +194,9 @@ namespace Vogel.Social.Application.Tests.Users.Commands
             return await UserRepository.InsertAsync(user);
         }
 
-        private async Task<Picture> CreatePictureAsync(string userId)
+        private PublicMediaFileDto CreateMedia(string userId)
         {
-            var picture = new Picture()
-            {
-                File = Guid.NewGuid().ToString(),
-                UserId = userId
-            };
-
-            return await PictureRepository.InsertAsync(picture);
+            return FakeMediaService.AddMedia(userId);
         }
     }
 }

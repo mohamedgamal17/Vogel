@@ -5,10 +5,12 @@ using Vogel.Application.Tests.Extensions;
 using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.BuildingBlocks.MongoDb;
 using Vogel.Social.Application.Tests.Extensions;
+using Vogel.Social.Application.Tests.Fakers;
 using Vogel.Social.Application.Users.Commands.CreateUser;
 using Vogel.Social.Domain;
-using Vogel.Social.Domain.Pictures;
 using Vogel.Social.Domain.Users;
+using Vogel.MediaEngine.Shared.Dtos;
+using Vogel.MediaEngine.Shared.Enums;
 using Vogel.Social.MongoEntities.Users;
 namespace Vogel.Social.Application.Tests.Users.Commands
 {
@@ -16,13 +18,13 @@ namespace Vogel.Social.Application.Tests.Users.Commands
     {
         protected ISocialRepository<User> UserRepository { get; }
         protected IMongoRepository<UserMongoEntity> UserMongoRepository { get; }
-        protected ISocialRepository<Picture> PictureRepository { get; }
+        protected FakeMediaService FakeMediaService { get; }
 
         public CreateUserCommandHandlerTests()
         {
             UserRepository = ServiceProvider.GetRequiredService<ISocialRepository<User>>();
             UserMongoRepository = ServiceProvider.GetRequiredService<IMongoRepository<UserMongoEntity>>();
-            PictureRepository = ServiceProvider.GetRequiredService<ISocialRepository<Picture>>();
+            FakeMediaService = ServiceProvider.GetRequiredService<FakeMediaService>();
         }
 
         [Test]
@@ -30,7 +32,7 @@ namespace Vogel.Social.Application.Tests.Users.Commands
         {
             AuthenticationService.Login();
 
-            var fakePicture = await CreatePictureAsync(AuthenticationService.GetCurrentUser().Id);
+            var fakePicture = CreateMedia(AuthenticationService.GetCurrentUser().Id);
 
             var command = new CreateUserCommand
             {
@@ -63,7 +65,7 @@ namespace Vogel.Social.Application.Tests.Users.Commands
         {
             AuthenticationService.Login();
 
-            var fakePicture = await CreatePictureAsync(Guid.NewGuid().ToString());
+            var fakePicture = CreateMedia(Guid.NewGuid().ToString());
 
             var command = new CreateUserCommand
             {
@@ -77,6 +79,27 @@ namespace Vogel.Social.Application.Tests.Users.Commands
             var result = await Mediator.Send(command);
 
             result.ShoulBeFailure(typeof(ForbiddenAccessException));
+        }
+
+        [Test]
+        public async Task Should_failure_while_creating_user_when_avatar_is_not_image()
+        {
+            AuthenticationService.Login();
+
+            var fakeVideo = FakeMediaService.AddMedia(AuthenticationService.GetCurrentUser().Id, MediaType.Video);
+
+            var command = new CreateUserCommand
+            {
+                FirstName = Guid.NewGuid().ToString(),
+                LastName = Guid.NewGuid().ToString(),
+                AvatarId = fakeVideo.Id,
+                BirthDate = DateTime.Now.AddYears(-18),
+                Gender = Shared.Common.Gender.Male
+            };
+
+            var result = await Mediator.Send(command);
+
+            result.ShoulBeFailure(typeof(BusinessLogicException));
         }
 
         [Test]
@@ -136,7 +159,7 @@ namespace Vogel.Social.Application.Tests.Users.Commands
 
         private async Task<User> CreateUserAsync(string userId)
         {
-            var picture = await CreatePictureAsync(userId);
+            var picture = CreateMedia(userId);
 
             Faker faker = new Faker();
 
@@ -153,15 +176,9 @@ namespace Vogel.Social.Application.Tests.Users.Commands
             return await UserRepository.InsertAsync(user);
         }
 
-        private async Task<Picture> CreatePictureAsync(string userId)
+        private PublicMediaFileDto CreateMedia(string userId)
         {
-            var media = new Picture()
-            {
-                File = Guid.NewGuid().ToString(),
-                UserId = userId
-            };
-
-            return await PictureRepository.InsertAsync(media);
+            return FakeMediaService.AddMedia(userId);
         }
     }
 }

@@ -1,22 +1,22 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Vogel.Application.Tests.Extensions;
 using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.Social.Application.Tests.Extensions;
+using Vogel.Social.Application.Tests.Fakers;
 using Vogel.Social.Application.Users.Queries.GetCurrentUser;
 using Vogel.Social.Domain;
-using Vogel.Social.Domain.Pictures;
 using Vogel.Social.Domain.Users;
 namespace Vogel.Social.Application.Tests.Users.Queries
 {
     public class GetCurrentUserQueryHandlerTests : SocialTestFixture
     {
         public ISocialRepository<User> UserRepository { get;  }
-        public ISocialRepository<Picture> PictureRepository { get;  }
+        public FakeMediaService FakeMediaService { get; }
 
         public GetCurrentUserQueryHandlerTests()
         {
             UserRepository = ServiceProvider.GetRequiredService<ISocialRepository<User>>();
-            PictureRepository = ServiceProvider.GetRequiredService<ISocialRepository<Picture>>();
+            FakeMediaService = ServiceProvider.GetRequiredService<FakeMediaService>();
         }
 
         [Test]
@@ -24,7 +24,12 @@ namespace Vogel.Social.Application.Tests.Users.Queries
         {
             var targetUser = await UserRepository.AsQuerable().PickRandom();
 
-            var userPicture = await PictureRepository.FindByIdAsync(targetUser!.AvatarId ?? Guid.NewGuid().ToString());
+            var userMedia = targetUser!.AvatarId == null ? null : FakeMediaService.AddMedia(targetUser.Id);
+            if (userMedia != null)
+            {
+                targetUser.AvatarId = userMedia.Id;
+                await UserRepository.UpdateAsync(targetUser);
+            }
 
             AuthenticationService.Login(targetUser.Id, targetUser.FirstName + targetUser.LastName, new List<string>());
 
@@ -34,7 +39,7 @@ namespace Vogel.Social.Application.Tests.Users.Queries
 
             result.ShouldBeSuccess();
 
-            result.Value!.AssertUserDto(targetUser, userPicture);
+            result.Value!.AssertUserDto(targetUser, userMedia);
         }
 
         [Test]
