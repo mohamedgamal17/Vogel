@@ -1,6 +1,8 @@
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using FluentAssertions;
 using Vogel.Application.Tests.Extensions;
 using Vogel.BuildingBlocks.Domain.Exceptions;
+using Vogel.MediaEngine.Shared.Enums;
 using Vogel.Social.Application.Tests.Extensions;
 using Vogel.Social.Application.Tests.Fakers;
 using Vogel.Social.Application.Users.Queries.GetCurrentUser;
@@ -40,6 +42,23 @@ namespace Vogel.Social.Application.Tests.Users.Queries
             result.ShouldBeSuccess();
 
             result.Value!.AssertUserDto(targetUser, userMedia);
+        }
+
+        [Test]
+        public async Task Should_return_null_avatar_when_current_user_avatar_is_not_image()
+        {
+            var targetUser = await UserRepository.AsQuerable().PickRandom();
+            var videoMedia = FakeMediaService.AddMedia(targetUser!.Id, MediaType.Video);
+            targetUser.AvatarId = videoMedia.Id;
+            await UserRepository.UpdateAsync(targetUser);
+
+            AuthenticationService.Login(targetUser.Id, targetUser.FirstName + targetUser.LastName, new List<string>());
+
+            var result = await Mediator.Send(new GetCurrentUserQuery());
+
+            result.ShouldBeSuccess();
+            result.Value!.AvatarId.Should().Be(videoMedia.Id);
+            result.Value.Avatar.Should().BeNull();
         }
 
         [Test]
