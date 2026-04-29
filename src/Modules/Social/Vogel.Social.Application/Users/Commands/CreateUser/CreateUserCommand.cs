@@ -1,11 +1,10 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using MongoDB.Driver.Linq;
 using Vogel.BuildingBlocks.Application.Requests;
-using Vogel.BuildingBlocks.Domain.Repositories;
 using Vogel.Social.Domain;
-using Vogel.Social.Domain.Pictures;
 using Vogel.Social.Domain.Users;
+using Vogel.MediaEngine.Shared.Services;
 using Vogel.Social.Shared.Dtos;
 namespace Vogel.Social.Application.Users.Commands.CreateUser
 {
@@ -22,10 +21,10 @@ namespace Vogel.Social.Application.Users.Commands.CreateUser
 
     public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
     {
-        private readonly ISocialRepository<Picture> _pictureRepository;
-        public CreateUserCommandValidator(ISocialRepository<Picture> pictureRepository)
+        private readonly IMediaService _mediaService;
+        public CreateUserCommandValidator(IMediaService mediaService)
         {
-            _pictureRepository = pictureRepository;
+            _mediaService = mediaService;
 
             RuleFor(x => x.FirstName)
                 .NotEmpty()
@@ -51,15 +50,16 @@ namespace Vogel.Social.Application.Users.Commands.CreateUser
                 .NotEmpty()
                 .NotNull()
                 .MaximumLength(UserTableConsts.AvatarIdLength)
-                .MustAsync(CheckPictureExist)
-                .WithMessage((_, pictureId) => $"Picture with id : ({pictureId}) , is not exist")
+                .MustAsync(CheckMediaExist)
+                .WithMessage((_, mediaId) => $"Media with id : ({mediaId}) , is not exist")
                 .When(x => x.AvatarId != null);
         }
 
 
-        private async Task<bool> CheckPictureExist(string pictureId, CancellationToken cancellationToken = default)
+        private async Task<bool> CheckMediaExist(string mediaId, CancellationToken cancellationToken = default)
         {
-            return await _pictureRepository.AnyAsync(x => x.Id == pictureId);
+            var media = await _mediaService.GetMediaById(mediaId);
+            return media.IsSuccess;
         }
     }
 }

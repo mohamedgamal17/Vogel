@@ -2,10 +2,10 @@ using Vogel.BuildingBlocks.Application.Requests;
 using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.BuildingBlocks.Infrastructure.Security;
 using Vogel.BuildingBlocks.Shared.Results;
-using Vogel.Social.Application.Pictures.Policies;
+using Vogel.MediaEngine.Shared.Enums;
+using Vogel.MediaEngine.Shared.Services;
 using Vogel.Social.Application.Users.Factories;
 using Vogel.Social.Domain;
-using Vogel.Social.Domain.Pictures;
 using Vogel.Social.Domain.Users;
 using Vogel.Social.MongoEntities.Users;
 using Vogel.Social.Shared.Dtos;
@@ -18,17 +18,15 @@ namespace Vogel.Social.Application.Users.Commands.UpdateUser
         private readonly ISecurityContext _securityContext;
         private readonly UserMongoRepository _userMongoRepository;
         private readonly IUserResponseFactory _userResponseFactory;
-        private readonly ISocialRepository<Picture> _pictureRepository;
-        private readonly IApplicationAuthorizationService _applicationAuthorizationService;
+        private readonly IMediaService _mediaService;
 
-        public UpdateUserCommandHandler(ISocialRepository<User> userRepository, ISecurityContext securityContext, UserMongoRepository userMongoRepository, IUserResponseFactory userResponseFactory, ISocialRepository<Picture> pictureRepository, IApplicationAuthorizationService applicationAuthorizationService)
+        public UpdateUserCommandHandler(ISocialRepository<User> userRepository, ISecurityContext securityContext, UserMongoRepository userMongoRepository, IUserResponseFactory userResponseFactory, IMediaService mediaService)
         {
             _userRepository = userRepository;
             _securityContext = securityContext;
             _userMongoRepository = userMongoRepository;
             _userResponseFactory = userResponseFactory;
-            _pictureRepository = pictureRepository;
-            _applicationAuthorizationService = applicationAuthorizationService;
+            _mediaService = mediaService;
         }
 
         public async Task<Result<UserDto>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
@@ -42,23 +40,25 @@ namespace Vogel.Social.Application.Users.Commands.UpdateUser
                 return new Result<UserDto>(new EntityNotFoundException(typeof(User), currentUserId));
             }
 
-            Picture? avatar = null;
+            string? avatarId = null;
 
             if (request.AvatarId != null)
             {
-                avatar = await _pictureRepository.FindByIdAsync(request.AvatarId);
-                if (avatar == null)
+                var mediaResult = await _mediaService.GetMediaById(request.AvatarId);
+                if (mediaResult.IsFailure)
                 {
-                    return new Result<UserDto>(new EntityNotFoundException(typeof(Picture), request.AvatarId));
+                    return new Result<UserDto>(mediaResult.Exception!);
                 }
 
-                if (!avatar.IsOwnedBy(currentUserId))
+                if (mediaResult.Value!.MediaType != MediaType.Image)
                 {
-                    return new Result<UserDto>(new ForbiddenAccessException());
+                    return new Result<UserDto>(new BusinessLogicException("Avatar must be an image"));
                 }
+
+                avatarId = mediaResult.Value!.Id;
             }
 
-            PrepareUserEntity(request, user, avatar);
+            PrepareUserEntity(request, user, avatarId);
 
             await _userRepository.UpdateAsync(user);
 
@@ -67,13 +67,13 @@ namespace Vogel.Social.Application.Users.Commands.UpdateUser
             return await _userResponseFactory.PrepareUserDto(userView);
         }
 
-        private void PrepareUserEntity(UpdateUserCommand command, User user, Picture? avatar = null)
+        private static void PrepareUserEntity(UpdateUserCommand command, User user, string? avatarId = null)
         {
             user.FirstName = command.FirstName;
             user.LastName = command.LastName;
             user.BirthDate = command.BirthDate;
             user.Gender = command.Gender;
-            user.AvatarId = avatar?.Id;
+            user.AvatarId = avatarId;
         }
     }
 }

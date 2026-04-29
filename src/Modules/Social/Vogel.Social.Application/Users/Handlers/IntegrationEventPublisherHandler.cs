@@ -1,11 +1,9 @@
-﻿using MassTransit;
+using MassTransit;
 using MediatR;
 using Vogel.BuildingBlocks.Domain.Events;
-using Vogel.BuildingBlocks.MongoDb;
+using Vogel.MediaEngine.Shared.Services;
 using Vogel.Social.Domain.Users;
-using Vogel.Social.MongoEntities.Pictures;
 using Vogel.Social.Shared.Events;
-using Vogel.Social.Shared.Events.Models;
 namespace Vogel.Social.Application.Users.Handlers
 {
     public class IntegrationEventPublisherHandler :
@@ -13,11 +11,11 @@ namespace Vogel.Social.Application.Users.Handlers
         INotificationHandler<EntityUpdatedEvent<User>>
     {
         private readonly IPublishEndpoint _publishEndPoint;
-        private readonly IMongoRepository<PictureMongoEntity> _pictureMongoRepository;
-        public IntegrationEventPublisherHandler(IPublishEndpoint publishEndPoint, IMongoRepository<PictureMongoEntity> pictureMongoRepository)
+        private readonly IMediaService _mediaService;
+        public IntegrationEventPublisherHandler(IPublishEndpoint publishEndPoint, IMediaService mediaService)
         {
             _publishEndPoint = publishEndPoint;
-            _pictureMongoRepository = pictureMongoRepository;
+            _mediaService = mediaService;
         }
 
         public async Task Handle(EntityCreatedEvent<User> notification, CancellationToken cancellationToken)
@@ -34,14 +32,11 @@ namespace Vogel.Social.Application.Users.Handlers
 
             if (notification.Entity.AvatarId != null)
             {
-                var avatar = await _pictureMongoRepository.FindByIdAsync(notification.Entity.AvatarId);
-
-                @event.Avatar = new PictureModel
+                var avatarResult = await _mediaService.GetPublicMediaById(notification.Entity.AvatarId);
+                if (avatarResult.IsSuccess)
                 {
-                    Id = avatar!.Id,
-                    File = avatar.File,
-                    UserId = avatar.UserId
-                };
+                    @event.Avatar = avatarResult.Value;
+                }
             }
 
             await _publishEndPoint.Publish(@event);
@@ -61,14 +56,11 @@ namespace Vogel.Social.Application.Users.Handlers
 
             if (notification.Entity.AvatarId != null)
             {
-                var avatar = await _pictureMongoRepository.FindByIdAsync(notification.Entity.AvatarId);
-
-                @event.Avatar = new PictureModel
+                var avatarResult = await _mediaService.GetPublicMediaById(notification.Entity.AvatarId);
+                if (avatarResult.IsSuccess)
                 {
-                    Id = avatar!.Id,
-                    File = avatar.File,
-                    UserId = avatar.UserId
-                };
+                    @event.Avatar = avatarResult.Value;
+                }
             }
 
             await _publishEndPoint.Publish(@event);

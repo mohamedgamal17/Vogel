@@ -1,5 +1,4 @@
-using Vogel.Social.Application.Pictures.Factories;
-using Vogel.Social.MongoEntities.Pictures;
+using Vogel.MediaEngine.Shared.Services;
 using Vogel.Social.MongoEntities.Users;
 using Vogel.Social.Shared.Dtos;
 
@@ -7,13 +6,11 @@ namespace Vogel.Social.Application.Users.Factories
 {
     public class UserResponseFactory : IUserResponseFactory
     {
-        private readonly PictureMongoRepository _pictureMongoRepository;
-        private readonly IPictureResponseFactory _pictureResponseFactory;
+        private readonly IMediaService _mediaService;
 
-        public UserResponseFactory(PictureMongoRepository pictureMongoRepository, IPictureResponseFactory pictureResponseFactory)
+        public UserResponseFactory(IMediaService mediaService)
         {
-            _pictureMongoRepository = pictureMongoRepository;
-            _pictureResponseFactory = pictureResponseFactory;
+            _mediaService = mediaService;
         }
 
         public async Task<List<UserDto>> PrepareListUserDto(List<UserMongoView> users)
@@ -39,10 +36,10 @@ namespace Vogel.Social.Application.Users.Factories
 
             if (user.AvatarId != null)
             {
-                var avatar = await _pictureMongoRepository.FindByIdAsync(user.AvatarId);
-                if (avatar != null)
+                var avatarResult = await _mediaService.GetPublicMediaById(user.AvatarId);
+                if (avatarResult.IsSuccess)
                 {
-                    result.Avatar = await _pictureResponseFactory.PreparePictureDto(avatar);
+                    result.Avatar = avatarResult.Value;
                 }
             }
 
