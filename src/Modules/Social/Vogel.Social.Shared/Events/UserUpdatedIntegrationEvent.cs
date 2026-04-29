@@ -1,5 +1,5 @@
-﻿using Vogel.Social.Shared.Common;
-using Vogel.Social.Shared.Events.Models;
+using Vogel.Social.Shared.Common;
+using Vogel.MediaEngine.Shared.Dtos;
 
 namespace Vogel.Social.Shared.Events
 {
@@ -11,7 +11,7 @@ namespace Vogel.Social.Shared.Events
         public DateTime BirthDate { get; set; }
         public Gender Gender { get; set; }
         public string? AvatarId { get; set; }
-        public PictureModel? Avatar { get; set; }
+        public PublicMediaFileDto? Avatar { get; set; }
 
     }
 }
