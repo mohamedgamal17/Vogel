@@ -34,6 +34,8 @@ namespace Vogel.Social.Application.Tests
 
             await services.RunModulesBootstrapperAsync();
 
+            await EnsureSocialSchemaCompatibility(services);
+
             await SeedTestData(services);
 
             // Tests query Mongo read models; seed SQL users don't raise domain events,
@@ -48,6 +50,17 @@ namespace Vogel.Social.Application.Tests
                 var mongoEntity = mapper.Map<User, UserMongoEntity>(user);
                 await userMongoRepository.ReplaceOrInsertAsync(mongoEntity);
             }
+        }
+
+        private static async Task EnsureSocialSchemaCompatibility(IServiceProvider services)
+        {
+            var dbContext = services.GetRequiredService<SocialDbContext>();
+
+            await dbContext.Database.ExecuteSqlRawAsync(@"
+IF COL_LENGTH('Social.Users', 'CoverId') IS NULL
+BEGIN
+    ALTER TABLE [Social].[Users] ADD [CoverId] nvarchar(256) NULL;
+END");
         }
 
         private async Task SeedTestData(IServiceProvider services)

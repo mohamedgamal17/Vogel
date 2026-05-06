@@ -17,6 +17,7 @@ namespace Vogel.Social.Application.Tests.Extensions
             user.Gender.Should().Be(command.Gender);
             user.BirthDate.Should().BeSameDateAs(command.BirthDate);
             user.AvatarId.Should().Be(command.AvatarId);
+            user.CoverId.Should().Be(command.CoverId);
         }
 
         public static void AssertUser(this User user , UpdateUserCommand command)
@@ -26,6 +27,7 @@ namespace Vogel.Social.Application.Tests.Extensions
             user.Gender.Should().Be(command.Gender);
             user.BirthDate.Should().BeSameDateAs(command.BirthDate);
             user.AvatarId.Should().Be(command.AvatarId);
+            user.CoverId.Should().Be(command.CoverId);
         }
 
         public static void AssertUserMongoEntity(this UserMongoEntity user, User mongoEntity)
@@ -43,6 +45,8 @@ namespace Vogel.Social.Application.Tests.Extensions
             userDto.Id.Should().Be(user.Id);
             userDto.FirstName.Should().Be(user.FirstName);
             userDto.LastName.Should().Be(user.LastName);
+            userDto.AvatarId.Should().Be(user.AvatarId);
+            userDto.CoverId.Should().Be(user.CoverId);
             // userDto.BirthDate.Should().BeSameDateAs(userAggregate.BirthDate);
         }
     }

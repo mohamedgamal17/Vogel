@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using FluentAssertions;
 using Vogel.Application.Tests.Extensions;
 using Vogel.BuildingBlocks.Domain.Exceptions;
 using Vogel.Social.Application.Tests.Extensions;
@@ -28,12 +29,11 @@ namespace Vogel.Social.Application.Tests.Users.Queries
 
             var targetUser = await UserRepository.AsQuerable().PickRandom();
 
-            var userMedia = targetUser!.AvatarId == null ? null : FakeMediaService.AddMedia(targetUser.Id);
-            if (userMedia != null)
-            {
-                targetUser.AvatarId = userMedia.Id;
-                await UserRepository.UpdateAsync(targetUser);
-            }
+            var avatar = FakeMediaService.AddMedia(targetUser!.Id);
+            var cover = FakeMediaService.AddMedia(targetUser.Id);
+            targetUser.AvatarId = avatar.Id;
+            targetUser.CoverId = cover.Id;
+            await UserRepository.UpdateAsync(targetUser);
 
             var query = new GetUserByIdQuery
             {
@@ -45,6 +45,10 @@ namespace Vogel.Social.Application.Tests.Users.Queries
             result.ShouldBeSuccess();
 
             result.Value!.AssertUserDto(targetUser);
+            result.Value.Avatar.Should().NotBeNull();
+            result.Value.Avatar!.Id.Should().Be(avatar.Id);
+            result.Value.Cover.Should().NotBeNull();
+            result.Value.Cover!.Id.Should().Be(cover.Id);
         }
 
         [Test]

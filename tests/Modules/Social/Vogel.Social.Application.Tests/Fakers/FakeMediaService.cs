@@ -74,26 +74,34 @@ namespace Vogel.Social.Application.Tests.Fakers
         {
             var tasks = ids.Select(GetMediaById);
             var results = await Task.WhenAll(tasks);
-            var firstFailure = results.FirstOrDefault(x => x.IsFailure);
-            if (firstFailure != null)
+            var firstBlockingFailure = results
+                .FirstOrDefault(x => x.IsFailure && x.Exception is not EntityNotFoundException);
+            if (firstBlockingFailure != null)
             {
-                return new Result<List<MediaDto>>(firstFailure.Exception!);
+                return new Result<List<MediaDto>>(firstBlockingFailure.Exception!);
             }
 
-            return results.Select(x => x.Value!).ToList();
+            return results
+                .Where(x => x.IsSuccess && x.Value != null)
+                .Select(x => x.Value!)
+                .ToList();
         }
 
         public async Task<Result<List<PublicMediaFileDto>>> ListPublicMediaByIds(List<string> ids)
         {
             var tasks = ids.Select(GetPublicMediaById);
             var results = await Task.WhenAll(tasks);
-            var firstFailure = results.FirstOrDefault(x => x.IsFailure);
-            if (firstFailure != null)
+            var firstBlockingFailure = results
+                .FirstOrDefault(x => x.IsFailure && x.Exception is not EntityNotFoundException);
+            if (firstBlockingFailure != null)
             {
-                return new Result<List<PublicMediaFileDto>>(firstFailure.Exception!);
+                return new Result<List<PublicMediaFileDto>>(firstBlockingFailure.Exception!);
             }
 
-            return results.Select(x => x.Value!).ToList();
+            return results
+                .Where(x => x.IsSuccess && x.Value != null)
+                .Select(x => x.Value!)
+                .ToList();
         }
 
         public PublicMediaFileDto AddMedia(string userId)
