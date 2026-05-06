@@ -57,11 +57,30 @@ namespace Vogel.Social.Application.Users.Commands.CreateUser
                 avatarId = mediaResult.Value!.Id;
             }
 
+            string? coverId = null;
+
+            if (request.CoverId != null)
+            {
+                var mediaResult = await _mediaService.GetMediaById(request.CoverId);
+                if (mediaResult.IsFailure)
+                {
+                    return new Result<UserDto>(mediaResult.Exception!);
+                }
+
+                if (mediaResult.Value!.MediaType != MediaType.Image)
+                {
+                    return new Result<UserDto>(new BusinessLogicException("Cover must be an image"));
+                }
+
+                coverId = mediaResult.Value!.Id;
+            }
+
             var user = new User(userId)
             {
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 AvatarId = avatarId,
+                CoverId = coverId,
                 BirthDate = request.BirthDate,
                 Gender = request.Gender,
             };

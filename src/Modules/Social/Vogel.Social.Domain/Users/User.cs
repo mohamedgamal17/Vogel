@@ -17,5 +17,6 @@ namespace Vogel.Social.Domain.Users
         public DateTime BirthDate { get; set; }
         public Gender Gender { get; set; }
         public string? AvatarId { get; set; }
+        public string? CoverId { get; set; }
     }
 }

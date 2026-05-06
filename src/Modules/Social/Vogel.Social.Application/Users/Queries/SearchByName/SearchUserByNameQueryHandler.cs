@@ -48,6 +48,8 @@ namespace Vogel.Social.Application.Users.Queries.SearchByName
                     LastName = x.LastName,
                     BirthDate = x.BirthDate,
                     Gender = x.Gender,
+                    AvatarId = x.AvatarId,
+                    CoverId = x.CoverId,
                     CreationTime = x.CreationTime,
                     CreatorId = x.CreatorId,
                     ModificationTime = x.ModificationTime,

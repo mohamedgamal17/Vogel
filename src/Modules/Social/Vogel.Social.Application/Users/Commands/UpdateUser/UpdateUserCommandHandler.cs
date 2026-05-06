@@ -58,7 +58,25 @@ namespace Vogel.Social.Application.Users.Commands.UpdateUser
                 avatarId = mediaResult.Value!.Id;
             }
 
-            PrepareUserEntity(request, user, avatarId);
+            string? coverId = null;
+
+            if (request.CoverId != null)
+            {
+                var mediaResult = await _mediaService.GetMediaById(request.CoverId);
+                if (mediaResult.IsFailure)
+                {
+                    return new Result<UserDto>(mediaResult.Exception!);
+                }
+
+                if (mediaResult.Value!.MediaType != MediaType.Image)
+                {
+                    return new Result<UserDto>(new BusinessLogicException("Cover must be an image"));
+                }
+
+                coverId = mediaResult.Value!.Id;
+            }
+
+            PrepareUserEntity(request, user, avatarId, coverId);
 
             await _userRepository.UpdateAsync(user);
 
@@ -67,13 +85,14 @@ namespace Vogel.Social.Application.Users.Commands.UpdateUser
             return await _userResponseFactory.PrepareUserDto(userView);
         }
 
-        private static void PrepareUserEntity(UpdateUserCommand command, User user, string? avatarId = null)
+        private static void PrepareUserEntity(UpdateUserCommand command, User user, string? avatarId = null, string? coverId = null)
         {
             user.FirstName = command.FirstName;
             user.LastName = command.LastName;
             user.BirthDate = command.BirthDate;
             user.Gender = command.Gender;
             user.AvatarId = avatarId;
+            user.CoverId = coverId;
         }
     }
 }

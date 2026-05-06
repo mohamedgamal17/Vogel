@@ -22,6 +22,8 @@ namespace Vogel.Social.Infrastructure.EntityFramework.Configuration
 
             builder.Property(x => x.AvatarId).HasMaxLength(UserTableConsts.AvatarIdLength);
 
+            builder.Property(x => x.CoverId).HasMaxLength(UserTableConsts.CoverIdLength);
+
             builder.AutoMapAuditing();
         }
     }

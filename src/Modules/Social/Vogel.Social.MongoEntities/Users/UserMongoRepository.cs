@@ -33,6 +33,8 @@ namespace Vogel.Social.MongoEntities.Users
                     LastName = x.LastName,
                     BirthDate = x.BirthDate,
                     Gender = x.Gender,
+                    AvatarId = x.AvatarId,
+                    CoverId = x.CoverId,
                     CreationTime = x.CreationTime,
                     CreatorId = x.CreatorId,
                     ModificationTime = x.ModificationTime,

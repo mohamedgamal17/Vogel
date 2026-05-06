@@ -45,7 +45,6 @@ namespace Vogel.Social.Application.Friendship.Factories
             return dto;
         }
 
-
         public async Task<List<FriendDto>> PrepareListFriendDto(List<FriendMongoView> friends)
         {
             var tasks = friends.Select(PrepareFriendDto);
@@ -76,7 +75,6 @@ namespace Vogel.Social.Application.Friendship.Factories
 
             return dto;
         }
-
 
     }
 }

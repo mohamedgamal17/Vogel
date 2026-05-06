@@ -16,6 +16,7 @@ namespace Vogel.Social.Application.Users.Commands.UpdateUser
         public DateTime BirthDate { get; set; }
         public Shared.Common.Gender Gender { get; set; }
         public string? AvatarId { get; set; }
+        public string? CoverId { get; set; }
     }
 
     public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
@@ -52,6 +53,14 @@ namespace Vogel.Social.Application.Users.Commands.UpdateUser
                 .MustAsync(CheckMediaExist)
                 .WithMessage((_, mediaId) => $"Media with id : ({mediaId}) , is not exist")
                 .When(x => x.AvatarId != null);
+
+            RuleFor(x => x.CoverId)
+                .NotEmpty()
+                .NotNull()
+                .MaximumLength(UserTableConsts.CoverIdLength)
+                .MustAsync(CheckMediaExist)
+                .WithMessage((_, mediaId) => $"Media with id : ({mediaId}) , is not exist")
+                .When(x => x.CoverId != null);
         }
 
 

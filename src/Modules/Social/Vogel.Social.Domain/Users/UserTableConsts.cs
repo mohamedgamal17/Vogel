@@ -11,5 +11,7 @@
         public static int LastNameLength = 100;
 
         public static int AvatarIdLength = 256;
+
+        public static int CoverIdLength = 256;
     }
 }
