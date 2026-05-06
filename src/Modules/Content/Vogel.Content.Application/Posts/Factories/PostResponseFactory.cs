@@ -4,22 +4,17 @@ using Vogel.Content.Application.PostReactions.Dtos;
 using Vogel.Content.Application.Posts.Dtos;
 using Vogel.Content.MongoEntities.PostReactions;
 using Vogel.Content.MongoEntities.Posts;
-using Vogel.MediaEngine.Shared.Dtos;
-using Vogel.MediaEngine.Shared.Services;
 using Vogel.Social.Shared.Dtos;
 using Vogel.Social.Shared.Services;
 namespace Vogel.Content.Application.Posts.Factories
 {
     public class PostResponseFactory : IPostResponseFactory
     {
-        private readonly IMediaService _mediaService;
-
         private readonly IUserService _userService;
 
         private readonly PostReactionMongoRepository _postReactionMongoRepository;
-        public PostResponseFactory(IMediaService mediaService, IUserService userService, PostReactionMongoRepository postReactionMongoRepository)
+        public PostResponseFactory(IUserService userService, PostReactionMongoRepository postReactionMongoRepository)
         {
-            _mediaService = mediaService;
             _userService = userService;
             _postReactionMongoRepository = postReactionMongoRepository;
         }
@@ -28,17 +23,14 @@ namespace Vogel.Content.Application.Posts.Factories
         {
             var usersDictionary = await PrepareDictionaryOfUsers(posts);
 
-            var mediaDictionary = await PrepareDictionaryOfMedia(posts);
-
             var reactionsDictionary = await PrepareDictionaryOfPostReactionSummary(posts);
 
             var tasks = posts.Select(post =>
             {
                 var user = usersDictionary.GetValueOrDefault(post.UserId);
-                var media = post.MediaId == null ? null : mediaDictionary.GetValueOrDefault(post.MediaId);
                 var reaction = reactionsDictionary.GetValueOrDefault(post.Id);
 
-                return PreparePostDto(post, user, media, reaction);
+                return PreparePostDto(post, user, reaction);
 
             });
 
@@ -53,31 +45,19 @@ namespace Vogel.Content.Application.Posts.Factories
 
             userResult.ThrowIfFailure();
 
-            PublicMediaFileDto? media = null;
-            if (post.MediaId != null)
-            {
-                var mediaResult = await _mediaService.GetPublicMediaById(post.MediaId);
-                if (mediaResult.IsSuccess)
-                {
-                    media = mediaResult.Value;
-                }
-            }
-
             var reaction = await _postReactionMongoRepository.GetPostReactionSummary(post.Id);
 
-            return await PreparePostDto(post, userResult.Value!, media, reaction);
+            return await PreparePostDto(post, userResult.Value!, reaction);
         }
 
-        private Task<PostDto> PreparePostDto(PostMongoView post, UserDto? user = null, PublicMediaFileDto? media = null, PostReactionSummaryMongoView? reactionSummary = null)
+        private Task<PostDto> PreparePostDto(PostMongoView post, UserDto? user = null, PostReactionSummaryMongoView? reactionSummary = null)
         {
             var result = new PostDto
             {
                 Id = post.Id,
                 Caption = post.Caption,
-                MediaId = post.MediaId,
                 UserId = post.UserId,
-                User = user,
-                Media = media
+                User = user
             };
 
             if (reactionSummary != null)
@@ -94,29 +74,6 @@ namespace Vogel.Content.Application.Posts.Factories
             }
 
             return Task.FromResult(result);
-        }
-
-        private async Task<Dictionary<string, PublicMediaFileDto>> PrepareDictionaryOfMedia(List<PostMongoView> posts)
-        {
-            var mediaIds = posts
-                .Select(x => x.MediaId)
-                .Where(x => !string.IsNullOrWhiteSpace(x))
-                .Distinct()
-                .Cast<string>()
-                .ToList();
-
-            if (mediaIds.Count == 0)
-            {
-                return new Dictionary<string, PublicMediaFileDto>();
-            }
-
-            var result = await _mediaService.ListPublicMediaByIds(mediaIds);
-            if (result.IsFailure || result.Value == null)
-            {
-                return new Dictionary<string, PublicMediaFileDto>();
-            }
-
-            return result.Value.ToDictionary(k => k.Id, v => v);
         }
 
         private async Task<Dictionary<string , UserDto>> PrepareDictionaryOfUsers(List<PostMongoView> posts)
