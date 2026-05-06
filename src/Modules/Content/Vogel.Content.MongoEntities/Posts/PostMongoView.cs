@@ -5,5 +5,6 @@ namespace Vogel.Content.MongoEntities.Posts
     {
         public string Caption { get; set; }
         public string UserId { get; set; }
+        public string? MediaId { get; set; }
     }
 }

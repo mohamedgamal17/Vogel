@@ -6,5 +6,6 @@ namespace Vogel.Content.MongoEntities.Posts
     public class PostMongoEntity : OwnedFullAuditedMongoEntity<string>
     {
         public string Caption { get; set; }
+        public string? MediaId { get; set; }
     }
 }
