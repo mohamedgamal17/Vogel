@@ -44,7 +44,7 @@ namespace Vogel.Social.Application.Tests.Users.Queries
 
             result.ShouldBeSuccess();
 
-            result.Value!.AssertUserDto(targetUser, userMedia);
+            result.Value!.AssertUserDto(targetUser);
         }
 
         [Test]

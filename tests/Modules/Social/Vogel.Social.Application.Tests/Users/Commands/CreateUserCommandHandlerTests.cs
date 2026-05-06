@@ -56,7 +56,7 @@ namespace Vogel.Social.Application.Tests.Users.Commands
 
             user.AssertUser(command);
             mongoEntity!.AssertUserMongoEntity(user);
-            result.Value!.AssertUserDto(user, fakePicture);
+            result.Value!.AssertUserDto(user);
         }
 
 

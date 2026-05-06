@@ -3,7 +3,7 @@
     public class Avatar
     {
         public string Id { get; set; }
-        public string File { get; set; }
+        public string Reference { get; set; }
         public string UserId { get; set; }
     }
 }

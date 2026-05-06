@@ -33,7 +33,7 @@ namespace Vogel.Messanger.Application.Users.Consumers
                 mongoEntity.Avatar = new Avatar
                 {
                     Id = context.Message.Avatar.Id,
-                    File = context.Message.Avatar.File,
+                    Reference = context.Message.Avatar.Reference,
                     UserId = context.Message.Avatar.UserId
                 };
             }

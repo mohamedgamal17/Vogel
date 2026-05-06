@@ -1,13 +1,17 @@
 using Bogus;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Respawn.Graph;
 using Vogel.Application.Tests;
 using Vogel.BuildingBlocks.Infrastructure.Extensions;
+using Vogel.BuildingBlocks.MongoDb;
 using Vogel.Social.Application.Tests.Fakers;
 using Vogel.Social.Domain.Friendship;
 using Vogel.Social.Domain.Users;
+using Vogel.Social.MongoEntities.Users;
 using Vogel.Social.Infrastructure.EntityFramework;
 
 namespace Vogel.Social.Application.Tests
@@ -31,6 +35,19 @@ namespace Vogel.Social.Application.Tests
             await services.RunModulesBootstrapperAsync();
 
             await SeedTestData(services);
+
+            // Tests query Mongo read models; seed SQL users don't raise domain events,
+            // so we project them into Mongo here.
+            var mapper = services.GetRequiredService<IMapper>();
+            var userMongoRepository = services.GetRequiredService<IMongoRepository<UserMongoEntity>>();
+            var dbContext = services.GetRequiredService<SocialDbContext>();
+
+            var users = await dbContext.Set<User>().AsNoTracking().ToListAsync();
+            foreach (var user in users)
+            {
+                var mongoEntity = mapper.Map<User, UserMongoEntity>(user);
+                await userMongoRepository.ReplaceOrInsertAsync(mongoEntity);
+            }
         }
 
         private async Task SeedTestData(IServiceProvider services)
@@ -76,6 +93,7 @@ namespace Vogel.Social.Application.Tests
 
             await dbContext.SaveChangesAsync();
         }
+
 
 
 

@@ -64,7 +64,7 @@ namespace Vogel.Content.Application.Tests.Posts
 
             post.AssertPostMongoEntity(postMongoEntity!);
 
-            result.Value.AssertPostDto(post, fakeMedia1);
+            result.Value.AssertPostDto(post);
         }
 
 

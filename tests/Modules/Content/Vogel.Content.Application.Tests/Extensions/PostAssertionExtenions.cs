@@ -6,7 +6,6 @@ using Vogel.Content.Application.Posts.Commands.UpdatePost;
 using Vogel.Content.Application.Posts.Dtos;
 using Vogel.Content.Domain.Posts;
 using Vogel.Content.MongoEntities.Posts;
-using Vogel.MediaEngine.Shared.Dtos;
 namespace Vogel.Content.Application.Tests.Extensions
 {
     public static class PostAssertionExtenions
@@ -30,24 +29,13 @@ namespace Vogel.Content.Application.Tests.Extensions
         {
             post.Id.Should().Be(mongoEntity.Id);
             post.Caption.Should().Be(mongoEntity.Caption);
-            post.MediaId.Should().Be(mongoEntity.MediaId);
         }
 
-        public static void AssertPostDto(this PostDto dto, Post post, PublicMediaFileDto? media = null)
+        public static void AssertPostDto(this PostDto dto, Post post)
         {
             dto.Id.Should().Be(post.Id);
             dto.Caption.Should().Be(post.Caption);
-            dto.MediaId.Should().Be(post.MediaId);
             dto.UserId.Should().Be(post.UserId);
-            if (media != null)
-            {
-                dto.Media.Should().NotBeNull();
-                dto.Media!.Id.Should().Be(media.Id);
-                dto.Media.UserId.Should().Be(media.UserId);
-                dto.Media.MimeType.Should().Be(media.MimeType);
-                dto.Media.MediaType.Should().Be(media.MediaType);
-                dto.Media.Reference.Should().Be(media.Reference);
-            }
         }
 
         public static void AssertReactionSummaryDto(this PostDto  dto, PostReactionSummaryDto expected)

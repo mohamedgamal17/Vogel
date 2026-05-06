@@ -1,5 +1,4 @@
 ﻿using Vogel.BuildingBlocks.Shared.Dtos;
-using Vogel.Social.Shared.Dtos;
 
 namespace Vogel.Messanger.Application.Conversations.Dtos
 {
@@ -7,6 +6,6 @@ namespace Vogel.Messanger.Application.Conversations.Dtos
     {
         public string ConversationId { get; set; }
         public string UserId { get; set; }
-        public UserDto User { get; set; }
+        public ConversationUserDto User { get; set; }
     }
 }

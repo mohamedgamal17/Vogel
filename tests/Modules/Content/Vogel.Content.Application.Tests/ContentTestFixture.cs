@@ -1,4 +1,5 @@
 ﻿using Bogus;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,6 +8,7 @@ using Respawn.Graph;
 using Vogel.Application.Tests;
 using Vogel.Application.Tests.Extensions;
 using Vogel.BuildingBlocks.Infrastructure.Extensions;
+using Vogel.BuildingBlocks.MongoDb;
 using Vogel.Content.Application.Tests.Fakers;
 using Vogel.Content.Domain.Comments;
 using Vogel.Content.Domain.Common;
@@ -38,6 +40,44 @@ namespace Vogel.Content.Application.Tests
             ResetInMemoryUsers(services);
             await services.RunModulesBootstrapperAsync();
             await SeedData(services);
+
+            // Tests query Mongo read models; seeded EF entities don't raise domain events,
+            // so we project them into Mongo here.
+            var mapper = services.GetRequiredService<IMapper>();
+            var dbContext = services.GetRequiredService<ContentDbContext>();
+
+            var postMongoRepository = services.GetRequiredService<IMongoRepository<Vogel.Content.MongoEntities.Posts.PostMongoEntity>>();
+            var commentMongoRepository = services.GetRequiredService<IMongoRepository<Vogel.Content.MongoEntities.Comments.CommentMongoEntity>>();
+            var postReactionMongoRepository = services.GetRequiredService<IMongoRepository<Vogel.Content.MongoEntities.PostReactions.PostReactionMongoEntity>>();
+            var commentReactionMongoRepository = services.GetRequiredService<IMongoRepository<Vogel.Content.MongoEntities.CommentReactions.CommentReactionMongoEntity>>();
+
+            var posts = await dbContext.Set<Post>().AsNoTracking().ToListAsync();
+            foreach (var post in posts)
+            {
+                var mongoEntity = mapper.Map<Post, Vogel.Content.MongoEntities.Posts.PostMongoEntity>(post);
+                await postMongoRepository.ReplaceOrInsertAsync(mongoEntity);
+            }
+
+            var comments = await dbContext.Set<Comment>().AsNoTracking().ToListAsync();
+            foreach (var comment in comments)
+            {
+                var mongoEntity = mapper.Map<Comment, Vogel.Content.MongoEntities.Comments.CommentMongoEntity>(comment);
+                await commentMongoRepository.ReplaceOrInsertAsync(mongoEntity);
+            }
+
+            var postReactions = await dbContext.Set<PostReaction>().AsNoTracking().ToListAsync();
+            foreach (var reaction in postReactions)
+            {
+                var mongoEntity = mapper.Map<PostReaction, Vogel.Content.MongoEntities.PostReactions.PostReactionMongoEntity>(reaction);
+                await postReactionMongoRepository.ReplaceOrInsertAsync(mongoEntity);
+            }
+
+            var commentReactions = await dbContext.Set<CommentReaction>().AsNoTracking().ToListAsync();
+            foreach (var reaction in commentReactions)
+            {
+                var mongoEntity = mapper.Map<CommentReaction, Vogel.Content.MongoEntities.CommentReactions.CommentReactionMongoEntity>(reaction);
+                await commentReactionMongoRepository.ReplaceOrInsertAsync(mongoEntity);
+            }
         }
 
         private async Task SeedData(IServiceProvider services)

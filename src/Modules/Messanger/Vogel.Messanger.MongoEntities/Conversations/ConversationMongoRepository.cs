@@ -97,7 +97,9 @@ namespace Vogel.Messanger.MongoEntities.Conversations
                      + " "
                      + x.Select(x => x.Participants).Where(x => x.UserId != userId).First().User.LastName,
                      TotalParticpants = x.Select(x=> x.Participants).Count(),
-                     Avatar = x.Select(x => x.Participants).Where(x => x.UserId != userId).First().User.Avatar.File,
+                     Avatar = x.Select(x => x.Participants).Where(x => x.UserId != userId).First().User.Avatar != null
+                        ? x.Select(x => x.Participants).Where(x => x.UserId != userId).First().User.Avatar.Reference
+                        : null,
                      Participants = x.Select(x=> x.Participants).Take(10).ToList(),
                      CreatorId = x.First().CreatorId,
                      CreationTime = x.First().CreationTime,
