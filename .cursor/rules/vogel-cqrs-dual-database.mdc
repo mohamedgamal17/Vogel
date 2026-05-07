@@ -5,10 +5,37 @@ alwaysApply: true
 
 # Vogel CQRS And Data Consistency Rules
 
-- Every write use case must be modeled as `*Command` + `*CommandHandler` and persist through SQL/EF command-side repositories.
-- Every read use case must be modeled as `*Query` + `*QueryHandler` and read from Mongo read models/repositories.
-- Do not read EF command aggregates directly inside query handlers.
-- Do not write Mongo read models from endpoints or ad-hoc flows; use existing domain-event synchronization patterns.
-- Treat SQL Server as source of truth for mutations and MongoDB as query projection store.
-- Keep query pagination cursor-based; do not introduce page-number/offset pagination unless explicitly requested.
-- If a feature changes read-model shape, update synchronization handlers and Mongo projections in the same change set.
+## Command (write) side
+
+- Every write use case is `*Command` + `*CommandHandler` implementing `IApplicationRequestHandler<TCommand, TResult>` and persisting through SQL/EF via the module's repository abstraction (e.g. `ISocialRepository<T>`, `IMediaEngineRepository<T>`).
+- Treat SQL Server as the source of truth for mutations. Validation happens via FluentValidation `*Validator` classes; authorization via `[Authorize]` and the `AuthorizationBehaviour` pipeline.
+- Do not call `DbContext` or EF repositories from `Presentation` or from query handlers.
+
+## Query (read) side
+
+- Every read use case is `*Query` + `*QueryHandler` and reads exclusively from a `*MongoRepository` in the module's `MongoEntities` project (e.g. `UserMongoRepository.GetUserViewPaged(...)`, `GetByIdUserMongoView(...)`).
+- Do not read EF command aggregates or `DbContext` inside query handlers. Project Mongo `*MongoView` shapes for response, not Mongo entities directly.
+
+## Read-model synchronization
+
+- Mongo read models are kept in sync via MediatR `INotificationHandler`s on the building-block domain events `EntityCreatedEvent<T>`, `EntityUpdatedEvent<T>`, `EntityDeletedEvent<T>`.
+- The handler must be named `MongoSynchronizationHandler` and live under `Vogel.<Module>.Application/<Aggregate>/Handlers/` or `Vogel.<Module>.Application/<Aggregate>/EventHandlers/` — match the folder name already used in the surrounding aggregate. Existing precedents: `Vogel.Social.Application/Users/Handlers/MongoSynchronizationHandler.cs`, `Vogel.MediaEngine.Application/Medias/EventHandlers/MongoSynchronizationHandler.cs`.
+- Never write Mongo read models from endpoints, command handlers, or ad-hoc flows. The synchronization handler is the only writer.
+
+## Cross-module communication
+
+- Synchronous calls: depend only on `Vogel.<OtherModule>.Shared` and consume its service contract (e.g. `IMediaService` from `Vogel.MediaEngine.Shared.Services`). Never reach into another module's `Domain`, `Application`, `MongoEntities`, or `Infrastructure`.
+- Asynchronous events: publish from an `IntegrationEventPublisherHandler` (a MediatR notification handler on the same `EntityCreatedEvent<T>` / `EntityUpdatedEvent<T>` family) using MassTransit `IPublishEndpoint`.
+  - Integration event types live under `Vogel.<Module>.Shared.Events` (e.g. `UserCreatedIntegrationEvent`).
+  - Consumers live under `Vogel.<Module>.Application/<Aggregate>/Consumers/` and implement MassTransit `IConsumer<TEvent>`.
+
+## Pagination
+
+- Listing queries return `Paging<T>` produced by `IAggregateFluent<TView>.ToPaged(cursor, limit, ascending)` from `Vogel.BuildingBlocks.MongoDb.Extensions`.
+- Do not introduce page-number / offset pagination unless the task explicitly requests it.
+
+## Schema and shape changes
+
+- When a feature changes a read-model shape, update the relevant `*MongoEntity`, `*MongoView`, `*MongoRepository`, and the matching `MongoSynchronizationHandler` in the same change set.
+- When a feature changes an SQL aggregate, update its EF configuration under `Vogel.<Module>.Infrastructure/EntityFramework/` and any AutoMapper `*Profile` that maps the aggregate to its `*MongoEntity`.
+- If the integration-event payload changes, update the event in `Vogel.<Module>.Shared.Events`, the `IntegrationEventPublisherHandler` that emits it, and every cross-module `Consumer` in the same change set.

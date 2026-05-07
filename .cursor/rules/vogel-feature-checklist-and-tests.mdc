@@ -7,11 +7,27 @@ alwaysApply: true
 
 For every feature/edit, apply this sequence:
 
-1. Map the request to one target module and determine command side, query side, or both.
-2. Place each file in the correct project layer (`Domain`, `Application`, `Infrastructure`, `Presentation`, `MongoEntities`).
-3. Preserve command flow (`Command -> Domain -> SQL`) and query flow (`Query -> Mongo`).
-4. Update read-model synchronization handlers when command-side changes affect query projections.
-5. Add tests in `tests/Modules/<Module>/<Module>.Application.Tests` for each new command/query handler.
-6. For features touching both sides, assert both SQL mutation results and Mongo query/projection results.
-7. When query listing is involved, test cursor pagination behavior (cursor generation, direction, and boundary handling).
-8. Run affected module tests before considering the change complete.
+1. Map the request to one target module (`Social`, `Content`, `Messanger`, or `MediaEngine`) and decide whether the change is command-side, query-side, or both.
+2. Place each new file in the correct project of that module: `Domain`, `Application`, `Infrastructure`, `MongoEntities`, `Presentation`, or `Shared`. Cross-module dependencies go through `Vogel.<OtherModule>.Shared` only.
+3. Preserve the CQRS flow: commands persist via the EF/SQL repository (`ISocialRepository<T>` or equivalent); queries read via the matching `*MongoRepository`.
+4. If a command changes a read-model shape, update the corresponding `MongoSynchronizationHandler` (under `Application/<Aggregate>/Handlers/` or `Application/<Aggregate>/EventHandlers/`, matching the existing folder name) and the `*MongoEntity` / `*MongoView` in the same change set.
+5. If other modules need to react to the change, add or extend an `IntegrationEventPublisherHandler` and the `*IntegrationEvent` under `Vogel.<Module>.Shared.Events`, plus any cross-module `Consumer` under `Application/<Aggregate>/Consumers/`.
+6. Add tests at `tests/Modules/<Module>/Vogel.<Module>.Application.Tests/<Aggregate>/Commands|Queries/<Handler>Tests.cs`, inheriting the module's fixture (`<Module>TestFixture : Vogel.Application.Tests.TestFixture`).
+
+## Test conventions
+
+- Framework: NUnit (`[Test]`), `FluentAssertions`, and `Bogus` fakers placed under `Fakers/` in the test project.
+- Result assertions: use the project's existing extensions in `Extensions/` — `result.ShouldBeSuccess()` for happy paths and `result.ShoulBeFailure(typeof(BusinessLogicException))` (or the appropriate exception type) for failures. Do not roll new assertion helpers when these already cover the case.
+- Cross-module isolation: do not call into another module's `Domain`/`Application` from a test. Use the registered fake of the cross-module `Shared` service (e.g. `FakeMediaService` for `IMediaService`) and call `Reset()` between fixtures as `<Module>TestFixture.InitializeAsync` already does.
+- Authentication: drive `[Authorize]` paths through `AuthenticationService.Login()` / `GetCurrentUser()` from `FakeAuthenticationService`.
+- For commands, assert both sides of the dual database:
+  - SQL aggregate via the module's repository (e.g. `UserRepository.SingleOrDefaultAsync(...)`).
+  - Projected Mongo entity via the matching `*MongoRepository` (e.g. `UserMongoRepository.FindByIdAsync(...)`), confirming the `MongoSynchronizationHandler` ran.
+- For listing queries, assert cursor pagination explicitly: cursor generation, both `ascending = true` and `ascending = false`, and boundary handling (`Limit`, exhausted cursor).
+- State reset between fixtures is the responsibility of the module fixture: SQL via `Respawn` scoped to the module's schema, Mongo via `DropMongoDb`, then `RunModulesBootstrapperAsync` and seed data via Bogus fakers. When seeds bypass domain events, reseed Mongo from SQL the way `SocialTestFixture` does so query handlers see consistent read models.
+- Configuration lives in the test project's `appsettings.json` / `appsettings.Development.json`; do not hardcode connection strings in tests.
+
+## Before considering the change complete
+
+- Run the affected module's test project, e.g. `dotnet test tests/Modules/<Module>/Vogel.<Module>.Application.Tests`.
+- For changes that touch cross-module integration events or `Shared` services, also run the consuming module's test project.

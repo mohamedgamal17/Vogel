@@ -5,15 +5,43 @@ alwaysApply: true
 
 # Vogel Module Architecture Rules
 
+## Module set
+
 - Work inside one module under `src/Modules/<ModuleName>` per feature unless a shared contract change is explicitly required.
-- Keep Clean Architecture layering strict:
-  - Domain: entities, value objects, domain services, repository interfaces.
-  - Application: CQRS requests/handlers, orchestration, policies.
-  - Infrastructure: EF/Mongo wiring, repository implementations, installers.
-  - Presentation: endpoints/routing/transport mapping only.
-  - MongoEntities: read models and Mongo query repositories.
-- Preserve dependency direction: `Presentation -> Application -> Domain`; domain never depends on infrastructure/presentation/framework transport types.
-- Reuse shared primitives from `src/Libraries` before introducing new abstractions.
-- Follow existing naming conventions: `*Command`, `*CommandHandler`, `*Query`, `*QueryHandler`, `*Endpoint`, `*ServiceInstaller`, `*ModuleBootstrapper`.
-- Keep endpoints thin; business and authorization decisions belong in application/domain policies and handlers.
-- Use existing module installer/bootstrapper patterns for schema/config/runtime wiring.
+- The known modules are `Social`, `Content`, `Messanger`, and `MediaEngine`. Do not introduce new top-level modules without explicit approval.
+
+## Per-module project layers
+
+Each module is composed of dedicated csproj layers. Place every new file in the correct one:
+
+- `Vogel.<Module>.Domain` — entities, aggregates, value objects, domain services, `*TableConsts`, and module repository interfaces (e.g. `ISocialRepository<T>`, `IMediaEngineRepository<T>`).
+- `Vogel.<Module>.Application` — CQRS use cases and orchestration, organized per aggregate:
+  - `Commands/<UseCase>/<UseCase>Command.cs` + `<UseCase>CommandHandler.cs`
+  - `Queries/<UseCase>/<UseCase>Query.cs` + `<UseCase>QueryHandler.cs`
+  - `Handlers/` or `EventHandlers/` for `MongoSynchronizationHandler` and `IntegrationEventPublisherHandler` (match the existing folder name used by the surrounding aggregate)
+  - `Factories/`, `Mappings/` or `Profiles/`, `Policies/` (or existing `Polices/`), `Consumers/`, `Events/`, `Dtos/`
+- `Vogel.<Module>.Infrastructure` — `<Module>ModuleInstaller` + `<Module>ModuleBootstrapper`, EF wiring under `EntityFramework/`, and DI helpers under `Installers/`.
+- `Vogel.<Module>.MongoEntities` — `*MongoEntity`, `*MongoView`, `*MongoRepository`, `*MongoConsts`.
+- `Vogel.<Module>.Presentation` — FastEndpoints `*Endpoint` classes grouped by `<Aggregate>RoutingGroup`; transport mapping only.
+- `Vogel.<Module>.Shared` — cross-module DTOs, integration events, and service contracts that other modules are allowed to depend on (e.g. `IMediaService`, `UserCreatedIntegrationEvent`). This is the only project a sibling module may reference.
+
+## Dependency direction
+
+- Inside a module: `Presentation -> Application -> Domain`. `Application` may also depend on its own `MongoEntities` and `Shared`.
+- Across modules: depend only on the other module's `Vogel.<OtherModule>.Shared`. Never reference another module's `Domain`, `Application`, `Infrastructure`, `MongoEntities`, or `Presentation`.
+- `Domain` never depends on infrastructure, presentation, MongoDB, EF, MassTransit, or framework transport types.
+- Reuse primitives from `src/Libraries/Vogel.BuildingBlocks.*` (`IApplicationRequestHandler`, `ICommand`/`IQuery`, `IRepository<T>`, `MongoRepository<T>`, `IModuleInstaller`/`IModuleBootstrapper`) before introducing new abstractions.
+
+## Naming conventions
+
+- Use cases: `*Command`, `*CommandHandler`, `*Query`, `*QueryHandler`, optional `*Validator` (FluentValidation).
+- Endpoints: `*Endpoint` + `<Aggregate>RoutingGroup`.
+- Module wiring: `<Module>ModuleInstaller` (implements `IModuleInstaller`) and `<Module>ModuleBootstrapper` (implements `IModuleBootstrapper`).
+- Persistence: `*TableConsts` (SQL), `*MongoEntity`, `*MongoView`, `*MongoRepository`, `*MongoConsts`.
+- Application support: `*ResponseFactory`, `*Profile` / `*MappingProfile`, `*Policy`, `MongoSynchronizationHandler`, `IntegrationEventPublisherHandler`.
+
+## Endpoint and handler responsibilities
+
+- Keep endpoints thin: `Endpoint<TReq, TRes>` should only `_mediator.Send(req)` and convert the result via the existing helpers (`result.ToCreatedAtRoute(...)`, `SendResultAsync(...)`).
+- Authorization, validation, and business rules belong in application/domain (`[Authorize]` on requests, `AbstractValidator<T>` validators, domain policies/services), not in endpoints.
+- Use the existing `<Module>ModuleInstaller` / `<Module>ModuleBootstrapper` patterns for schema/config/runtime wiring; do not bypass them with ad-hoc `IServiceCollection` registration in endpoints or handlers.
